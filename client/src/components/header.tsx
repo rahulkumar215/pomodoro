@@ -1,8 +1,11 @@
 import {
   ChartColumn,
+  Check,
   Clock,
   ClockCheck,
+  Info,
   Settings as SettingsIcon,
+  Volume2,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -21,9 +24,14 @@ import {
 import { Switch } from "./ui/switch";
 import { Separator } from "./ui/separator";
 import * as z from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ALARM_SOUND_KEYS, FOCUS_SOUND_KEYS, TABS } from "@/consts/consts";
+import {
+  ALARM_SOUND_KEYS,
+  FOCUS_SOUND_KEYS,
+  Sounds,
+  TABS,
+} from "@/consts/consts";
 import {
   Field,
   FieldError,
@@ -32,6 +40,17 @@ import {
   FieldLegend,
   FieldSet,
 } from "./ui/field";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useSound } from "@/hooks/useSound";
+import { useEffect } from "react";
 
 const settingsSchema = z.object({
   pomodoro_time: z.coerce.number<number>(),
@@ -40,11 +59,11 @@ const settingsSchema = z.object({
   auto_start_breaks: z.boolean(),
   auto_start_pomodoros: z.boolean(),
   long_break_interval: z.coerce.number<number>(),
-  // auto_check_tasks: z.boolean(),
-  // check_to_bottom: z.boolean(),
-  // alarm_sound: z.enum(ALARM_SOUND_KEYS),
-  // alarm_sound_volumn: z.number().min(0).max(100),
-  // alarm_sound_repeat: z.number(),
+  auto_check_tasks: z.boolean(),
+  check_to_bottom: z.boolean(),
+  alarm_sound: z.enum(ALARM_SOUND_KEYS),
+  alarm_sound_volumn: z.coerce.number<number>().min(0).max(100),
+  alarm_sound_repeat: z.coerce.number<number>(),
   // focus_sound: z.enum(FOCUS_SOUND_KEYS),
   // focus_sound_volumn: z.number().min(0).max(100),
   // pomodoro_theme: z.string(),
@@ -58,21 +77,18 @@ const settingsSchema = z.object({
 
 type Settings = z.infer<typeof settingsSchema>;
 
-const SettingSection = ({ icon, title, children }) => {
-  const Icon = icon;
-  return (
-    <section className="flex flex-col px-4 gap-6">
-      <h3 className="flex items-center  gap-2">
-        <Icon size={16} />
-        {title}
-      </h3>
-
-      {children}
-
-      <Separator />
-    </section>
-  );
-};
+const PopOverComp = ({ text }) => (
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button variant="ghost">
+        <Info />
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent className="w-60">
+      <p className="text-xs">{text}</p>
+    </PopoverContent>
+  </Popover>
+);
 
 const Header = () => {
   const form = useForm<Settings>({
@@ -84,9 +100,31 @@ const Header = () => {
       auto_start_breaks: false,
       auto_start_pomodoros: false,
       long_break_interval: 4,
+      auto_check_tasks: false,
+      check_to_bottom: false,
+      alarm_sound: "alpha",
+      alarm_sound_volumn: 0,
+      alarm_sound_repeat: 3,
     },
     mode: "all",
   });
+
+  const alarm = useWatch<Settings, "alarm_sound">({
+    control: form.control,
+    name: "alarm_sound",
+    defaultValue: "alpha",
+  });
+
+  const { play, changeSound, pause, isPlaying } = useSound(
+    Sounds.alarm[alarm].sound,
+  );
+  useEffect(() => {
+    if (isPlaying) pause();
+    changeSound(Sounds.alarm[alarm].sound);
+    play();
+
+    return () => pause();
+  }, [alarm, play, changeSound, pause, isPlaying]);
 
   function onSubmit(data: Settings) {
     // Do something with the form values.
@@ -115,7 +153,7 @@ const Header = () => {
               Settings
             </Button>
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className=" overflow-y-scroll">
             <SheetHeader>
               <SheetTitle>Settings</SheetTitle>
               <SheetDescription>
@@ -267,6 +305,102 @@ const Header = () => {
                 </FieldSet>
 
                 <Separator />
+
+                <FieldSet>
+                  <FieldLegend className="flex items-center gap-2 mb-2">
+                    <Check size={20} />
+                    Tasks
+                  </FieldLegend>
+                  <FieldGroup>
+                    <Controller
+                      name="auto_check_tasks"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel htmlFor="auto_check_tasks">
+                            Auto Check Tasks
+                            <PopOverComp
+                              text={`If you enable "Auto Check Tasks", the active task will be automatically checked when the actual pomodoro count reaches the estimated count.`}
+                            />
+                          </FieldLabel>
+                          <Switch
+                            id="auto_check_tasks"
+                            name={field.name}
+                            aria-invalid={fieldState.invalid}
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="check_to_bottom"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel htmlFor="check_to_bottom">
+                            Check To Bottom
+                            <PopOverComp
+                              text={`If you enable "Auto Switch Tasks", the checked task will be automatically moved to the bottom of the task list.`}
+                            />
+                          </FieldLabel>
+                          <Switch
+                            id="check_to_bottom"
+                            name={field.name}
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            aria-invalid={fieldState.invalid}
+                          />
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                </FieldSet>
+
+                <Separator />
+
+                <FieldSet>
+                  <FieldLegend className="flex items-center gap-2 mb-2">
+                    <Volume2 size={20} />
+                    Sound
+                  </FieldLegend>
+                  <FieldGroup>
+                    <Controller
+                      name="alarm_sound"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <Select
+                            name={field.name}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger aria-invalid={fieldState.invalid}>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent position="item-aligned">
+                              <SelectGroup>
+                                <SelectItem value="alpha">Alpha</SelectItem>
+                                <SelectItem value="honey">Honey</SelectItem>
+                                <SelectItem value="primul">Primul</SelectItem>
+                                <SelectItem value="interstellar">
+                                  Interstellar
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                </FieldSet>
 
                 <Field orientation="horizontal">
                   <Button type="submit">Save changes</Button>

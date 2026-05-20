@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useRef } from "react";
-import sound from "../assets/audios/alarm_sound.mp3";
 
-export function useSound() {
+export function useSound(sound: string) {
   const audio = useRef(new Audio(sound));
+  const isPlaying = !audio.current.paused;
 
   useEffect(() => {
     const audioCur = audio.current;
     return () => audioCur.pause();
   }, []);
+
+  const changeSound = (sound: string) => {
+    audio.current = new Audio(sound);
+  };
 
   const pause = useCallback(() => {
     audio.current.pause();
@@ -22,5 +26,5 @@ export function useSound() {
     }, 1000 * 5);
   }, [pause]);
 
-  return { play, pause };
+  return { play, pause, changeSound, isPlaying };
 }

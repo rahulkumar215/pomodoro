@@ -34,6 +34,10 @@ export const Sounds = {
       key: "Primul",
       sound: primul,
     },
+    interstellar: {
+      key: "Interstellar",
+      sound: interstellar,
+    },
   },
   focus: {
     clock: {
