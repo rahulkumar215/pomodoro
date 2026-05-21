@@ -10,13 +10,12 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
+  // SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -28,7 +27,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ALARM_SOUND_KEYS,
-  FOCUS_SOUND_KEYS,
+  // FOCUS_SOUND_KEYS,
   Sounds,
   TABS,
 } from "@/consts/consts";
@@ -50,7 +49,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useSound } from "@/hooks/useSound";
-import { useEffect } from "react";
+import { useState } from "react";
+import { Slider } from "./ui/slider";
 
 const settingsSchema = z.object({
   pomodoro_time: z.coerce.number<number>(),
@@ -62,10 +62,10 @@ const settingsSchema = z.object({
   auto_check_tasks: z.boolean(),
   check_to_bottom: z.boolean(),
   alarm_sound: z.enum(ALARM_SOUND_KEYS),
-  alarm_sound_volumn: z.coerce.number<number>().min(0).max(100),
+  alarm_sound_volume: z.coerce.number<number>().min(0).max(100),
   alarm_sound_repeat: z.coerce.number<number>(),
   // focus_sound: z.enum(FOCUS_SOUND_KEYS),
-  // focus_sound_volumn: z.number().min(0).max(100),
+  // focus_sound_volume: z.number().min(0).max(100),
   // pomodoro_theme: z.string(),
   // short_break_theme: z.string(),
   // long_break_theme: z.string(),
@@ -103,7 +103,7 @@ const Header = () => {
       auto_check_tasks: false,
       check_to_bottom: false,
       alarm_sound: "alpha",
-      alarm_sound_volumn: 0,
+      alarm_sound_volume: 0,
       alarm_sound_repeat: 3,
     },
     mode: "all",
@@ -115,16 +115,19 @@ const Header = () => {
     defaultValue: "alpha",
   });
 
-  const { play, changeSound, pause, isPlaying } = useSound(
+  const alarm_sound_volume = useWatch<Settings, "alarm_sound_volume">({
+    control: form.control,
+    name: "alarm_sound_volume",
+    defaultValue: 0,
+  });
+
+  const { changeSoundAndVolume, setAudio } = useSound(
     Sounds.alarm[alarm].sound,
   );
-  useEffect(() => {
-    if (isPlaying) pause();
-    changeSound(Sounds.alarm[alarm].sound);
-    play();
+  setAudio(Sounds.alarm[alarm].sound, 0, false, false);
+  const [prevAlarmSound, setPrevAlarmSound] = useState<string>(alarm);
+  const [prevAlarmSoundVolume, setPrevAlarmSoundVolume] = useState<number>(0);
 
-    return () => pause();
-  }, [alarm, play, changeSound, pause, isPlaying]);
 
   function onSubmit(data: Settings) {
     // Do something with the form values.
@@ -371,35 +374,110 @@ const Header = () => {
                     <Volume2 size={20} />
                     Sound
                   </FieldLegend>
-                  <FieldGroup>
+                  <FieldGroup className="grid grid-cols-2 items-center">
                     <Controller
                       name="alarm_sound"
                       control={form.control}
                       render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                          className="col-start-1 col-end-3"
+                        >
+                          <FieldLabel htmlFor="alarm_sound">
+                            Alarm Sound
+                          </FieldLabel>
                           <Select
                             name={field.name}
                             value={field.value}
-                            onValueChange={field.onChange}
+                            onValueChange={(e) => {
+                              field.onChange(e);
+                              changeSoundAndVolume(
+                                Sounds.alarm[e].sound,
+                                prevAlarmSoundVolume,
+                                true,
+                                false,
+                              );
+                              setPrevAlarmSound(e);
+                            }}
                           >
                             <SelectTrigger aria-invalid={fieldState.invalid}>
                               <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent position="item-aligned">
                               <SelectGroup>
-                                <SelectItem value="alpha">Alpha</SelectItem>
-                                <SelectItem value="honey">Honey</SelectItem>
-                                <SelectItem value="primul">Primul</SelectItem>
-                                <SelectItem value="interstellar">
-                                  Interstellar
-                                </SelectItem>
+                                {ALARM_SOUND_KEYS.map((key) => (
+                                  <SelectItem value={key} key={key}>
+                                    {Sounds.alarm[key].key}
+                                  </SelectItem>
+                                ))}
                               </SelectGroup>
                             </SelectContent>
                           </Select>
                         </Field>
                       )}
                     />
+
+                    <Controller
+                      name="alarm_sound_volume"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                          className="col-start-2 col-end-3"
+                        >
+                          <FieldLabel>{alarm_sound_volume}</FieldLabel>
+                          <Slider
+                            defaultValue={[0]}
+                            max={100}
+                            min={0}
+                            value={[field.value]}
+                            onValueChange={(e) => {
+                              field.onChange(e);
+                              changeSoundAndVolume(
+                                prevAlarmSound,
+                                e[0],
+                                false,
+                                true,
+                              );
+                              setPrevAlarmSoundVolume(e[0]);
+                            }}
+                            step={1}
+                          />
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="alarm_sound_repeat"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                          className="col-start-2 col-end-3"
+                        >
+                          <FieldLabel htmlFor="alarm_sound_repeat">
+                            repeat
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            id="alarm_sound_repeat"
+                            aria-invalid={fieldState.invalid}
+                            type="number"
+                            className="w-12"
+                          />
+                        </Field>
+                      )}
+                    />
                   </FieldGroup>
+                </FieldSet>
+
+                <Separator />
+
+                <FieldSet>
+
                 </FieldSet>
 
                 <Field orientation="horizontal">

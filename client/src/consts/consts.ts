@@ -8,7 +8,7 @@ export const TABS = {
   Pomodoro: { type: "Pomodoro", timer: 25, message: "Time to Focus" },
   Short_Break: {
     type: "Short Break",
-    timer: 5,
+    timer: 1,
     message: "Time for Short Break",
   },
   Long_Break: {

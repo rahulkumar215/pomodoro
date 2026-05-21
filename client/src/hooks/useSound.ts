@@ -1,30 +1,88 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 
-export function useSound(sound: string) {
-  const audio = useRef(new Audio(sound));
-  const isPlaying = !audio.current.paused;
+export function useSound(src: string, volume: number = 0) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    const audioCur = audio.current;
-    return () => audioCur.pause();
+  const setAudio = useCallback(
+    (
+      src: string,
+      volume: number,
+      changeSound: boolean,
+      changeVolume: boolean,
+    ) => {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(src);
+        audioRef.current.volume = volume / 100;
+      }
+
+      if (changeSound) {
+        audioRef.current = new Audio(src);
+        audioRef.current.currentTime = 0;
+      }
+
+      if (changeVolume) {
+        audioRef.current.volume = volume / 100;
+      }
+
+      return audioRef.current;
+    },
+    [],
+  );
+
+  const getAudio = useCallback(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(src);
+      audioRef.current.volume = volume / 100;
+    }
+
+    return audioRef.current;
+  }, [src, volume]);
+
+  const play = useCallback(
+    async (caller: string) => {
+      console.log("Play Got Called ");
+      console.log("Called from : ", caller);
+
+      try {
+        const audio = getAudio();
+        console.log(audio);
+        await audio.play();
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "NotAllowedError") {
+          console.warn("Audio blocked: requires user interaction first.");
+        } else {
+          throw err;
+        }
+      }
+    },
+    [getAudio],
+  );
+
+  const stop = useCallback((caller: string) => {
+    console.log("Stop Got Called");
+    console.log("Called from :", caller);
+    audioRef.current?.pause();
+    if (audioRef.current) audioRef.current.currentTime = 0;
   }, []);
 
-  const changeSound = (sound: string) => {
-    audio.current = new Audio(sound);
+  const changeSoundAndVolume = (
+    sound: string,
+    volume: number,
+    changeSound: boolean,
+    changeVolume: boolean,
+  ) => {
+    console.log(sound, volume, changeSound, changeVolume);
+    if (audioRef.current?.paused !== undefined && changeSound)
+      stop("changeSound");
+
+    if (changeSound) {
+      setAudio(sound, volume, changeSound, changeVolume);
+    }
+
+    if (changeVolume) {
+      setAudio(sound, volume, changeSound, changeVolume);
+    }
+    play("changeSoundAndVolume");
   };
-
-  const pause = useCallback(() => {
-    audio.current.pause();
-  }, []);
-
-  const play = useCallback(() => {
-    audio.current.currentTime = 0;
-    audio.current.play();
-
-    setTimeout(() => {
-      pause();
-    }, 1000 * 5);
-  }, [pause]);
-
-  return { play, pause, changeSound, isPlaying };
+  return { setAudio, play, stop, changeSoundAndVolume, audioRef };
 }

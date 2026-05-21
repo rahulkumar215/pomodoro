@@ -2,13 +2,14 @@ import { TABS, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
+import { Sounds } from "@/consts/consts";
 
 export default function useTimer() {
   const [activeTab, setActiveTab] = useState<Tab>(TABS.Pomodoro);
   const [started, setStarted] = useState(false);
   const [timer, setTimer] = useState<number>(activeTab.timer * 60 * 1000);
   const { showNotification } = useNotification();
-  const { play } = useSound();
+  const { play } = useSound(Sounds.alarm.alpha.sound);
   const workerRef = useRef<Worker | null>(null);
 
   const handleStartTimer = useCallback(() => {
@@ -46,7 +47,7 @@ export default function useTimer() {
         setStarted(false);
 
         // play notification sound
-        play();
+        play("userTimer");
 
         // show notification
         showNotification("Time is up!");
