@@ -27,7 +27,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ALARM_SOUND_KEYS,
-  // FOCUS_SOUND_KEYS,
+  FOCUS_SOUND_KEYS,
   Sounds,
   TABS,
 } from "@/consts/consts";
@@ -64,8 +64,8 @@ const settingsSchema = z.object({
   alarm_sound: z.enum(ALARM_SOUND_KEYS),
   alarm_sound_volume: z.coerce.number<number>().min(0).max(100),
   alarm_sound_repeat: z.coerce.number<number>(),
-  // focus_sound: z.enum(FOCUS_SOUND_KEYS),
-  // focus_sound_volume: z.number().min(0).max(100),
+  focus_sound: z.enum(FOCUS_SOUND_KEYS),
+  focus_sound_volume: z.coerce.number<number>().min(0).max(100),
   // pomodoro_theme: z.string(),
   // short_break_theme: z.string(),
   // long_break_theme: z.string(),
@@ -105,29 +105,37 @@ const Header = () => {
       alarm_sound: "alpha",
       alarm_sound_volume: 0,
       alarm_sound_repeat: 3,
+      focus_sound: "clock",
+      focus_sound_volume: 0,
     },
     mode: "all",
   });
 
-  const alarm = useWatch<Settings, "alarm_sound">({
+  const [alarm, focus, alarmVolume, focusVolume] = useWatch({
     control: form.control,
-    name: "alarm_sound",
-    defaultValue: "alpha",
-  });
-
-  const alarm_sound_volume = useWatch<Settings, "alarm_sound_volume">({
-    control: form.control,
-    name: "alarm_sound_volume",
-    defaultValue: 0,
+    name: [
+      "alarm_sound",
+      "focus_sound",
+      "alarm_sound_volume",
+      "focus_sound_volume",
+    ],
   });
 
   const { changeSoundAndVolume, setAudio } = useSound(
     Sounds.alarm[alarm].sound,
   );
   setAudio(Sounds.alarm[alarm].sound, 0, false, false);
+
+  // console.log(audioRef);
+  // const { changeSoundAndVolume, setAudio } = useSound(
+  //   Sounds.focus[focus].sound,
+  // );
+  // setAudio(Sounds.focus[focus].sound, 0, false, false);
+
   const [prevAlarmSound, setPrevAlarmSound] = useState<string>(alarm);
   const [prevAlarmSoundVolume, setPrevAlarmSoundVolume] = useState<number>(0);
-
+  const [prevFocusSound, setPrevFocusSound] = useState<string>(focus);
+  const [prevFocusSoundVolume, setPrevFocusSoundVolume] = useState<number>(0);
 
   function onSubmit(data: Settings) {
     // Do something with the form values.
@@ -427,14 +435,13 @@ const Header = () => {
                           orientation="horizontal"
                           className="col-start-2 col-end-3"
                         >
-                          <FieldLabel>{alarm_sound_volume}</FieldLabel>
+                          <FieldLabel>{alarmVolume}</FieldLabel>
                           <Slider
-                            defaultValue={[0]}
                             max={100}
                             min={0}
                             value={[field.value]}
                             onValueChange={(e) => {
-                              field.onChange(e);
+                              field.onChange(e[0]);
                               changeSoundAndVolume(
                                 prevAlarmSound,
                                 e[0],
@@ -471,14 +478,78 @@ const Header = () => {
                         </Field>
                       )}
                     />
+
+                    <Controller
+                      name="focus_sound"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          className="col-start-1 col-end-3"
+                          orientation="horizontal"
+                          data-invalid={fieldState.invalid}
+                        >
+                          <FieldLabel htmlFor="focus_sound">
+                            Focus Sound
+                          </FieldLabel>
+                          <Select
+                            name={field.name}
+                            value={field.value}
+                            onValueChange={(e) => {
+                              field.onChange(e);
+                              changeSoundAndVolume(
+                                Sounds.focus[e].sound,
+                                prevFocusSoundVolume,
+                                true,
+                                false,
+                              );
+                              setPrevFocusSound(e);
+                            }}
+                          >
+                            <SelectTrigger aria-invalid={fieldState.invalid}>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent position="item-aligned">
+                              {FOCUS_SOUND_KEYS.map((key) => (
+                                <SelectItem key={key} value={key}>
+                                  {Sounds.focus[key].key}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="focus_sound_volume"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel>{focusVolume}</FieldLabel>
+                          <Slider
+                            name="focust_sound_volume"
+                            value={[field.value]}
+                            onValueChange={(e) => {
+                              field.onChange(e[0]);
+                              changeSoundAndVolume(
+                                prevFocusSound,
+                                e[0],
+                                false,
+                                true,
+                              );
+                              setPrevFocusSoundVolume(e[0]);
+                            }}
+                            max={100}
+                            min={0}
+                            aria-invalid={fieldState.invalid}
+                          />
+                        </Field>
+                      )}
+                    />
                   </FieldGroup>
                 </FieldSet>
 
                 <Separator />
-
-                <FieldSet>
-
-                </FieldSet>
 
                 <Field orientation="horizontal">
                   <Button type="submit">Save changes</Button>

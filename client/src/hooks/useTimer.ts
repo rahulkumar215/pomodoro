@@ -47,7 +47,7 @@ export default function useTimer() {
         setStarted(false);
 
         // play notification sound
-        play("userTimer");
+        play();
 
         // show notification
         showNotification("Time is up!");

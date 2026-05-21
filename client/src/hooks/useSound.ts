@@ -18,6 +18,7 @@ export function useSound(src: string, volume: number = 0) {
       if (changeSound) {
         audioRef.current = new Audio(src);
         audioRef.current.currentTime = 0;
+        audioRef.current.volume = volume / 100;
       }
 
       if (changeVolume) {
@@ -34,33 +35,23 @@ export function useSound(src: string, volume: number = 0) {
       audioRef.current = new Audio(src);
       audioRef.current.volume = volume / 100;
     }
-
     return audioRef.current;
   }, [src, volume]);
 
-  const play = useCallback(
-    async (caller: string) => {
-      console.log("Play Got Called ");
-      console.log("Called from : ", caller);
-
-      try {
-        const audio = getAudio();
-        console.log(audio);
-        await audio.play();
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "NotAllowedError") {
-          console.warn("Audio blocked: requires user interaction first.");
-        } else {
-          throw err;
-        }
+  const play = useCallback(async () => {
+    try {
+      const audio = getAudio();
+      if (audio.volume > 0) await audio.play();
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "NotAllowedError") {
+        console.warn("Audio blocked: requires user interaction first.");
+      } else {
+        throw err;
       }
-    },
-    [getAudio],
-  );
+    }
+  }, [getAudio]);
 
-  const stop = useCallback((caller: string) => {
-    console.log("Stop Got Called");
-    console.log("Called from :", caller);
+  const stop = useCallback(() => {
     audioRef.current?.pause();
     if (audioRef.current) audioRef.current.currentTime = 0;
   }, []);
@@ -71,18 +62,10 @@ export function useSound(src: string, volume: number = 0) {
     changeSound: boolean,
     changeVolume: boolean,
   ) => {
-    console.log(sound, volume, changeSound, changeVolume);
-    if (audioRef.current?.paused !== undefined && changeSound)
-      stop("changeSound");
+    if (audioRef.current?.paused !== undefined && changeSound) stop();
 
-    if (changeSound) {
-      setAudio(sound, volume, changeSound, changeVolume);
-    }
-
-    if (changeVolume) {
-      setAudio(sound, volume, changeSound, changeVolume);
-    }
-    play("changeSoundAndVolume");
+    setAudio(sound, volume, changeSound, changeVolume);
+    play();
   };
   return { setAudio, play, stop, changeSoundAndVolume, audioRef };
 }
