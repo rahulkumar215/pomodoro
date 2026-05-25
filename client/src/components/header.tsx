@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "./ui/switch";
 import { Separator } from "./ui/separator";
-import * as z from "zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -32,10 +31,8 @@ import {
   COLOR_KEYS,
   colors,
   FOCUS_SOUND_KEYS,
-  settingsDefaultValues,
   settingsSchema,
   Sounds,
-  TABS,
   type Settings,
 } from "@/consts/consts";
 import {
@@ -56,7 +53,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useSound } from "@/hooks/useSound";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Slider } from "./ui/slider";
 import {
   DropdownMenu,
@@ -65,7 +62,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { SettingsContext } from "@/context/SettingsContext";
+import { useSettings } from "@/context/SettingsContext";
 
 const PopOverComp = ({ text }) => (
   <Popover>
@@ -81,7 +78,7 @@ const PopOverComp = ({ text }) => (
 );
 
 const Header = () => {
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const { settings, updateSettings } = useSettings();
 
   const form = useForm<Settings>({
     resolver: zodResolver(settingsSchema),
@@ -99,16 +96,15 @@ const Header = () => {
     ],
   });
 
-  const { changeSoundAndVolume, setAudio } = useSound(
+  const { changeSoundAndVolume: chnageAlarm, setAudio: setAlarm } = useSound(
     Sounds.alarm[alarm].sound,
   );
-  setAudio(Sounds.alarm[alarm].sound, 0, false, false);
+  setAlarm(Sounds.alarm[alarm].sound, 0, false, false);
 
-  // console.log(audioRef);
-  // const { changeSoundAndVolume, setAudio } = useSound(
-  //   Sounds.focus[focus].sound,
-  // );
-  // setAudio(Sounds.focus[focus].sound, 0, false, false);
+  const { changeSoundAndVolume: changeFocus, setAudio: setFocus } = useSound(
+    Sounds.focus[focus].sound,
+  );
+  setFocus(Sounds.focus[focus].sound, 0, false, false);
 
   const [prevAlarmSound, setPrevAlarmSound] = useState<string>(alarm);
   const [prevAlarmSoundVolume, setPrevAlarmSoundVolume] = useState<number>(0);
@@ -118,6 +114,7 @@ const Header = () => {
   function onSubmit(data: Settings) {
     // Do something with the form values.
     console.log(data);
+    updateSettings(data);
   }
 
   return (
@@ -378,7 +375,7 @@ const Header = () => {
                             value={field.value}
                             onValueChange={(e) => {
                               field.onChange(e);
-                              changeSoundAndVolume(
+                              chnageAlarm(
                                 Sounds.alarm[e].sound,
                                 prevAlarmSoundVolume,
                                 true,
@@ -420,12 +417,7 @@ const Header = () => {
                             value={[field.value]}
                             onValueChange={(e) => {
                               field.onChange(e[0]);
-                              changeSoundAndVolume(
-                                prevAlarmSound,
-                                e[0],
-                                false,
-                                true,
-                              );
+                              chnageAlarm(prevAlarmSound, e[0], false, true);
                               setPrevAlarmSoundVolume(e[0]);
                             }}
                             step={1}
@@ -474,7 +466,7 @@ const Header = () => {
                             value={field.value}
                             onValueChange={(e) => {
                               field.onChange(e);
-                              changeSoundAndVolume(
+                              changeFocus(
                                 Sounds.focus[e].sound,
                                 prevFocusSoundVolume,
                                 true,
@@ -513,12 +505,7 @@ const Header = () => {
                             value={[field.value]}
                             onValueChange={(e) => {
                               field.onChange(e[0]);
-                              changeSoundAndVolume(
-                                prevFocusSound,
-                                e[0],
-                                false,
-                                true,
-                              );
+                              changeFocus(prevFocusSound, e[0], false, true);
                               setPrevFocusSoundVolume(e[0]);
                             }}
                             max={100}
