@@ -1,15 +1,43 @@
-import { TABS, type Tab } from "@/consts/consts";
+import { TABS, type Settings, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
 import { Sounds } from "@/consts/consts";
+import { useSettings } from "@/context/SettingsContext";
+
+function getTimer(activeTab: Tab, settings: Settings) {
+  let timer: number;
+  switch (activeTab.type) {
+    case "Pomodoro": {
+      timer = settings.pomodoro_time;
+      break;
+    }
+    case "Short Break": {
+      timer = settings.short_break_time;
+      break;
+    }
+    case "Long Break": {
+      timer = settings.long_break_time;
+      break;
+    }
+  }
+
+  return timer * 60 * 1000;
+}
 
 export default function useTimer() {
+  const { settings } = useSettings();
   const [activeTab, setActiveTab] = useState<Tab>(TABS.Pomodoro);
   const [started, setStarted] = useState(false);
-  const [timer, setTimer] = useState<number>(activeTab.timer * 60 * 1000);
+  const [timer, setTimer] = useState<number>(getTimer(activeTab, settings));
   const { showNotification } = useNotification();
-  const { play } = useSound(Sounds.alarm.alpha.sound);
+  const { play, setAudio } = useSound();
+  setAudio(
+    Sounds.alarm[settings.alarm_sound].sound,
+    settings.alarm_sound_volume,
+    false,
+    false,
+  );
   const workerRef = useRef<Worker | null>(null);
 
   const handleStartTimer = useCallback(() => {
@@ -22,12 +50,15 @@ export default function useTimer() {
     }
   }, [started, timer]);
 
-  const handleChangeTab = useCallback((value: Tab) => {
-    setActiveTab(value);
-    setTimer(value.timer * 60 * 1000);
-    setStarted(false);
-    workerRef.current?.terminate();
-  }, []);
+  const handleChangeTab = useCallback(
+    (value: Tab) => {
+      setActiveTab(value);
+      setTimer(getTimer(value, settings));
+      setStarted(false);
+      workerRef.current?.terminate();
+    },
+    [settings],
+  );
 
   useEffect(() => {
     workerRef.current = new Worker(

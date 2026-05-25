@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-export function useSound(src: string, volume: number = 0) {
+export function useSound(src: string = "", volume: number = 0) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const setAudio = useCallback(
@@ -67,5 +67,6 @@ export function useSound(src: string, volume: number = 0) {
     setAudio(sound, volume, changeSound, changeVolume);
     play();
   };
+
   return { setAudio, play, stop, changeSoundAndVolume, audioRef };
 }
