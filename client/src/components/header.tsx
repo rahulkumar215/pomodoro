@@ -1,9 +1,11 @@
 import {
+  Bell,
   ChartColumn,
   Check,
   Clock,
   ClockCheck,
   Info,
+  Palette,
   Settings as SettingsIcon,
   Volume2,
 } from "lucide-react";
@@ -27,9 +29,14 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ALARM_SOUND_KEYS,
+  COLOR_KEYS,
+  colors,
   FOCUS_SOUND_KEYS,
+  settingsDefaultValues,
+  settingsSchema,
   Sounds,
   TABS,
+  type Settings,
 } from "@/consts/consts";
 import {
   Field,
@@ -49,33 +56,16 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useSound } from "@/hooks/useSound";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Slider } from "./ui/slider";
-
-const settingsSchema = z.object({
-  pomodoro_time: z.coerce.number<number>(),
-  short_break_time: z.coerce.number<number>(),
-  long_break_time: z.coerce.number<number>(),
-  auto_start_breaks: z.boolean(),
-  auto_start_pomodoros: z.boolean(),
-  long_break_interval: z.coerce.number<number>(),
-  auto_check_tasks: z.boolean(),
-  check_to_bottom: z.boolean(),
-  alarm_sound: z.enum(ALARM_SOUND_KEYS),
-  alarm_sound_volume: z.coerce.number<number>().min(0).max(100),
-  alarm_sound_repeat: z.coerce.number<number>(),
-  focus_sound: z.enum(FOCUS_SOUND_KEYS),
-  focus_sound_volume: z.coerce.number<number>().min(0).max(100),
-  // pomodoro_theme: z.string(),
-  // short_break_theme: z.string(),
-  // long_break_theme: z.string(),
-  // hour_format: z.enum(["24hr", "12hr"]),
-  // dark_mode_when_running: z.boolean(),
-  // notification_reminder_type: z.enum(["Every", "Last"]),
-  // notification_reminder_time: z.number().min(0),
-});
-
-type Settings = z.infer<typeof settingsSchema>;
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { SettingsContext } from "@/context/SettingsContext";
 
 const PopOverComp = ({ text }) => (
   <Popover>
@@ -91,23 +81,11 @@ const PopOverComp = ({ text }) => (
 );
 
 const Header = () => {
+  const { settings, updateSettings } = useContext(SettingsContext);
+
   const form = useForm<Settings>({
     resolver: zodResolver(settingsSchema),
-    defaultValues: {
-      pomodoro_time: TABS.Pomodoro.timer,
-      short_break_time: TABS.Short_Break.timer,
-      long_break_time: TABS.Long_Break.timer,
-      auto_start_breaks: false,
-      auto_start_pomodoros: false,
-      long_break_interval: 4,
-      auto_check_tasks: false,
-      check_to_bottom: false,
-      alarm_sound: "alpha",
-      alarm_sound_volume: 0,
-      alarm_sound_repeat: 3,
-      focus_sound: "clock",
-      focus_sound_volume: 0,
-    },
+    defaultValues: settings,
     mode: "all",
   });
 
@@ -524,7 +502,11 @@ const Header = () => {
                       name="focus_sound_volume"
                       control={form.control}
                       render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          className="col-start-2 col-end-3"
+                          orientation="horizontal"
+                        >
                           <FieldLabel>{focusVolume}</FieldLabel>
                           <Slider
                             name="focust_sound_volume"
@@ -550,6 +532,244 @@ const Header = () => {
                 </FieldSet>
 
                 <Separator />
+
+                <FieldSet>
+                  <FieldLegend className="flex items-center gap-2 mb-2">
+                    <Palette size={20} />
+                    Theme
+                  </FieldLegend>
+                  <FieldGroup>
+                    <Controller
+                      name="pomodoro_theme"
+                      control={form.control}
+                      render={({ field, fieldState }) => {
+                        return (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            orientation="horizontal"
+                          >
+                            <FieldLabel>Pomodoro Theme</FieldLabel>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  style={{
+                                    background: colors[field.value],
+                                  }}
+                                  className="w-24"
+                                ></Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="overflow-x-visible ">
+                                <DropdownMenuRadioGroup
+                                  value={field.value}
+                                  onValueChange={field.onChange}
+                                  className="grid grid-cols-4 gap-2 w-48"
+                                >
+                                  {COLOR_KEYS.map((color) => (
+                                    <DropdownMenuRadioItem
+                                      key={color}
+                                      value={color}
+                                      style={{
+                                        background: colors[color],
+                                      }}
+                                    >
+                                      &nbsp;
+                                    </DropdownMenuRadioItem>
+                                  ))}
+                                </DropdownMenuRadioGroup>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <Controller
+                      name="short_break_theme"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel>Short Break Theme</FieldLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                style={{
+                                  background: colors[field.value],
+                                }}
+                                className="w-24"
+                              ></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuRadioGroup
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                className="grid grid-cols-4 gap-2 w-48"
+                              >
+                                {COLOR_KEYS.map((color) => (
+                                  <DropdownMenuRadioItem
+                                    key={color}
+                                    value={color}
+                                    style={{
+                                      background: colors[color],
+                                    }}
+                                  >
+                                    &nbsp;
+                                  </DropdownMenuRadioItem>
+                                ))}
+                              </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="long_break_theme"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel>Long Break Theme</FieldLabel>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                style={{
+                                  background: colors[field.value],
+                                }}
+                                className="w-24"
+                              ></Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuRadioGroup
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                className="grid grid-cols-4 gap-2 w-48"
+                              >
+                                {COLOR_KEYS.map((color) => (
+                                  <DropdownMenuRadioItem
+                                    key={color}
+                                    value={color}
+                                    style={{
+                                      background: colors[color],
+                                    }}
+                                  >
+                                    &nbsp;
+                                  </DropdownMenuRadioItem>
+                                ))}
+                              </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="hour_format"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel htmlFor="hour_format">
+                            Hour Format
+                          </FieldLabel>
+                          <Select
+                            name={field.name}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger aria-invalid={fieldState.invalid}>
+                              <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent position="item-aligned">
+                              <SelectItem value="24hr">24hr</SelectItem>
+                              <SelectItem value="12hr">12hr</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </Field>
+                      )}
+                    />
+
+                    <Controller
+                      name="dark_mode_when_running"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field
+                          data-invalid={fieldState.invalid}
+                          orientation="horizontal"
+                        >
+                          <FieldLabel>Dark Mode when running</FieldLabel>
+                          <Switch
+                            aria-invalid={fieldState.invalid}
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </Field>
+                      )}
+                    />
+                  </FieldGroup>
+                </FieldSet>
+
+                <Separator />
+
+                <FieldSet>
+                  <FieldLegend className="flex items-center gap-2 mb-2">
+                    <Bell size={20} />
+                    Notification
+                  </FieldLegend>
+
+                  <FieldSet>
+                    <div className="grid grid-cols-2 items-center">
+                      <FieldLegend>Reminder</FieldLegend>
+                      <FieldGroup className="flex flex-row gap-2">
+                        <Controller
+                          name="reminder_type"
+                          control={form.control}
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <Select
+                                name={field.name}
+                                value={field.value}
+                                onValueChange={field.onChange}
+                              >
+                                <SelectTrigger
+                                  aria-invalid={fieldState.invalid}
+                                >
+                                  <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent position="item-aligned">
+                                  <SelectItem value="Every">Every</SelectItem>
+                                  <SelectItem value="Last">Last</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </Field>
+                          )}
+                        />
+
+                        <Controller
+                          name="reminder_time"
+                          control={form.control}
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <Input
+                                {...field}
+                                aria-invalid={fieldState.invalid}
+                                type="number"
+                              />
+                            </Field>
+                          )}
+                        />
+
+                        <p>min</p>
+                      </FieldGroup>
+                    </div>
+                  </FieldSet>
+                </FieldSet>
 
                 <Field orientation="horizontal">
                   <Button type="submit">Save changes</Button>

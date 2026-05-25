@@ -3,6 +3,7 @@ import honey from "./../assets/audios/alarm/honey.mp3";
 import primul from "./../assets/audios/alarm/primul.mp3";
 import clock from "./../assets/audios/focus/Clock.mp3";
 import interstellar from "./../assets/audios/focus/interstellar.mp3";
+import * as z from "zod";
 
 export const TABS = {
   Pomodoro: { type: "Pomodoro", timer: 25, message: "Time to Focus" },
@@ -62,3 +63,66 @@ export const FOCUS_SOUND_KEYS = Object.keys(Sounds.focus) as [
   FocusSoundKey,
   ...FocusSoundKey[],
 ];
+
+export const colors = {
+  brickRed: "#af4949",
+  tealGreen: "#297479",
+  steelBlue: "#2f6a95",
+  burntOrange: "#a6622a",
+  mutedPurple: "#6c4d89",
+  orchidPink: "#9f4387",
+  forestGreen: "#4a7950",
+  slateBlue: "#4a6879",
+} as const;
+
+export type ColorKey = keyof typeof colors;
+export const COLOR_KEYS = Object.keys(colors) as [ColorKey, ...ColorKey[]];
+export type ColorValue = (typeof colors)[ColorKey];
+
+export const settingsSchema = z.object({
+  pomodoro_time: z.coerce.number<number>(),
+  short_break_time: z.coerce.number<number>(),
+  long_break_time: z.coerce.number<number>(),
+  auto_start_breaks: z.boolean(),
+  auto_start_pomodoros: z.boolean(),
+  long_break_interval: z.coerce.number<number>(),
+  auto_check_tasks: z.boolean(),
+  check_to_bottom: z.boolean(),
+  alarm_sound: z.enum(ALARM_SOUND_KEYS),
+  alarm_sound_volume: z.coerce.number<number>().min(0).max(100),
+  alarm_sound_repeat: z.coerce.number<number>(),
+  focus_sound: z.enum(FOCUS_SOUND_KEYS),
+  focus_sound_volume: z.coerce.number<number>().min(0).max(100),
+  pomodoro_theme: z.enum(COLOR_KEYS),
+  short_break_theme: z.enum(COLOR_KEYS),
+  long_break_theme: z.enum(COLOR_KEYS),
+  hour_format: z.enum(["24hr", "12hr"]),
+  dark_mode_when_running: z.boolean(),
+  reminder_type: z.enum(["Every", "Last"]),
+  reminder_time: z.number().min(0),
+});
+
+export type Settings = z.infer<typeof settingsSchema>;
+
+export const DEFAULT_SETTINGS: Settings = {
+  pomodoro_time: TABS.Pomodoro.timer,
+  short_break_time: TABS.Short_Break.timer,
+  long_break_time: TABS.Long_Break.timer,
+  auto_start_breaks: false,
+  auto_start_pomodoros: false,
+  long_break_interval: 4,
+  auto_check_tasks: false,
+  check_to_bottom: false,
+  alarm_sound: "alpha",
+  alarm_sound_volume: 0,
+  alarm_sound_repeat: 3,
+  focus_sound: "clock",
+  focus_sound_volume: 0,
+  pomodoro_theme: "brickRed",
+  short_break_theme: "brickRed",
+  long_break_theme: "brickRed",
+  hour_format: "24hr",
+  dark_mode_when_running: false,
+  reminder_type: "Every",
+  reminder_time: 0,
+};
