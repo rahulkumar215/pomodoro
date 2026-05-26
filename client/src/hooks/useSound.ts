@@ -38,20 +38,46 @@ export function useSound(src: string = "", volume: number = 0) {
     return audioRef.current;
   }, [src, volume]);
 
-  const play = useCallback(async () => {
-    try {
-      const audio = getAudio();
-      if (audio.volume > 0) await audio.play();
-    } catch (err) {
-      if (err instanceof DOMException && err.name === "NotAllowedError") {
-        console.warn("Audio blocked: requires user interaction first.");
-      } else {
-        throw err;
+  const play = useCallback(
+    async ({
+      maxPlays = 1,
+      loop = false,
+    }: {
+      maxPlays?: number;
+      loop?: boolean;
+    }) => {
+      let playCount = 0;
+      try {
+        const audio = getAudio();
+        if (loop) audio.loop = true;
+        if (audio.volume > 0) {
+          const handleEnded = async () => {
+            playCount++;
+            if (playCount < maxPlays) {
+              audio.currentTime = 0;
+              await audio.play();
+            } else {
+              audio.removeEventListener("ended", handleEnded);
+            }
+          };
+
+          audio.addEventListener("ended", handleEnded);
+
+          await audio.play();
+        }
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "NotAllowedError") {
+          console.warn("Audio blocked: requires user interaction first.");
+        } else {
+          throw err;
+        }
       }
-    }
-  }, [getAudio]);
+    },
+    [getAudio],
+  );
 
   const stop = useCallback(() => {
+    console.log("Stopped the song");
     audioRef.current?.pause();
     if (audioRef.current) audioRef.current.currentTime = 0;
   }, []);
@@ -65,7 +91,7 @@ export function useSound(src: string = "", volume: number = 0) {
     if (audioRef.current?.paused !== undefined && changeSound) stop();
 
     setAudio(sound, volume, changeSound, changeVolume);
-    play();
+    play({});
   };
 
   return { setAudio, play, stop, changeSoundAndVolume, audioRef };

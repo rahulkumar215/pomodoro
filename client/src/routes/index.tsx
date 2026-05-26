@@ -11,8 +11,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { timer, started, activeTab, handleStartTimer, handleChangeTab } =
-    useTimer();
+  const {
+    timer,
+    started,
+    activeTab,
+    handleStartTimer,
+    handleChangeTab,
+    count,
+  } = useTimer();
 
   return (
     <div className="p-2 flex flex-col gap-6">
@@ -35,6 +41,12 @@ function Index() {
         </div>
 
         <h1>{formattedTimer(timer)}</h1>
+        {activeTab.type === "Pomodoro" ? (
+          <p>#{count.focus}</p>
+        ) : (
+          <p>#{count.break}</p>
+        )}
+        <p>{activeTab.message}</p>
         <Button onClick={handleStartTimer}>{started ? "Stop" : "Start"}</Button>
       </div>
     </div>
