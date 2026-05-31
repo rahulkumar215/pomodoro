@@ -5,6 +5,8 @@ import { TABS } from "@/consts/consts";
 import formattedTimer from "@/lib/formattedTimer";
 import useTimer from "@/hooks/useTimer";
 import Header from "@/components/header";
+import Tasks from "@/components/tasks";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -22,6 +24,7 @@ function Index() {
 
   return (
     <div className="p-2 flex flex-col gap-6">
+      <Toaster position="bottom-right" expand />
       <Header />
       <div className="flex flex-col gap-6 items-center">
         <div className="flex gap-2 items-center justify-center">
@@ -41,13 +44,15 @@ function Index() {
         </div>
 
         <h1>{formattedTimer(timer)}</h1>
+        <Button onClick={handleStartTimer}>{started ? "Stop" : "Start"}</Button>
         {activeTab.type === "Pomodoro" ? (
           <p>#{count.focus}</p>
         ) : (
           <p>#{count.break}</p>
         )}
         <p>{activeTab.message}</p>
-        <Button onClick={handleStartTimer}>{started ? "Stop" : "Start"}</Button>
+
+        <Tasks />
       </div>
     </div>
   );

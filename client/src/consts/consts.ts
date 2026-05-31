@@ -5,6 +5,7 @@ import clock from "./../assets/audios/focus/Clock.mp3";
 import interstellar from "./../assets/audios/focus/interstellar.mp3";
 import * as z from "zod";
 
+// Tabs Schema
 export const TABS = {
   Pomodoro: { type: "Pomodoro", timer: 25, message: "Time to Focus" },
   Short_Break: {
@@ -19,8 +20,10 @@ export const TABS = {
   },
 } as const;
 
+// Exporting Tab Schema
 export type Tab = (typeof TABS)[keyof typeof TABS];
 
+// Sounds Schema
 export const Sounds = {
   alarm: {
     alpha: {
@@ -64,6 +67,7 @@ export const FOCUS_SOUND_KEYS = Object.keys(Sounds.focus) as [
   ...FocusSoundKey[],
 ];
 
+// Colors Object
 export const colors = {
   brickRed: "#af4949",
   tealGreen: "#297479",
@@ -79,18 +83,29 @@ export type ColorKey = keyof typeof colors;
 export const COLOR_KEYS = Object.keys(colors) as [ColorKey, ...ColorKey[]];
 export type ColorValue = (typeof colors)[ColorKey];
 
+// Settings Schema
 export const settingsSchema = z.object({
-  pomodoro_time: z.coerce.number<number>(),
-  short_break_time: z.coerce.number<number>(),
-  long_break_time: z.coerce.number<number>(),
+  pomodoro_time: z.coerce
+    .number<number>()
+    .min(1, "Pomodoro must be at least 1 minute."),
+  short_break_time: z.coerce
+    .number<number>()
+    .min(1, "Short break must be at least 1 minute."),
+  long_break_time: z.coerce
+    .number<number>()
+    .min(1, "Long break must be at least 1 minute."),
   auto_start_breaks: z.boolean(),
   auto_start_pomodoros: z.boolean(),
-  long_break_interval: z.coerce.number<number>(),
+  long_break_interval: z.coerce
+    .number<number>()
+    .min(1, "Interval must be at least 1 cycle."),
   auto_check_tasks: z.boolean(),
   check_to_bottom: z.boolean(),
   alarm_sound: z.enum(ALARM_SOUND_KEYS),
   alarm_sound_volume: z.coerce.number<number>().min(0).max(100),
-  alarm_sound_repeat: z.coerce.number<number>(),
+  alarm_sound_repeat: z.coerce
+    .number<number>()
+    .min(1, "Alarm sound must be played al least 1 time."),
   focus_sound: z.enum(FOCUS_SOUND_KEYS),
   focus_sound_volume: z.coerce.number<number>().min(0).max(100),
   pomodoro_theme: z.enum(COLOR_KEYS),
@@ -99,7 +114,9 @@ export const settingsSchema = z.object({
   hour_format: z.enum(["24hr", "12hr"]),
   dark_mode_when_running: z.boolean(),
   reminder_type: z.enum(["Every", "Last"]),
-  reminder_time: z.coerce.number().min(0),
+  reminder_time: z.coerce
+    .number<number>()
+    .min(0, "Reminder time must be 1 at least min."),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
@@ -126,3 +143,49 @@ export const DEFAULT_SETTINGS: Settings = {
   reminder_type: "Every",
   reminder_time: 0,
 };
+
+export const TASK_CONSTRAINTS = {
+  title: { min: 1, max: 120 },
+  description: { max: 360 },
+  estimatedPomodoros: { min: 1 },
+  note: { max: 120 },
+} as const;
+
+// Tasks Schema
+export const taskSchema = z.object({
+  title: z
+    .string()
+    .min(TASK_CONSTRAINTS.title.min, "Title is required.")
+    .max(TASK_CONSTRAINTS.title.max, "Title max length reached."),
+  description: z
+    .string()
+    .max(TASK_CONSTRAINTS.description.max, "Description max length reached.")
+    .default("")
+    .optional(),
+  estimatedPomodoros: z.coerce
+    .number<number>()
+    .min(
+      TASK_CONSTRAINTS.estimatedPomodoros.min,
+      "At least 1 pomodoro is required.",
+    ),
+  completedPomodoros: z.coerce.number<number>().min(0).default(0),
+  isComplete: z.boolean().default(false),
+  order: z.coerce.number<number>().default(0).optional(),
+  projectId: z.string().nullable().default(null).optional(),
+  note: z
+    .string()
+    .max(TASK_CONSTRAINTS.note.max, "Notes maximum length reached.")
+    .default("")
+    .optional(),
+  createdAt: z.iso.datetime().default(new Date().toString()).optional(),
+});
+
+export const HIDDEN_FIELDS = [
+  "completedPomodoros",
+  "isComplete",
+  "order",
+  "projectId",
+  "createdAt",
+] as const;
+
+export type Task = z.infer<typeof taskSchema>;

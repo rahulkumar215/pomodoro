@@ -4,6 +4,7 @@ import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
 import { Sounds } from "@/consts/consts";
 import { useSettings } from "@/context/SettingsContext";
+import formattedTimer from "@/lib/formattedTimer";
 
 function getTimer(activeTab: Tab, settings: Settings) {
   let timer: number;
@@ -71,6 +72,7 @@ export default function useTimer() {
       const timeLeft = e.data.timeLeft;
       setTimer(timeLeft);
       timerRef.current = timeLeft;
+      document.title = `${formattedTimer(timeLeft)} ${activeTab.message}}`;
 
       if (timeLeft > 0 && settings.reminder_time > 0) {
         if (
@@ -94,7 +96,12 @@ export default function useTimer() {
     };
 
     workerRef.current = worker;
-  }, [settings.reminder_time, settings.reminder_type, showNotification]);
+  }, [
+    settings.reminder_time,
+    settings.reminder_type,
+    showNotification,
+    activeTab.message,
+  ]);
 
   const startWorker = useCallback(() => {
     createWorker();

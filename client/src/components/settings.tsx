@@ -60,7 +60,7 @@ import {
 } from "./ui/dropdown-menu";
 import { useSettings } from "@/context/SettingsContext";
 
-const Settings = () => {
+const SettingsComp = () => {
   const { settings, updateSettings } = useSettings();
 
   const form = useForm<Settings>({
@@ -130,7 +130,7 @@ const Settings = () => {
                     name="pomodoro_time"
                     control={form.control}
                     render={({ field, fieldState }) => (
-                      <Field data-inavlid={fieldState.invalid}>
+                      <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="pomodoro-time">
                           Pomodoro
                         </FieldLabel>
@@ -150,7 +150,7 @@ const Settings = () => {
                     name="short_break_time"
                     control={form.control}
                     render={({ field, fieldState }) => (
-                      <Field data-inavlid={fieldState.invalid}>
+                      <Field data-invalid={fieldState.invalid}>
                         <FieldLabel htmlFor="short_break_time">
                           Short Break
                         </FieldLabel>
@@ -207,6 +207,9 @@ const Settings = () => {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
                       </Field>
                     )}
                   />
@@ -229,6 +232,9 @@ const Settings = () => {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
                       </Field>
                     )}
                   />
@@ -251,6 +257,9 @@ const Settings = () => {
                           className="w-12"
                           type="number"
                         />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
                       </Field>
                     )}
                   />
@@ -287,6 +296,9 @@ const Settings = () => {
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -312,6 +324,9 @@ const Settings = () => {
                         onCheckedChange={field.onChange}
                         aria-invalid={fieldState.invalid}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -363,6 +378,9 @@ const Settings = () => {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -388,6 +406,9 @@ const Settings = () => {
                         }}
                         step={1}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -411,6 +432,9 @@ const Settings = () => {
                         type="number"
                         className="w-12"
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -450,6 +474,9 @@ const Settings = () => {
                           ))}
                         </SelectContent>
                       </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -476,6 +503,9 @@ const Settings = () => {
                         min={0}
                         aria-invalid={fieldState.invalid}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -529,6 +559,9 @@ const Settings = () => {
                             </DropdownMenuRadioGroup>
                           </DropdownMenuContent>
                         </DropdownMenu>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
                       </Field>
                     );
                   }}
@@ -572,6 +605,9 @@ const Settings = () => {
                           </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -614,6 +650,9 @@ const Settings = () => {
                           </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -640,6 +679,9 @@ const Settings = () => {
                           <SelectItem value="12hr">12hr</SelectItem>
                         </SelectContent>
                       </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -658,6 +700,9 @@ const Settings = () => {
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
                     </Field>
                   )}
                 />
@@ -694,6 +739,9 @@ const Settings = () => {
                               <SelectItem value="Last">Last</SelectItem>
                             </SelectContent>
                           </Select>
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
                         </Field>
                       )}
                     />
@@ -708,6 +756,9 @@ const Settings = () => {
                             aria-invalid={fieldState.invalid}
                             type="number"
                           />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
                         </Field>
                       )}
                     />
@@ -718,7 +769,10 @@ const Settings = () => {
               </FieldSet>
             </FieldSet>
 
-            <Field orientation="horizontal">
+            <Field
+              orientation="horizontal"
+              className="mt-6 mb-4 flex justify-end items-center"
+            >
               <Button type="submit">Save changes</Button>
               <SheetClose asChild>
                 <Button variant="outline">Close</Button>
@@ -744,4 +798,4 @@ const PopOverComp = ({ text }) => (
   </Popover>
 );
 
-export default Settings;
+export default SettingsComp;
