@@ -37,7 +37,11 @@ export default function useTimer() {
   const [timer, setTimer] = useState<number>(getTimer(activeTab, settings));
   const timerRef = useRef(timer);
   const { showNotification } = useNotification();
-  const { play: playAlarm, setAudio: setAlarmAudio } = useSound();
+  const {
+    play: playAlarm,
+    setAudio: setAlarmAudio,
+    stop: stopAlarm,
+  } = useSound();
   const {
     play: playFocus,
     setAudio: setFocusAudio,
@@ -68,13 +72,29 @@ export default function useTimer() {
       setTimer(timeLeft);
       timerRef.current = timeLeft;
 
+      if (timeLeft > 0 && settings.reminder_time > 0) {
+        if (
+          settings.reminder_type === "Every" &&
+          timeLeft % (settings.reminder_time * 60 * 1000) === 0
+        ) {
+          // Every 1 min
+          showNotification(`${timeLeft / 60 / 1000} min left!`);
+        } else if (
+          settings.reminder_type === "Last" &&
+          timeLeft === settings.reminder_time * 60 * 1000
+        ) {
+          // Last 1 min
+          showNotification(`${settings.reminder_time} min left!`);
+        }
+      }
+
       if (timeLeft <= 0) {
         handleStopTimerRef.current();
       }
     };
 
     workerRef.current = worker;
-  }, []);
+  }, [settings.reminder_time, settings.reminder_type, showNotification]);
 
   const startWorker = useCallback(() => {
     createWorker();
@@ -106,12 +126,15 @@ export default function useTimer() {
       setTimer(newTimer);
       timerRef.current = newTimer;
       setStarted(false);
+      focusTabRef.current = value.type === "Pomodoro";
+      workerRef.current?.terminate();
       if (!auto) {
         enteredViaAutoTransition.current = false;
+        stopFocus();
+        stopAlarm();
       }
-      workerRef.current?.terminate();
     },
-    [settings],
+    [settings, stopAlarm, stopFocus],
   );
 
   const handleStopTimer = useCallback(() => {
@@ -154,7 +177,6 @@ export default function useTimer() {
       }
       enteredViaAutoTransition.current = true;
       handleChangeTab(TABS.Pomodoro);
-      focusTabRef.current = true;
 
       if (settings.auto_start_pomodoros) {
         setStarted(true);

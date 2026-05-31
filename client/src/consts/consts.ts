@@ -99,7 +99,7 @@ export const settingsSchema = z.object({
   hour_format: z.enum(["24hr", "12hr"]),
   dark_mode_when_running: z.boolean(),
   reminder_type: z.enum(["Every", "Last"]),
-  reminder_time: z.number().min(0),
+  reminder_time: z.coerce.number().min(0),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
