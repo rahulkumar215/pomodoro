@@ -17,6 +17,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  CircleCheckBigIcon,
   CirclePlusIcon,
   EllipsisVerticalIcon,
   EyeOffIcon,
@@ -54,12 +55,56 @@ import {
 } from "./ui/input-group";
 import { toast } from "sonner";
 import { renderTextLeft } from "@/lib/renderTextLeft";
-import { Item, ItemContent, ItemGroup, ItemHeader, ItemTitle } from "./ui/item";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from "./ui/item";
+import { cx } from "class-variance-authority";
 
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState<Task[] | []>([]);
+  const [tasks, setTasks] = useState<Task[] | []>([
+    {
+      title: "This is for console log 1.",
+      description: "",
+      estimatedPomodoros: 5,
+      completedPomodoros: 0,
+      isComplete: false,
+      order: 0,
+      projectId: null,
+      note: "",
+      createdAt: "Mon Jun 01 2026 22:20:42 GMT+0530 (India Standard Time)",
+    },
+    {
+      title: "This is for console log 2.",
+      description: "This is description.",
+      estimatedPomodoros: 5,
+      completedPomodoros: 0,
+      isComplete: false,
+      order: 0,
+      projectId: null,
+      note: "",
+      createdAt: "Mon Jun 01 2026 23:20:42 GMT+0530 (India Standard Time)",
+    },
+    {
+      title: "This is for console log 3.",
+      description: "This is description.",
+      estimatedPomodoros: 5,
+      completedPomodoros: 0,
+      isComplete: false,
+      order: 0,
+      projectId: null,
+      note: "And this is note.",
+      createdAt: "Mon Jun 01 2026 24:20:42 GMT+0530 (India Standard Time)",
+    },
+  ]);
 
   const form = useForm({
     resolver: zodResolver(taskSchema),
@@ -94,6 +139,10 @@ const Tasks = () => {
     setOpen(false);
     setAddNotes(false);
     form.reset();
+
+    setTimeout(() => {
+      setOpen(true);
+    }, 500);
   }
 
   function onError(errors: typeof form.formState.errors) {
@@ -150,9 +199,35 @@ const Tasks = () => {
           <ItemGroup>
             {tasks.map((task: Task) => (
               <Item key={task.createdAt} variant="outline">
+                <ItemActions>
+                  <Button variant="ghost" className="rounded-full">
+                    <CircleCheckBigIcon />
+                  </Button>
+                </ItemActions>
                 <ItemContent>
-                  <ItemTitle>{task.title}</ItemTitle>
+                  <ItemTitle
+                    className={cx("flex-1", task.isComplete && "line-through")}
+                  >
+                    {task.title}
+                  </ItemTitle>
+
+                  {task.description && (
+                    <ItemDescription>{task.description}</ItemDescription>
+                  )}
                 </ItemContent>
+                <ItemActions>
+                  <span>
+                    {task.completedPomodoros}/{task.estimatedPomodoros}
+                  </span>
+                  <Button variant="ghost" className="py-1 px-2 h-fit">
+                    <EllipsisVerticalIcon />
+                  </Button>
+                </ItemActions>
+                {task.note && (
+                  <ItemFooter className="text-left p-2  border rounded-md bg-yellow-300 text-black">
+                    {task.note}
+                  </ItemFooter>
+                )}
               </Item>
             ))}
           </ItemGroup>
