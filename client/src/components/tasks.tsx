@@ -62,49 +62,106 @@ import {
   ItemDescription,
   ItemFooter,
   ItemGroup,
-  ItemHeader,
   ItemTitle,
 } from "./ui/item";
 import { cx } from "class-variance-authority";
+import { DragDropProvider } from "@dnd-kit/react";
+import { isSortable, useSortable } from "@dnd-kit/react/sortable";
+import { useSettings } from "@/context/SettingsContext";
+
+const ItemComp = ({ task, index }: { task: Task; index: number }) => {
+  const {
+    createdAt,
+    order,
+    title,
+    description,
+    estimatedPomodoros,
+    completedPomodoros,
+    isComplete,
+    note,
+  } = task;
+  const [element, setElement] = useState<Element | null>(null);
+  useSortable({ id: createdAt || "", index, element });
+
+  return (
+    <Item ref={setElement} key={createdAt} variant="outline">
+      <ItemActions>
+        <Button variant="ghost" className="rounded-full">
+          <CircleCheckBigIcon />
+        </Button>
+      </ItemActions>
+      <ItemContent>
+        <ItemTitle className={cx("flex-1", isComplete && "line-through")}>
+          {title}
+        </ItemTitle>
+
+        {description && <ItemDescription>{description}</ItemDescription>}
+      </ItemContent>
+      <ItemActions>
+        <span>
+          {completedPomodoros}/{estimatedPomodoros}
+        </span>
+        <Button variant="ghost" className="py-1 px-2 h-fit">
+          <EllipsisVerticalIcon />
+        </Button>
+      </ItemActions>
+      {note && (
+        <ItemFooter className="text-left p-2  border rounded-md bg-yellow-300 text-black">
+          {note}
+        </ItemFooter>
+      )}
+    </Item>
+  );
+};
 
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState<Task[] | []>([
+  const [tasks, setTasks] = useState<Task[]>([
     {
       title: "This is for console log 1.",
       description: "",
       estimatedPomodoros: 5,
       completedPomodoros: 0,
       isComplete: false,
-      order: 0,
+      order: 1,
       projectId: null,
       note: "",
       createdAt: "Mon Jun 01 2026 22:20:42 GMT+0530 (India Standard Time)",
-    },
-    {
-      title: "This is for console log 2.",
-      description: "This is description.",
-      estimatedPomodoros: 5,
-      completedPomodoros: 0,
-      isComplete: false,
-      order: 0,
-      projectId: null,
-      note: "",
-      createdAt: "Mon Jun 01 2026 23:20:42 GMT+0530 (India Standard Time)",
-    },
-    {
-      title: "This is for console log 3.",
-      description: "This is description.",
-      estimatedPomodoros: 5,
-      completedPomodoros: 0,
-      isComplete: false,
-      order: 0,
-      projectId: null,
-      note: "And this is note.",
-      createdAt: "Mon Jun 01 2026 24:20:42 GMT+0530 (India Standard Time)",
-    },
+    }
   ]);
+  const { settings } = useSettings();
+  const totalEstimatedPomodoros = tasks.reduce((acc, cur) => {
+    return acc + cur.estimatedPomodoros;
+  }, 0);
+  const totalCompletedPomodoros = tasks.reduce((acc, cur) => {
+    return acc + cur.completedPomodoros;
+  }, 0);
+
+  const getCompletionTime = () => {
+    const pomodoroLeft = totalEstimatedPomodoros - totalCompletedPomodoros;
+    const longBreakCount = (pomodoroLeft - 1) / settings.long_break_interval;
+    const shortBreakCount = pomodoroLeft - 1 - longBreakCount;
+
+    const longBreakMins = longBreakCount * settings.long_break_time;
+    const shortBreakMins = shortBreakCount * settings.short_break_time;
+    const pomodoroMins = pomodoroLeft * settings.pomodoro_time;
+
+    const totalTime = pomodoroMins + shortBreakMins + longBreakMins;
+
+    const now = new Date().getTime();
+
+    return `${new Date(now + totalTime * 60 * 1000).toLocaleTimeString(
+      "en-IN",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      },
+    )} (${(totalTime / 60).toFixed(1)}h)`;
+  };
+
+  const time = getCompletionTime();
 
   const form = useForm({
     resolver: zodResolver(taskSchema),
@@ -196,41 +253,43 @@ const Tasks = () => {
       <Separator />
       <CardContent className="flex flex-col gap-4">
         {tasks.length > 0 && (
-          <ItemGroup>
-            {tasks.map((task: Task) => (
-              <Item key={task.createdAt} variant="outline">
-                <ItemActions>
-                  <Button variant="ghost" className="rounded-full">
-                    <CircleCheckBigIcon />
-                  </Button>
-                </ItemActions>
-                <ItemContent>
-                  <ItemTitle
-                    className={cx("flex-1", task.isComplete && "line-through")}
-                  >
-                    {task.title}
-                  </ItemTitle>
+          <>
+            <DragDropProvider
+              onDragEnd={(event) => {
+                if (event.canceled) return;
 
-                  {task.description && (
-                    <ItemDescription>{task.description}</ItemDescription>
-                  )}
-                </ItemContent>
-                <ItemActions>
-                  <span>
-                    {task.completedPomodoros}/{task.estimatedPomodoros}
-                  </span>
-                  <Button variant="ghost" className="py-1 px-2 h-fit">
-                    <EllipsisVerticalIcon />
-                  </Button>
-                </ItemActions>
-                {task.note && (
-                  <ItemFooter className="text-left p-2  border rounded-md bg-yellow-300 text-black">
-                    {task.note}
-                  </ItemFooter>
-                )}
-              </Item>
-            ))}
-          </ItemGroup>
+                const { source } = event.operation;
+
+                if (isSortable(source)) {
+                  const { initialIndex, index } = source;
+
+                  if (initialIndex !== index) {
+                    const newTasks = [...tasks];
+                    const [removed] = newTasks.splice(initialIndex, 1);
+                    newTasks.splice(index, 0, removed);
+                    setTasks(newTasks);
+                  }
+                }
+              }}
+            >
+              <ItemGroup>
+                {tasks.map((task: Task, index) => (
+                  <ItemComp key={task.createdAt} task={task} index={index} />
+                ))}
+              </ItemGroup>
+            </DragDropProvider>
+
+            <div className="my-4 border p-2 rounded-md grid grid-cols-2 gap-2 items-center justify-center">
+              <div>
+                <p>
+                  Pomos: {totalCompletedPomodoros}/{totalEstimatedPomodoros}
+                </p>
+              </div>
+              <div>
+                <p>Finish At: {time}</p>
+              </div>
+            </div>
+          </>
         )}
 
         <Dialog
