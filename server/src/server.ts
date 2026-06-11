@@ -1,17 +1,25 @@
-import express from "express";
-import cors from "cors";
+import express, { Request, Response } from "express";
 import morgan from "morgan";
-import { prisma } from "./lib/prisma";
+import cors from "cors";
+import config from "./config";
+import v1 from "./routes/v1";
+import errorHandler from "./middleware/error-handler";
 
-const app = express();
+export const createServer = () => {
+  const app = express();
+  app
+    .disable("x-powered-by")
+    .use(morgan("dev"))
+    .use(express.urlencoded({ extended: true }))
+    .use(express.json())
+    .use(cors());
 
-app.use(cors());
-app.use(morgan("tiny"));
-app.use(express.json());
+  app.get("/health", (req: Request, res: Response) => {
+    res.json({ ok: true, environment: config.env });
+  });
 
-app.get("/users", async (req, res) => {
-  const users = await prisma.users.findMany();
-  res.json(users);
-});
+  app.use("/v1", v1);
 
-export default app;
+  app.use(errorHandler);
+  return app;
+};
