@@ -18,7 +18,7 @@ export const createServer = () => {
     res.json({ ok: true, environment: config.env });
   });
 
-  app.use("/v1", v1);
+  app.use("/api/v1", v1);
 
   app.use(errorHandler);
   return app;
