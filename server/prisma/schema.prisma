@@ -13,21 +13,119 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  photo String?
-  google_id String?
-  auth_provider Auth_Proiders @default(EMAIL)
-  is_verified Boolean @default(false)
-  created_at DateTime @default(now())
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String?
+  avatar_url    String?
+  google_id     String?        @unique
+  auth_provider Auth_Providers @default(email)
+  is_verified   Boolean        @default(false)
+  projects      Project[]
+  tasks         Task[]
+  sessions      Session[]
+  settings      Settings?
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @default(now()) @updatedAt
 
   @@map("user")
 }
 
+model Project {
+  id         String   @id @default(uuid())
+  name       String
+  color      String
+  user       User     @relation(fields: [user_id], references: [id])
+  tasks      Task[]
+  user_id    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-enum Auth_Proiders {
-  EMAIL
-  GOOGLE
+  @@map("project")
+}
+
+model Task {
+  id                  String    @id @default(uuid())
+  name                String
+  note                String?
+  estimated_pomodoros Int       @default(1)
+  is_complete         Boolean   @default(false)
+  order               Int       @default(0)
+  project             Project?  @relation(fields: [project_id], references: [id])
+  sessions            Session[]
+  project_id          String?
+  user                User      @relation(fields: [user_id], references: [id])
+  user_id             String
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  deleted_at          DateTime?
+
+  @@map("task")
+}
+
+model Session {
+  id         String        @id @default(uuid())
+  type       Session_Types
+  start_time DateTime
+  end_time   DateTime
+  minutes    Int
+  task       Task?         @relation(fields: [task_id], references: [id])
+  task_id    String?
+  user       User          @relation(fields: [user_id], references: [id])
+  user_id    String
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
+
+  @@map("session")
+}
+
+model Settings {
+  id                     String         @id @default(uuid())
+  user                   User           @relation(fields: [user_id], references: [id])
+  user_id                String         @unique
+  pomodoro_duration      Int
+  short_break_duration   Int
+  long_break_duration    Int
+  long_break_interval    Int
+  auto_start_breaks      Boolean        @default(false)
+  auto_start_pomodoros   Boolean        @default(false)
+  auto_check_tasks       Boolean        @default(false)
+  check_to_bottom        Boolean        @default(false)
+  alarm_sound            String
+  alarm_sound_repeat     Int
+  alarm_sound_volume     Int
+  focus_sound            String
+  focus_sound_volume     Int
+  pomodoro_theme         String
+  short_break_theme      String
+  long_break_theme       String
+  hour_format            Hour_Formats
+  dark_mode_when_running Boolean        @default(false)
+  reminder_type          Reminder_Types
+  reminder_time          Int
+  created_at             DateTime       @default(now())
+  updated_at             DateTime       @updatedAt
+
+  @@map("settings")
+}
+
+enum Auth_Providers {
+  email
+  google
+}
+
+enum Session_Types {
+  pomodoro
+  short_break
+  long_break
+}
+
+enum Hour_Formats {
+  h24
+  h12
+}
+
+enum Reminder_Types {
+  every
+  last
 }
