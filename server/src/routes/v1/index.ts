@@ -1,12 +1,14 @@
 import express, { Router, Response, Request } from "express";
-import tasks from "./tasks";
-import projects from "./projects";
 import authRoutes from "./auth";
+import taskRoutes from "./tasks";
+import projectRoutes from "./projects";
+import sessionRoutes from "./sessions";
 
 const v1: Router = express.Router();
 
-v1.use("/tasks", tasks);
-v1.use("/projects", projects);
 v1.use("/auth", authRoutes);
+v1.use("/tasks", taskRoutes);
+v1.use("/projects", projectRoutes);
+v1.use("/sessions", sessionRoutes);
 
 export default v1;

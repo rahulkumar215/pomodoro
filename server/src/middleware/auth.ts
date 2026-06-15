@@ -3,8 +3,15 @@ import jwt, { JsonWebTokenError, Jwt } from "jsonwebtoken";
 import config from "../config";
 import { prisma } from "../db";
 
-export async function auth(req: Request, res: Response, next: NextFunction) {
-  const token = req.headers.authorization;
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const header = req.headers.authorization;
+  if (!header) return res.status(401).json({ error: "No token" });
+
+  const token = header.split(" ")[1];
 
   try {
     if (token) {
@@ -17,6 +24,13 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
       const user = await prisma.user.findFirst({
         where: {
           email: decoded.email,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          avatar_url: true,
+          is_verified: true,
         },
       });
 

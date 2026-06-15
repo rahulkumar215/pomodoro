@@ -67,7 +67,7 @@ export const me = (req: Request, res: Response) => {
     res.send({
       name: user.name,
       email: user.email,
-      photo: user.photo,
+      avatarUrl: user.avatar_url,
       isVerified: user.is_verified,
     });
   } else {

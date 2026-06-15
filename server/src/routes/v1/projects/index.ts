@@ -1,10 +1,15 @@
 import express, { Router } from "express";
-import { listProjects, getProject, listProjectTasks } from "./controller";
+import * as projectController from "./controller";
+import { authMiddleware } from "@/middleware/auth";
 
 const projects: Router = express.Router();
 
-projects.get("/", listProjects);
-projects.get("/:id", getProject);
-projects.get("/:id/tasks", listProjectTasks);
+projects.use(authMiddleware);
+
+projects.post("/", projectController.createProject);
+projects.get("/", projectController.listProjects);
+projects.get("/:id", projectController.getProject);
+projects.patch("/:id", projectController.updateProject);
+projects.get("/:id/tasks", projectController.listProjectTasks);
 
 export default projects;

@@ -51,7 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Project: 'Project',
+  Task: 'Task',
+  Session: 'Session',
+  Settings: 'Settings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,14 +79,89 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  photo: 'photo',
+  avatar_url: 'avatar_url',
   google_id: 'google_id',
   auth_provider: 'auth_provider',
   is_verified: 'is_verified',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  color: 'color',
+  user_id: 'user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const TaskScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  note: 'note',
+  estimated_pomodoros: 'estimated_pomodoros',
+  is_complete: 'is_complete',
+  order: 'order',
+  project_id: 'project_id',
+  user_id: 'user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+} as const
+
+export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  start_time: 'start_time',
+  end_time: 'end_time',
+  minutes: 'minutes',
+  task_id: 'task_id',
+  user_id: 'user_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const SettingsScalarFieldEnum = {
+  id: 'id',
+  user_id: 'user_id',
+  pomodoro_duration: 'pomodoro_duration',
+  short_break_duration: 'short_break_duration',
+  long_break_duration: 'long_break_duration',
+  long_break_interval: 'long_break_interval',
+  auto_start_breaks: 'auto_start_breaks',
+  auto_start_pomodoros: 'auto_start_pomodoros',
+  auto_check_tasks: 'auto_check_tasks',
+  check_to_bottom: 'check_to_bottom',
+  alarm_sound: 'alarm_sound',
+  alarm_sound_repeat: 'alarm_sound_repeat',
+  alarm_sound_volume: 'alarm_sound_volume',
+  focus_sound: 'focus_sound',
+  focus_sound_volume: 'focus_sound_volume',
+  pomodoro_theme: 'pomodoro_theme',
+  short_break_theme: 'short_break_theme',
+  long_break_theme: 'long_break_theme',
+  hour_format: 'hour_format',
+  dark_mode_when_running: 'dark_mode_when_running',
+  reminder_type: 'reminder_type',
+  reminder_time: 'reminder_time',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -9,9 +9,34 @@
 * 🟢 You can import this file directly.
 */
 
-export const Auth_Proiders = {
-  EMAIL: 'EMAIL',
-  GOOGLE: 'GOOGLE'
+export const Auth_Providers = {
+  email: 'email',
+  google: 'google'
 } as const
 
-export type Auth_Proiders = (typeof Auth_Proiders)[keyof typeof Auth_Proiders]
+export type Auth_Providers = (typeof Auth_Providers)[keyof typeof Auth_Providers]
+
+
+export const Session_Types = {
+  pomodoro: 'pomodoro',
+  short_break: 'short_break',
+  long_break: 'long_break'
+} as const
+
+export type Session_Types = (typeof Session_Types)[keyof typeof Session_Types]
+
+
+export const Hour_Formats = {
+  h24: 'h24',
+  h12: 'h12'
+} as const
+
+export type Hour_Formats = (typeof Hour_Formats)[keyof typeof Hour_Formats]
+
+
+export const Reminder_Types = {
+  every: 'every',
+  last: 'last'
+} as const
+
+export type Reminder_Types = (typeof Reminder_Types)[keyof typeof Reminder_Types]
