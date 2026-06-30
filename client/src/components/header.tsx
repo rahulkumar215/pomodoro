@@ -1,9 +1,17 @@
-import { ChartColumn, ClockCheck } from "lucide-react";
+import { ChartColumn, CircleUserIcon, ClockCheck } from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Settings from "./settings";
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import type { User } from "@/consts/consts";
 
 const Header = () => {
+  const token = localStorage.getItem("token");
+  const [user, setUser] = useState<User | null>(
+    JSON.parse(localStorage.getItem("user") as string),
+  );
+
   return (
     <div className="flex items-center justify-between">
       <h2 className="flex items-center gap-x-2">
@@ -21,10 +29,19 @@ const Header = () => {
 
         <Settings />
 
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        {token ? (
+          <Avatar>
+            <AvatarImage src={user?.avatarUrl} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        ) : (
+          <Button asChild>
+            <Link to="/signup">
+              <CircleUserIcon />
+              Sign In
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );

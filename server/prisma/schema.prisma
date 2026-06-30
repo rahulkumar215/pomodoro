@@ -21,6 +21,12 @@ model User {
   google_id     String?        @unique
   auth_provider Auth_Providers @default(email)
   is_verified   Boolean        @default(false)
+  is_premium    Boolean        @default(false)
+  razorpay_customer_id String?
+  plan_id String?
+  subscription_id String?
+  premium_expires_at DateTime?
+  autorenew Boolean @default(false)
   projects      Project[]
   tasks         Task[]
   sessions      Session[]
@@ -107,6 +113,25 @@ model Settings {
   updated_at             DateTime       @updatedAt
 
   @@map("settings")
+}
+
+model plan {
+  id String @unique
+  name String
+  price Int
+  billingType Billing_Type
+  interval Interval
+}
+
+enum Interval {
+  month
+  year
+  infinite
+}
+
+enum Billing_Type {
+  recurring
+  one_time
 }
 
 enum Auth_Providers {

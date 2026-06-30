@@ -42,3 +42,8 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type Settings = Prisma.SettingsModel
+/**
+ * Model plan
+ * 
+ */
+export type plan = Prisma.planModel

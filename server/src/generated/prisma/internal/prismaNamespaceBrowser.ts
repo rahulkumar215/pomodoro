@@ -55,7 +55,8 @@ export const ModelName = {
   Project: 'Project',
   Task: 'Task',
   Session: 'Session',
-  Settings: 'Settings'
+  Settings: 'Settings',
+  plan: 'plan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,6 +84,12 @@ export const UserScalarFieldEnum = {
   google_id: 'google_id',
   auth_provider: 'auth_provider',
   is_verified: 'is_verified',
+  is_premium: 'is_premium',
+  razorpay_customer_id: 'razorpay_customer_id',
+  plan_id: 'plan_id',
+  subscription_id: 'subscription_id',
+  premium_expires_at: 'premium_expires_at',
+  autorenew: 'autorenew',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -162,6 +169,17 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  billingType: 'billingType',
+  interval: 'interval'
+} as const
+
+export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
 
 
 export const SortOrder = {

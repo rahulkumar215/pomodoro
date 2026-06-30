@@ -9,6 +9,23 @@
 * 🟢 You can import this file directly.
 */
 
+export const Interval = {
+  month: 'month',
+  year: 'year',
+  infinite: 'infinite'
+} as const
+
+export type Interval = (typeof Interval)[keyof typeof Interval]
+
+
+export const Billing_Type = {
+  recurring: 'recurring',
+  one_time: 'one_time'
+} as const
+
+export type Billing_Type = (typeof Billing_Type)[keyof typeof Billing_Type]
+
+
 export const Auth_Providers = {
   email: 'email',
   google: 'google'

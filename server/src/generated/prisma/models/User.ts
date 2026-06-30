@@ -33,6 +33,12 @@ export type UserMinAggregateOutputType = {
   google_id: string | null
   auth_provider: $Enums.Auth_Providers | null
   is_verified: boolean | null
+  is_premium: boolean | null
+  razorpay_customer_id: string | null
+  plan_id: string | null
+  subscription_id: string | null
+  premium_expires_at: Date | null
+  autorenew: boolean | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -46,6 +52,12 @@ export type UserMaxAggregateOutputType = {
   google_id: string | null
   auth_provider: $Enums.Auth_Providers | null
   is_verified: boolean | null
+  is_premium: boolean | null
+  razorpay_customer_id: string | null
+  plan_id: string | null
+  subscription_id: string | null
+  premium_expires_at: Date | null
+  autorenew: boolean | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -59,6 +71,12 @@ export type UserCountAggregateOutputType = {
   google_id: number
   auth_provider: number
   is_verified: number
+  is_premium: number
+  razorpay_customer_id: number
+  plan_id: number
+  subscription_id: number
+  premium_expires_at: number
+  autorenew: number
   created_at: number
   updated_at: number
   _all: number
@@ -74,6 +92,12 @@ export type UserMinAggregateInputType = {
   google_id?: true
   auth_provider?: true
   is_verified?: true
+  is_premium?: true
+  razorpay_customer_id?: true
+  plan_id?: true
+  subscription_id?: true
+  premium_expires_at?: true
+  autorenew?: true
   created_at?: true
   updated_at?: true
 }
@@ -87,6 +111,12 @@ export type UserMaxAggregateInputType = {
   google_id?: true
   auth_provider?: true
   is_verified?: true
+  is_premium?: true
+  razorpay_customer_id?: true
+  plan_id?: true
+  subscription_id?: true
+  premium_expires_at?: true
+  autorenew?: true
   created_at?: true
   updated_at?: true
 }
@@ -100,6 +130,12 @@ export type UserCountAggregateInputType = {
   google_id?: true
   auth_provider?: true
   is_verified?: true
+  is_premium?: true
+  razorpay_customer_id?: true
+  plan_id?: true
+  subscription_id?: true
+  premium_expires_at?: true
+  autorenew?: true
   created_at?: true
   updated_at?: true
   _all?: true
@@ -186,6 +222,12 @@ export type UserGroupByOutputType = {
   google_id: string | null
   auth_provider: $Enums.Auth_Providers
   is_verified: boolean
+  is_premium: boolean
+  razorpay_customer_id: string | null
+  plan_id: string | null
+  subscription_id: string | null
+  premium_expires_at: Date | null
+  autorenew: boolean
   created_at: Date
   updated_at: Date
   _count: UserCountAggregateOutputType | null
@@ -220,6 +262,12 @@ export type UserWhereInput = {
   google_id?: Prisma.StringNullableFilter<"User"> | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFilter<"User"> | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFilter<"User"> | boolean
+  is_premium?: Prisma.BoolFilter<"User"> | boolean
+  razorpay_customer_id?: Prisma.StringNullableFilter<"User"> | string | null
+  plan_id?: Prisma.StringNullableFilter<"User"> | string | null
+  subscription_id?: Prisma.StringNullableFilter<"User"> | string | null
+  premium_expires_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  autorenew?: Prisma.BoolFilter<"User"> | boolean
   created_at?: Prisma.DateTimeFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"User"> | Date | string
   projects?: Prisma.ProjectListRelationFilter
@@ -237,6 +285,12 @@ export type UserOrderByWithRelationInput = {
   google_id?: Prisma.SortOrderInput | Prisma.SortOrder
   auth_provider?: Prisma.SortOrder
   is_verified?: Prisma.SortOrder
+  is_premium?: Prisma.SortOrder
+  razorpay_customer_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  plan_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscription_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  premium_expires_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  autorenew?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   projects?: Prisma.ProjectOrderByRelationAggregateInput
@@ -257,6 +311,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   avatar_url?: Prisma.StringNullableFilter<"User"> | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFilter<"User"> | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFilter<"User"> | boolean
+  is_premium?: Prisma.BoolFilter<"User"> | boolean
+  razorpay_customer_id?: Prisma.StringNullableFilter<"User"> | string | null
+  plan_id?: Prisma.StringNullableFilter<"User"> | string | null
+  subscription_id?: Prisma.StringNullableFilter<"User"> | string | null
+  premium_expires_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  autorenew?: Prisma.BoolFilter<"User"> | boolean
   created_at?: Prisma.DateTimeFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"User"> | Date | string
   projects?: Prisma.ProjectListRelationFilter
@@ -274,6 +334,12 @@ export type UserOrderByWithAggregationInput = {
   google_id?: Prisma.SortOrderInput | Prisma.SortOrder
   auth_provider?: Prisma.SortOrder
   is_verified?: Prisma.SortOrder
+  is_premium?: Prisma.SortOrder
+  razorpay_customer_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  plan_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscription_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  premium_expires_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  autorenew?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -293,6 +359,12 @@ export type UserScalarWhereWithAggregatesInput = {
   google_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersWithAggregatesFilter<"User"> | $Enums.Auth_Providers
   is_verified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  is_premium?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  razorpay_customer_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  plan_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  subscription_id?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  premium_expires_at?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  autorenew?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   created_at?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -306,6 +378,12 @@ export type UserCreateInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -323,6 +401,12 @@ export type UserUncheckedCreateInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -340,6 +424,12 @@ export type UserUpdateInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -357,6 +447,12 @@ export type UserUncheckedUpdateInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -374,6 +470,12 @@ export type UserCreateManyInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -387,6 +489,12 @@ export type UserUpdateManyMutationInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -400,6 +508,12 @@ export type UserUncheckedUpdateManyInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,6 +527,12 @@ export type UserCountOrderByAggregateInput = {
   google_id?: Prisma.SortOrder
   auth_provider?: Prisma.SortOrder
   is_verified?: Prisma.SortOrder
+  is_premium?: Prisma.SortOrder
+  razorpay_customer_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
+  subscription_id?: Prisma.SortOrder
+  premium_expires_at?: Prisma.SortOrder
+  autorenew?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -426,6 +546,12 @@ export type UserMaxOrderByAggregateInput = {
   google_id?: Prisma.SortOrder
   auth_provider?: Prisma.SortOrder
   is_verified?: Prisma.SortOrder
+  is_premium?: Prisma.SortOrder
+  razorpay_customer_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
+  subscription_id?: Prisma.SortOrder
+  premium_expires_at?: Prisma.SortOrder
+  autorenew?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -439,6 +565,12 @@ export type UserMinOrderByAggregateInput = {
   google_id?: Prisma.SortOrder
   auth_provider?: Prisma.SortOrder
   is_verified?: Prisma.SortOrder
+  is_premium?: Prisma.SortOrder
+  razorpay_customer_id?: Prisma.SortOrder
+  plan_id?: Prisma.SortOrder
+  subscription_id?: Prisma.SortOrder
+  premium_expires_at?: Prisma.SortOrder
+  autorenew?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -462,6 +594,10 @@ export type EnumAuth_ProvidersFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -533,6 +669,12 @@ export type UserCreateWithoutProjectsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   tasks?: Prisma.TaskCreateNestedManyWithoutUserInput
@@ -549,6 +691,12 @@ export type UserUncheckedCreateWithoutProjectsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutUserInput
@@ -581,6 +729,12 @@ export type UserUpdateWithoutProjectsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUpdateManyWithoutUserNestedInput
@@ -597,6 +751,12 @@ export type UserUncheckedUpdateWithoutProjectsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutUserNestedInput
@@ -613,6 +773,12 @@ export type UserCreateWithoutTasksInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -629,6 +795,12 @@ export type UserUncheckedCreateWithoutTasksInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -661,6 +833,12 @@ export type UserUpdateWithoutTasksInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -677,6 +855,12 @@ export type UserUncheckedUpdateWithoutTasksInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -693,6 +877,12 @@ export type UserCreateWithoutSessionsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -709,6 +899,12 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -741,6 +937,12 @@ export type UserUpdateWithoutSessionsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -757,6 +959,12 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -773,6 +981,12 @@ export type UserCreateWithoutSettingsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectCreateNestedManyWithoutUserInput
@@ -789,6 +1003,12 @@ export type UserUncheckedCreateWithoutSettingsInput = {
   google_id?: string | null
   auth_provider?: $Enums.Auth_Providers
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: string | null
+  plan_id?: string | null
+  subscription_id?: string | null
+  premium_expires_at?: Date | string | null
+  autorenew?: boolean
   created_at?: Date | string
   updated_at?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutUserInput
@@ -821,6 +1041,12 @@ export type UserUpdateWithoutSettingsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUpdateManyWithoutUserNestedInput
@@ -837,6 +1063,12 @@ export type UserUncheckedUpdateWithoutSettingsInput = {
   google_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth_provider?: Prisma.EnumAuth_ProvidersFieldUpdateOperationsInput | $Enums.Auth_Providers
   is_verified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  is_premium?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  razorpay_customer_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  plan_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscription_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  premium_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  autorenew?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutUserNestedInput
@@ -902,6 +1134,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   google_id?: boolean
   auth_provider?: boolean
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: boolean
+  plan_id?: boolean
+  subscription_id?: boolean
+  premium_expires_at?: boolean
+  autorenew?: boolean
   created_at?: boolean
   updated_at?: boolean
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
@@ -920,6 +1158,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   google_id?: boolean
   auth_provider?: boolean
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: boolean
+  plan_id?: boolean
+  subscription_id?: boolean
+  premium_expires_at?: boolean
+  autorenew?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["user"]>
@@ -933,6 +1177,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   google_id?: boolean
   auth_provider?: boolean
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: boolean
+  plan_id?: boolean
+  subscription_id?: boolean
+  premium_expires_at?: boolean
+  autorenew?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["user"]>
@@ -946,11 +1196,17 @@ export type UserSelectScalar = {
   google_id?: boolean
   auth_provider?: boolean
   is_verified?: boolean
+  is_premium?: boolean
+  razorpay_customer_id?: boolean
+  plan_id?: boolean
+  subscription_id?: boolean
+  premium_expires_at?: boolean
+  autorenew?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "avatar_url" | "google_id" | "auth_provider" | "is_verified" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "avatar_url" | "google_id" | "auth_provider" | "is_verified" | "is_premium" | "razorpay_customer_id" | "plan_id" | "subscription_id" | "premium_expires_at" | "autorenew" | "created_at" | "updated_at", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projects?: boolean | Prisma.User$projectsArgs<ExtArgs>
   tasks?: boolean | Prisma.User$tasksArgs<ExtArgs>
@@ -978,6 +1234,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     google_id: string | null
     auth_provider: $Enums.Auth_Providers
     is_verified: boolean
+    is_premium: boolean
+    razorpay_customer_id: string | null
+    plan_id: string | null
+    subscription_id: string | null
+    premium_expires_at: Date | null
+    autorenew: boolean
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["user"]>
@@ -1415,6 +1677,12 @@ export interface UserFieldRefs {
   readonly google_id: Prisma.FieldRef<"User", 'String'>
   readonly auth_provider: Prisma.FieldRef<"User", 'Auth_Providers'>
   readonly is_verified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly is_premium: Prisma.FieldRef<"User", 'Boolean'>
+  readonly razorpay_customer_id: Prisma.FieldRef<"User", 'String'>
+  readonly plan_id: Prisma.FieldRef<"User", 'String'>
+  readonly subscription_id: Prisma.FieldRef<"User", 'String'>
+  readonly premium_expires_at: Prisma.FieldRef<"User", 'DateTime'>
+  readonly autorenew: Prisma.FieldRef<"User", 'Boolean'>
   readonly created_at: Prisma.FieldRef<"User", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"User", 'DateTime'>
 }

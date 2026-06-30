@@ -1,62 +1,95 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { prisma } from "@/db";
 import config from "@/config";
 import jwt from "jsonwebtoken";
+import { ValidationError } from "@/errors";
+import { Prisma } from "@/generated/prisma/client";
 
-export const signup = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { email, password, confirmPassword } = req.body;
 
-  const hasedPassword = await bcrypt.hash(password, 10);
+  if (confirmPassword !== password) {
+    throw new ValidationError("Passwords do not match");
+  }
 
-  const user = await prisma.user.create({
-    data: {
-      name: "Pomodoro User",
-      email: email,
-      password: hasedPassword,
-    },
-  });
+  try {
+    const hasedPassword = await bcrypt.hash(password, 10);
 
-  res.json({
-    message: "You are signed up!",
-    data: {
-      user: user,
-    },
-  });
+    await prisma.user.create({
+      data: {
+        name: "Pomodoro User",
+        email: email,
+        password: hasedPassword,
+      },
+    });
+
+    res.status(200).json({
+      message: "You are signed up!",
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      throw new ValidationError("User already exists.");
+    }
+
+    throw error;
+  }
 };
 
 export const signin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await prisma.user.findFirst({
-    where: {
-      email: email,
-    },
-  });
-
-  if (!user) {
-    res.status(400).json({
-      message: "User does not exist.",
-    });
-    return;
-  }
-
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
-  if (passwordMatch) {
-    const token = jwt.sign(
-      {
-        email: user.email,
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        email: email,
       },
-      config.jwt_secret,
-      {
-        expiresIn: "24h",
+      select: {
+        name: true,
+        avatar_url: true,
+        password: true,
+        email: true,
       },
-    );
-
-    res.send({
-      token,
     });
+
+    if (!user) {
+      res.status(400).json({
+        message: "User does not exist.",
+      });
+      return;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (passwordMatch) {
+      const token = jwt.sign(
+        {
+          email: user.email,
+        },
+        config.jwt_secret,
+        {
+          expiresIn: "24h",
+        },
+      );
+
+      res.status(200).json({
+        token,
+        user: {
+          name: user.name,
+          email: user.email,
+          avatarUrl: user.avatar_url,
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 

@@ -388,7 +388,8 @@ export const ModelName = {
   Project: 'Project',
   Task: 'Task',
   Session: 'Session',
-  Settings: 'Settings'
+  Settings: 'Settings',
+  plan: 'plan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +405,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "project" | "task" | "session" | "settings"
+    modelProps: "user" | "project" | "task" | "session" | "settings" | "plan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +779,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    plan: {
+      payload: Prisma.$planPayload<ExtArgs>
+      fields: Prisma.planFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.planFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.planFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        findFirst: {
+          args: Prisma.planFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.planFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        findMany: {
+          args: Prisma.planFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>[]
+        }
+        create: {
+          args: Prisma.planCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        createMany: {
+          args: Prisma.planCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.planCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>[]
+        }
+        delete: {
+          args: Prisma.planDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        update: {
+          args: Prisma.planUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        deleteMany: {
+          args: Prisma.planDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.planUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.planUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>[]
+        }
+        upsert: {
+          args: Prisma.planUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$planPayload>
+        }
+        aggregate: {
+          args: Prisma.PlanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlan>
+        }
+        groupBy: {
+          args: Prisma.planGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.planCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlanCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -826,6 +901,12 @@ export const UserScalarFieldEnum = {
   google_id: 'google_id',
   auth_provider: 'auth_provider',
   is_verified: 'is_verified',
+  is_premium: 'is_premium',
+  razorpay_customer_id: 'razorpay_customer_id',
+  plan_id: 'plan_id',
+  subscription_id: 'subscription_id',
+  premium_expires_at: 'premium_expires_at',
+  autorenew: 'autorenew',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -905,6 +986,17 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  billingType: 'billingType',
+  interval: 'interval'
+} as const
+
+export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1043,6 +1135,34 @@ export type ListEnumReminder_TypesFieldRefInput<$PrismaModel> = FieldRefInputTyp
 
 
 /**
+ * Reference to a field of type 'Billing_Type'
+ */
+export type EnumBilling_TypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Billing_Type'>
+    
+
+
+/**
+ * Reference to a field of type 'Billing_Type[]'
+ */
+export type ListEnumBilling_TypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Billing_Type[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Interval'
+ */
+export type EnumIntervalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Interval'>
+    
+
+
+/**
+ * Reference to a field of type 'Interval[]'
+ */
+export type ListEnumIntervalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Interval[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1170,6 +1290,7 @@ export type GlobalOmitConfig = {
   task?: Prisma.TaskOmit
   session?: Prisma.SessionOmit
   settings?: Prisma.SettingsOmit
+  plan?: Prisma.planOmit
 }
 
 /* Types for Logging */
