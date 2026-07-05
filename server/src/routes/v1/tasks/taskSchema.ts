@@ -3,6 +3,7 @@ import z from "zod";
 export const TASK_CONSTRAINTS = {
   name: { min: 1, max: 120 },
   estimatedPomodoros: { min: 1 },
+  completedPomodoros: { min: 0 },
   note: { max: 120 },
 } as const;
 
@@ -18,6 +19,9 @@ const taskShape = {
       TASK_CONSTRAINTS.estimatedPomodoros.min,
       "At least 1 pomodoro is required.",
     ),
+  completedPomodoros: z.coerce
+    .number()
+    .min(TASK_CONSTRAINTS.completedPomodoros.min),
   isComplete: z.boolean(),
   order: z.coerce.number(),
   projectId: z.string().nullable(),
@@ -28,6 +32,7 @@ const taskShape = {
 export const createTaskSchema = z.object({
   name: taskShape.name,
   estimatedPomodoros: taskShape.estimatedPomodoros.default(1),
+  completedPomodoros: taskShape.completedPomodoros.default(0),
   isComplete: taskShape.isComplete.default(false),
   order: taskShape.order.default(0).optional(),
   projectId: taskShape.projectId.default(null).optional(),

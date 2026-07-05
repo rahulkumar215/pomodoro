@@ -931,6 +931,7 @@ export const TaskScalarFieldEnum = {
   name: 'name',
   note: 'note',
   estimatedPomodoros: 'estimatedPomodoros',
+  completedPomodoros: 'completedPomodoros',
   isComplete: 'isComplete',
   order: 'order',
   projectId: 'projectId',

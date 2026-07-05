@@ -39,14 +39,7 @@ import {
 } from "./ui/dialog";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  HIDDEN_FIELDS,
-  TASK_CONSTRAINTS,
-  taskSchema,
-  tasksResponseSchema,
-  type Task,
-  type TasksResponse,
-} from "@/consts/consts";
+import { HIDDEN_FIELDS, TASK_CONSTRAINTS } from "@/consts/consts";
 import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { useState } from "react";
@@ -70,12 +63,14 @@ import { cx } from "class-variance-authority";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import { useSettings } from "@/context/SettingsContext";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
-import z from "zod";
-import { handleError } from "@/lib/handleError";
 import { Label } from "./ui/label";
-import type { UpdateTaskInput } from "@/schemas/task";
+import {
+  createTaskSchema,
+  type CreateTaskInput,
+  type TasksResponse,
+  type UpdateTaskInput,
+} from "@/schemas/task";
+import { useTasks } from "@/context/TaskContext";
 
 function buildDiff<T extends Record<string, unknown>>(
   original: T,
@@ -94,10 +89,12 @@ const ItemComp = ({
   task,
   onEditTask,
   onDeleteTask,
+  onPatchTask,
 }: {
   task: TasksResponse;
   onEditTask: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
+  onPatchTask: (taskId: string, changes: Partial<UpdateTaskInput>) => void;
 }) => {
   const {
     id,
@@ -114,7 +111,15 @@ const ItemComp = ({
   return (
     <Item ref={setElement} key={id} variant="outline">
       <ItemActions>
-        <Button variant="ghost" className="rounded-full">
+        <Button
+          onClick={() =>
+            onPatchTask(task.id, {
+              isComplete: !isComplete,
+            })
+          }
+          variant={isComplete ? "default" : "ghost"}
+          className="rounded-full"
+        >
           <CircleCheckBigIcon />
         </Button>
       </ItemActions>
@@ -170,87 +175,32 @@ const Tasks = () => {
   const [originalTask, setOriginalTask] = useState<TasksResponse | null>(null);
 
   const { settings } = useSettings();
-
-  const queryClient = useQueryClient();
-
-  const {
-    data: tasks,
-    isError,
-    error,
-  } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: async (): Promise<TasksResponse[]> => {
-      console.log("fetcing tasks");
-      const response = await api.get("/tasks");
-      return z.array(tasksResponseSchema).parse(response.data.tasks);
-    },
-  });
-
-  if (isError) {
-    handleError(error);
-  }
+  const { tasks, createTask, patchTask, deleteTask } = useTasks();
 
   const totalEstimatedPomodoros = tasks
-    ? tasks.reduce((acc, cur) => {
-        return acc + cur.estimatedPomodoros;
-      }, 0)
+    ? tasks
+        .filter((task) => task.isComplete === false)
+        .reduce((acc, cur) => {
+          return acc + cur.estimatedPomodoros;
+        }, 0)
     : 0;
 
   const totalCompletedPomodoros = tasks
-    ? tasks.reduce((acc, cur) => {
-        return acc + cur.completedPomodoros;
-      }, 0)
+    ? tasks
+        .filter((task) => task.isComplete === false)
+        .reduce((acc, cur) => {
+          return acc + cur.completedPomodoros;
+        }, 0)
     : 0;
-  const addTask = async (data: Task) => {
-    const response = await api.post("/tasks", data);
-    return response;
-  };
-  const mutaion = useMutation({
-    mutationFn: addTask,
-    onSuccess: async () => {
-      console.log("invalidating query");
-      await queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
-  });
-
-  const updateTask = useMutation({
-    mutationFn: async ({
-      id,
-      changes,
-    }: {
-      id: string;
-      changes: Partial<UpdateTaskInput>;
-    }) => {
-      const response = await api.patch(`/tasks/${id}`, changes);
-      return response;
-    },
-    onSuccess: async () => {
-      console.log("invalidating query");
-      await queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
-  });
-
-  const deleteTask = useMutation({
-    mutationFn: async (taskId: string) => {
-      const response = await api.delete(`/tasks/${taskId}`);
-      return response;
-    },
-    onSuccess: async () => {
-      toast.success("Successfully deleted task.");
-      await queryClient.invalidateQueries({
-        queryKey: ["tasks"],
-      });
-    },
-  });
 
   const getCompletionTime = () => {
     const pomodoroLeft = totalEstimatedPomodoros - totalCompletedPomodoros;
-    const longBreakCount = (pomodoroLeft - 1) / settings.long_break_interval;
-    const shortBreakCount = pomodoroLeft - 1 - longBreakCount;
+    const longBreakCount =
+      pomodoroLeft === 0
+        ? 0
+        : (pomodoroLeft - 1) / settings.long_break_interval;
+    const shortBreakCount =
+      pomodoroLeft === 0 ? 0 : pomodoroLeft - 1 - longBreakCount;
 
     const longBreakMins = longBreakCount * settings.long_break_duration;
     const shortBreakMins = shortBreakCount * settings.short_break_duration;
@@ -273,7 +223,7 @@ const Tasks = () => {
   const time = getCompletionTime();
 
   const form = useForm({
-    resolver: zodResolver(taskSchema),
+    resolver: zodResolver(createTaskSchema),
     defaultValues: {
       name: "",
       estimatedPomodoros: 1,
@@ -285,9 +235,8 @@ const Tasks = () => {
     name: ["note"],
   });
 
-  function onSubmit(data: Task) {
-    console.log(data);
-    mutaion.mutate(data);
+  function onSubmit(data: CreateTaskInput) {
+    createTask(data);
     setOpen(false);
     setAddNotes(false);
     form.reset();
@@ -301,13 +250,6 @@ const Tasks = () => {
       }
     });
   }
-
-  const patchTask = async (id: string, changes: Partial<UpdateTaskInput>) => {
-    updateTask.mutate({
-      id,
-      changes,
-    });
-  };
 
   const handleEditTask = (taskId: string) => {
     const task = tasks?.find((task) => task.id === taskId);
@@ -325,7 +267,7 @@ const Tasks = () => {
     form.setValues({ ...task });
   };
 
-  const onEdit = (formState: Task) => {
+  const onEdit = (formState: CreateTaskInput) => {
     if (originalTask === null) {
       toast.error("No task present.");
       return;
@@ -342,8 +284,7 @@ const Tasks = () => {
       return;
     }
 
-    patchTask(originalTask.id, changes);
-
+    patchTask({ id: originalTask.id, changes });
     toast.success("Successfully updated task.");
     setOpen(false);
     setAddNotes(false);
@@ -417,7 +358,10 @@ const Tasks = () => {
                     key={task.id}
                     task={task}
                     onEditTask={handleEditTask}
-                    onDeleteTask={(taskId) => deleteTask.mutate(taskId)}
+                    onDeleteTask={(taskId) => deleteTask(taskId)}
+                    onPatchTask={(taskId, changes) =>
+                      patchTask({ id: taskId, changes })
+                    }
                   />
                 ))}
               </ItemGroup>

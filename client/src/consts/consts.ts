@@ -152,27 +152,26 @@ export const TASK_CONSTRAINTS = {
 } as const;
 
 // Tasks Schema
-export const taskSchema = z.object({
-  name: z
-    .string()
-    .min(TASK_CONSTRAINTS.name.min, "Name is required.")
-    .max(TASK_CONSTRAINTS.name.max, "Name max length reached."),
-  estimatedPomodoros: z.coerce
-    .number<number>()
-    .min(
-      TASK_CONSTRAINTS.estimatedPomodoros.min,
-      "At least 1 pomodoro is required.",
-    ),
-  completedPomodoros: z.coerce.number<number>().min(0).default(0),
-  isComplete: z.boolean().default(false),
-  order: z.coerce.number<number>().default(0).optional(),
-  projectId: z.string().nullable().default(null).optional(),
-  note: z
-    .string()
-    .max(TASK_CONSTRAINTS.note.max, "Notes maximum length reached.")
-    .default("")
-    .optional(),
-});
+// export const taskSchema = z.object({
+//   name: z
+//     .string()
+//     .min(TASK_CONSTRAINTS.name.min, "Name is required.")
+//     .max(TASK_CONSTRAINTS.name.max, "Name max length reached."),
+//   estimatedPomodoros: z.coerce.number<number>()
+//     .min(
+//       TASK_CONSTRAINTS.estimatedPomodoros.min,
+//       "At least 1 pomodoro is required.",
+//     ),
+//   completedPomodoros: z.coerce.number<number>().min(0).default(0),
+//   isComplete: z.boolean().default(false),
+//   order: z.coerce.number<number>().default(0).optional(),
+//   projectId: z.string().nullable().default(null).optional(),
+//   note: z
+//     .string()
+//     .max(TASK_CONSTRAINTS.note.max, "Notes maximum length reached.")
+//     .default("")
+//     .optional(),
+// });
 
 export const HIDDEN_FIELDS = [
   "completedPomodoros",
@@ -181,15 +180,15 @@ export const HIDDEN_FIELDS = [
   "projectId",
 ] as const;
 
-export type Task = z.infer<typeof taskSchema>;
+// export type Task = z.infer<typeof taskSchema>;
 
-export const tasksResponseSchema = taskSchema.extend({
-  id: z.uuid(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
-});
+// export const tasksResponseSchema = taskSchema.extend({
+//   id: z.uuid(),
+//   createdAt: z.iso.datetime(),
+//   updatedAt: z.iso.datetime(),
+// });
 
-export type TasksResponse = z.infer<typeof tasksResponseSchema>;
+// export type TasksResponse = z.infer<typeof tasksResponseSchema>;
 
 export const signupSchema = z
   .object({

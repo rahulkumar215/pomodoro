@@ -9,7 +9,7 @@ import formattedTimer from "@/lib/formattedTimer";
 import useTimer from "@/hooks/useTimer";
 import Header from "@/components/header";
 import Tasks from "@/components/tasks";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 
 type SessionsResponse = {
@@ -32,8 +32,6 @@ function Index() {
     handleChangeTab,
     count,
   } = useTimer();
-
-  const queryClient = useQueryClient();
 
   const {
     isPending,

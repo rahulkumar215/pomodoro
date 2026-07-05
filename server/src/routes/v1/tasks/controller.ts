@@ -34,13 +34,7 @@ export const listTasks = async (req: Request, res: Response) => {
   const tasks = await prisma.task.findMany({
     where: {
       userId: req.user.id,
-    },
-    include: {
-      _count: {
-        select: {
-          sessions: true,
-        },
-      },
+      deletedAt: null,
     },
     omit: {
       userId: true,
@@ -104,9 +98,12 @@ export const deleteTask = async (
     throw new ValidationError("Task does not exits");
   }
 
-  await prisma.task.delete({
+  await prisma.task.update({
     where: {
       id,
+    },
+    data: {
+      deletedAt: new Date(),
     },
   });
 

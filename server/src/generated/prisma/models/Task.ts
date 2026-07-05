@@ -28,11 +28,13 @@ export type AggregateTask = {
 
 export type TaskAvgAggregateOutputType = {
   estimatedPomodoros: number | null
+  completedPomodoros: number | null
   order: number | null
 }
 
 export type TaskSumAggregateOutputType = {
   estimatedPomodoros: number | null
+  completedPomodoros: number | null
   order: number | null
 }
 
@@ -41,6 +43,7 @@ export type TaskMinAggregateOutputType = {
   name: string | null
   note: string | null
   estimatedPomodoros: number | null
+  completedPomodoros: number | null
   isComplete: boolean | null
   order: number | null
   projectId: string | null
@@ -55,6 +58,7 @@ export type TaskMaxAggregateOutputType = {
   name: string | null
   note: string | null
   estimatedPomodoros: number | null
+  completedPomodoros: number | null
   isComplete: boolean | null
   order: number | null
   projectId: string | null
@@ -69,6 +73,7 @@ export type TaskCountAggregateOutputType = {
   name: number
   note: number
   estimatedPomodoros: number
+  completedPomodoros: number
   isComplete: number
   order: number
   projectId: number
@@ -82,11 +87,13 @@ export type TaskCountAggregateOutputType = {
 
 export type TaskAvgAggregateInputType = {
   estimatedPomodoros?: true
+  completedPomodoros?: true
   order?: true
 }
 
 export type TaskSumAggregateInputType = {
   estimatedPomodoros?: true
+  completedPomodoros?: true
   order?: true
 }
 
@@ -95,6 +102,7 @@ export type TaskMinAggregateInputType = {
   name?: true
   note?: true
   estimatedPomodoros?: true
+  completedPomodoros?: true
   isComplete?: true
   order?: true
   projectId?: true
@@ -109,6 +117,7 @@ export type TaskMaxAggregateInputType = {
   name?: true
   note?: true
   estimatedPomodoros?: true
+  completedPomodoros?: true
   isComplete?: true
   order?: true
   projectId?: true
@@ -123,6 +132,7 @@ export type TaskCountAggregateInputType = {
   name?: true
   note?: true
   estimatedPomodoros?: true
+  completedPomodoros?: true
   isComplete?: true
   order?: true
   projectId?: true
@@ -224,6 +234,7 @@ export type TaskGroupByOutputType = {
   name: string
   note: string | null
   estimatedPomodoros: number
+  completedPomodoros: number
   isComplete: boolean
   order: number
   projectId: string | null
@@ -261,6 +272,7 @@ export type TaskWhereInput = {
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
@@ -278,6 +290,7 @@ export type TaskOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -298,6 +311,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
@@ -315,6 +329,7 @@ export type TaskOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +352,7 @@ export type TaskScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Task"> | string
   note?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
   estimatedPomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  completedPomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
   isComplete?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
   order?: Prisma.IntWithAggregatesFilter<"Task"> | number
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
@@ -351,6 +367,7 @@ export type TaskCreateInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   createdAt?: Date | string
@@ -366,6 +383,7 @@ export type TaskUncheckedCreateInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   projectId?: string | null
@@ -381,6 +399,7 @@ export type TaskUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +415,7 @@ export type TaskUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -411,6 +431,7 @@ export type TaskCreateManyInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   projectId?: string | null
@@ -425,6 +446,7 @@ export type TaskUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,6 +459,7 @@ export type TaskUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,6 +484,7 @@ export type TaskCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -472,6 +496,7 @@ export type TaskCountOrderByAggregateInput = {
 
 export type TaskAvgOrderByAggregateInput = {
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -480,6 +505,7 @@ export type TaskMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -494,6 +520,7 @@ export type TaskMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
@@ -505,6 +532,7 @@ export type TaskMinOrderByAggregateInput = {
 
 export type TaskSumOrderByAggregateInput = {
   estimatedPomodoros?: Prisma.SortOrder
+  completedPomodoros?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -626,6 +654,7 @@ export type TaskCreateWithoutUserInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   createdAt?: Date | string
@@ -640,6 +669,7 @@ export type TaskUncheckedCreateWithoutUserInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   projectId?: string | null
@@ -683,6 +713,7 @@ export type TaskScalarWhereInput = {
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
@@ -697,6 +728,7 @@ export type TaskCreateWithoutProjectInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   createdAt?: Date | string
@@ -711,6 +743,7 @@ export type TaskUncheckedCreateWithoutProjectInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   userId: string
@@ -751,6 +784,7 @@ export type TaskCreateWithoutSessionsInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   createdAt?: Date | string
@@ -765,6 +799,7 @@ export type TaskUncheckedCreateWithoutSessionsInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   projectId?: string | null
@@ -795,6 +830,7 @@ export type TaskUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -809,6 +845,7 @@ export type TaskUncheckedUpdateWithoutSessionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -823,6 +860,7 @@ export type TaskCreateManyUserInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   projectId?: string | null
@@ -836,6 +874,7 @@ export type TaskUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -850,6 +889,7 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -864,6 +904,7 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -877,6 +918,7 @@ export type TaskCreateManyProjectInput = {
   name: string
   note?: string | null
   estimatedPomodoros?: number
+  completedPomodoros?: number
   isComplete?: boolean
   order?: number
   userId: string
@@ -890,6 +932,7 @@ export type TaskUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -904,6 +947,7 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -918,6 +962,7 @@ export type TaskUncheckedUpdateManyWithoutProjectInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -962,6 +1007,7 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   note?: boolean
   estimatedPomodoros?: boolean
+  completedPomodoros?: boolean
   isComplete?: boolean
   order?: boolean
   projectId?: boolean
@@ -980,6 +1026,7 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   note?: boolean
   estimatedPomodoros?: boolean
+  completedPomodoros?: boolean
   isComplete?: boolean
   order?: boolean
   projectId?: boolean
@@ -996,6 +1043,7 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   note?: boolean
   estimatedPomodoros?: boolean
+  completedPomodoros?: boolean
   isComplete?: boolean
   order?: boolean
   projectId?: boolean
@@ -1012,6 +1060,7 @@ export type TaskSelectScalar = {
   name?: boolean
   note?: boolean
   estimatedPomodoros?: boolean
+  completedPomodoros?: boolean
   isComplete?: boolean
   order?: boolean
   projectId?: boolean
@@ -1021,7 +1070,7 @@ export type TaskSelectScalar = {
   deletedAt?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "note" | "estimatedPomodoros" | "isComplete" | "order" | "projectId" | "userId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "note" | "estimatedPomodoros" | "completedPomodoros" | "isComplete" | "order" | "projectId" | "userId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Task$projectArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
@@ -1049,6 +1098,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     note: string | null
     estimatedPomodoros: number
+    completedPomodoros: number
     isComplete: boolean
     order: number
     projectId: string | null
@@ -1486,6 +1536,7 @@ export interface TaskFieldRefs {
   readonly name: Prisma.FieldRef<"Task", 'String'>
   readonly note: Prisma.FieldRef<"Task", 'String'>
   readonly estimatedPomodoros: Prisma.FieldRef<"Task", 'Int'>
+  readonly completedPomodoros: Prisma.FieldRef<"Task", 'Int'>
   readonly isComplete: Prisma.FieldRef<"Task", 'Boolean'>
   readonly order: Prisma.FieldRef<"Task", 'Int'>
   readonly projectId: Prisma.FieldRef<"Task", 'String'>
