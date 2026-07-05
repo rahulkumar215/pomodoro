@@ -3,6 +3,7 @@ import config from "../config";
 import { AppError } from "@/errors/appError";
 
 const sendErrorDev = (err: unknown, res: Response) => {
+  console.log(err);
   res.status(err.statusCode).json({
     status: err.status,
     error: err,

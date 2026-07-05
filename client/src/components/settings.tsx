@@ -127,16 +127,16 @@ const SettingsComp = () => {
                 <h4 className="mb-1">Timer (minutes)</h4>
                 <FieldGroup className="grid grid-cols-3">
                   <Controller
-                    name="pomodoro_time"
+                    name="pomodoro_duration"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="pomodoro-time">
+                        <FieldLabel htmlFor="pomodoro_duration">
                           Pomodoro
                         </FieldLabel>
                         <Input
                           {...field}
-                          id="pomodoro-time"
+                          id="pomodoro_duration"
                           aria-invalid={fieldState.invalid}
                           type="number"
                         />
@@ -147,16 +147,16 @@ const SettingsComp = () => {
                     )}
                   />
                   <Controller
-                    name="short_break_time"
+                    name="short_break_duration"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="short_break_time">
+                        <FieldLabel htmlFor="short_break_duration">
                           Short Break
                         </FieldLabel>
                         <Input
                           {...field}
-                          id="short_break_time"
+                          id="short_break_duration"
                           aria-invalid={fieldState.invalid}
                           type="number"
                         />
@@ -167,17 +167,17 @@ const SettingsComp = () => {
                     )}
                   />
                   <Controller
-                    name="long_break_time"
+                    name="long_break_duration"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="long_break_time">
+                        <FieldLabel htmlFor="long_break_duration">
                           Long Break
                         </FieldLabel>
                         <Input
                           {...field}
                           aria-invalid={fieldState.invalid}
-                          id="long_break_time"
+                          id="long_break_duration"
                           type="number"
                         />
                         {fieldState.invalid && (
@@ -735,8 +735,8 @@ const SettingsComp = () => {
                               <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent position="item-aligned">
-                              <SelectItem value="Every">Every</SelectItem>
-                              <SelectItem value="Last">Last</SelectItem>
+                              <SelectItem value="every">Every</SelectItem>
+                              <SelectItem value="last">Last</SelectItem>
                             </SelectContent>
                           </Select>
                           {fieldState.invalid && (

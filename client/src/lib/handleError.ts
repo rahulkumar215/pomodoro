@@ -6,17 +6,17 @@ export function handleError(error: unknown) {
 
   let errMsg = "Something went wrong!";
 
-  if (
+  if (error instanceof AxiosError) {
+    errMsg =
+      error.response?.data.message ||
+      "Cannot connect to server, Is it running?";
+  } else if (
     error &&
     typeof error === "object" &&
     "status" in error &&
     Number(error.status) === 204
   ) {
     errMsg = "Content not found!";
-  }
-
-  if (error instanceof AxiosError) {
-    errMsg = error.response?.data.message;
   }
 
   toast.error(errMsg);

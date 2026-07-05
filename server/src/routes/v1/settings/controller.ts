@@ -1,56 +1,19 @@
 import { prisma } from "@/db";
 import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { settingsSchema } from "./settingsSchema";
 
 export const createSettings = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const {
-    pomodoroDuration,
-    shortBreakDurtaion,
-    longBreakDuration,
-    longBreakInterval,
-    autoStartBreaks,
-    autoStartPomodoros,
-    autoCheckTasks,
-    checkToBottom,
-    alarmSound,
-    alarmSoundRepeat,
-    alarmVolumn,
-    focusSound,
-    focusVolume,
-    pomodoroTheme,
-    shortBreakTheme,
-    longBreakTheme,
-    hourFormat,
-    darkModeWhenRunning,
-    reminderType,
-    reminderTime,
-  } = req.body;
+  const settingsData = settingsSchema.parse(req.body);
 
   const settings = prisma.settings.create({
     data: {
+      ...settingsData,
       user_id: req.user.id,
-      pomodoro_duration: pomodoroDuration,
-      short_break_duration: shortBreakDurtaion,
-      long_break_duration: longBreakDuration,
-      long_break_interval: longBreakInterval,
-      auto_start_breaks: autoStartBreaks,
-      auto_start_pomodoros: autoStartPomodoros,
-      auto_check_tasks: autoCheckTasks,
-      check_to_bottom: checkToBottom,
-      alarm_sound: alarmSound,
-      alarm_sound_repeat: alarmSoundRepeat,
-      alarm_sound_volume: alarmVolumn,
-      focus_sound: focusSound,
-      focus_sound_volume: focusVolume,
-      pomodoro_theme: pomodoroTheme,
-      long_break_theme: longBreakTheme,
-      hour_format: hourFormat,
-      dark_mode_when_running: darkModeWhenRunning,
-      reminder_type: reminderType,
-      reminder_time: reminderTime,
     },
   });
 
@@ -59,5 +22,52 @@ export const createSettings = async (
     data: {
       data: settings,
     },
+  });
+};
+
+export const getSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const settings = await prisma.settings.findFirst({
+    where: {
+      user_id: req.user.id,
+    },
+  });
+
+  res.status(StatusCodes.OK).json({
+    settings,
+  });
+};
+
+export const updateSettings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const settingsData = settingsSchema.parse(req.body);
+
+  const settings = await prisma.settings.upsert({
+    where: {
+      user_id: req.user.id,
+    },
+    update: {
+      ...settingsData,
+    },
+    create: {
+      ...settingsData,
+      user_id: req.user.id,
+    },
+    omit: {
+      id: true,
+      user_id: true,
+      created_at: true,
+      updated_at: true,
+    },
+  });
+
+  res.status(StatusCodes.CREATED).json({
+    settings,
   });
 };

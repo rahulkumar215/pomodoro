@@ -19,6 +19,7 @@ import {
   ChevronUpIcon,
   CircleCheckBigIcon,
   CirclePlusIcon,
+  EditIcon,
   EllipsisVerticalIcon,
   EyeOffIcon,
   FilesIcon,
@@ -42,7 +43,9 @@ import {
   HIDDEN_FIELDS,
   TASK_CONSTRAINTS,
   taskSchema,
+  tasksResponseSchema,
   type Task,
+  type TasksResponse,
 } from "@/consts/consts";
 import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
@@ -59,7 +62,6 @@ import {
   Item,
   ItemActions,
   ItemContent,
-  ItemDescription,
   ItemFooter,
   ItemGroup,
   ItemTitle,
@@ -68,23 +70,49 @@ import { cx } from "class-variance-authority";
 import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable, useSortable } from "@dnd-kit/react/sortable";
 import { useSettings } from "@/context/SettingsContext";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/api";
+import z from "zod";
+import { handleError } from "@/lib/handleError";
+import { Label } from "./ui/label";
+import type { UpdateTaskInput } from "@/schemas/task";
 
-const ItemComp = ({ task, index }: { task: Task; index: number }) => {
+function buildDiff<T extends Record<string, unknown>>(
+  original: T,
+  edited: T,
+): Partial<T> {
+  const diff: Partial<T> = {};
+  for (const key in edited) {
+    if (edited[key] !== original[key]) {
+      diff[key] = edited[key];
+    }
+  }
+  return diff;
+}
+
+const ItemComp = ({
+  task,
+  onEditTask,
+  onDeleteTask,
+}: {
+  task: TasksResponse;
+  onEditTask: (taskId: string) => void;
+  onDeleteTask: (taskId: string) => void;
+}) => {
   const {
-    createdAt,
+    id,
     order,
-    title,
-    description,
+    name,
     estimatedPomodoros,
     completedPomodoros,
     isComplete,
     note,
   } = task;
   const [element, setElement] = useState<Element | null>(null);
-  useSortable({ id: createdAt || "", index, element });
+  useSortable({ id, index: order || 0, element });
 
   return (
-    <Item ref={setElement} key={createdAt} variant="outline">
+    <Item ref={setElement} key={id} variant="outline">
       <ItemActions>
         <Button variant="ghost" className="rounded-full">
           <CircleCheckBigIcon />
@@ -92,18 +120,39 @@ const ItemComp = ({ task, index }: { task: Task; index: number }) => {
       </ItemActions>
       <ItemContent>
         <ItemTitle className={cx("flex-1", isComplete && "line-through")}>
-          {title}
+          {name}
         </ItemTitle>
-
-        {description && <ItemDescription>{description}</ItemDescription>}
       </ItemContent>
       <ItemActions>
         <span>
           {completedPomodoros}/{estimatedPomodoros}
         </span>
-        <Button variant="ghost" className="py-1 px-2 h-fit">
-          <EllipsisVerticalIcon />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="py-1 px-2 h-fit">
+              <EllipsisVerticalIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="flex gap-1 min-w-fit ">
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Button variant="outline" onClick={() => onEditTask(task.id)}>
+                <EditIcon />
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              asChild
+              className="cursor-pointer"
+              variant="destructive"
+            >
+              <Button
+                variant="destructive"
+                onClick={() => onDeleteTask(task.id)}
+              >
+                <Trash2Icon />
+              </Button>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </ItemActions>
       {note && (
         <ItemFooter className="text-left p-2  border rounded-md bg-yellow-300 text-black">
@@ -117,35 +166,95 @@ const ItemComp = ({ task, index }: { task: Task; index: number }) => {
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      title: "This is for console log 1.",
-      description: "",
-      estimatedPomodoros: 5,
-      completedPomodoros: 0,
-      isComplete: false,
-      order: 1,
-      projectId: null,
-      note: "",
-      createdAt: "Mon Jun 01 2026 22:20:42 GMT+0530 (India Standard Time)",
-    }
-  ]);
+  const [editTaskId, setEditTaskId] = useState<string | null>(null);
+  const [originalTask, setOriginalTask] = useState<TasksResponse | null>(null);
+
   const { settings } = useSettings();
-  const totalEstimatedPomodoros = tasks.reduce((acc, cur) => {
-    return acc + cur.estimatedPomodoros;
-  }, 0);
-  const totalCompletedPomodoros = tasks.reduce((acc, cur) => {
-    return acc + cur.completedPomodoros;
-  }, 0);
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: tasks,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: async (): Promise<TasksResponse[]> => {
+      console.log("fetcing tasks");
+      const response = await api.get("/tasks");
+      return z.array(tasksResponseSchema).parse(response.data.tasks);
+    },
+  });
+
+  if (isError) {
+    handleError(error);
+  }
+
+  const totalEstimatedPomodoros = tasks
+    ? tasks.reduce((acc, cur) => {
+        return acc + cur.estimatedPomodoros;
+      }, 0)
+    : 0;
+
+  const totalCompletedPomodoros = tasks
+    ? tasks.reduce((acc, cur) => {
+        return acc + cur.completedPomodoros;
+      }, 0)
+    : 0;
+  const addTask = async (data: Task) => {
+    const response = await api.post("/tasks", data);
+    return response;
+  };
+  const mutaion = useMutation({
+    mutationFn: addTask,
+    onSuccess: async () => {
+      console.log("invalidating query");
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    },
+  });
+
+  const updateTask = useMutation({
+    mutationFn: async ({
+      id,
+      changes,
+    }: {
+      id: string;
+      changes: Partial<UpdateTaskInput>;
+    }) => {
+      const response = await api.patch(`/tasks/${id}`, changes);
+      return response;
+    },
+    onSuccess: async () => {
+      console.log("invalidating query");
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    },
+  });
+
+  const deleteTask = useMutation({
+    mutationFn: async (taskId: string) => {
+      const response = await api.delete(`/tasks/${taskId}`);
+      return response;
+    },
+    onSuccess: async () => {
+      toast.success("Successfully deleted task.");
+      await queryClient.invalidateQueries({
+        queryKey: ["tasks"],
+      });
+    },
+  });
 
   const getCompletionTime = () => {
     const pomodoroLeft = totalEstimatedPomodoros - totalCompletedPomodoros;
     const longBreakCount = (pomodoroLeft - 1) / settings.long_break_interval;
     const shortBreakCount = pomodoroLeft - 1 - longBreakCount;
 
-    const longBreakMins = longBreakCount * settings.long_break_time;
-    const shortBreakMins = shortBreakCount * settings.short_break_time;
-    const pomodoroMins = pomodoroLeft * settings.pomodoro_time;
+    const longBreakMins = longBreakCount * settings.long_break_duration;
+    const shortBreakMins = shortBreakCount * settings.short_break_duration;
+    const pomodoroMins = pomodoroLeft * settings.pomodoro_duration;
 
     const totalTime = pomodoroMins + shortBreakMins + longBreakMins;
 
@@ -166,40 +275,22 @@ const Tasks = () => {
   const form = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      title: "",
+      name: "",
       estimatedPomodoros: 1,
     },
   });
 
-  const [task_note, task_description] = useWatch({
+  const [task_note] = useWatch({
     control: form.control,
-    name: ["note", "description"],
+    name: ["note"],
   });
 
   function onSubmit(data: Task) {
     console.log(data);
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    });
-    setTasks((prev) => [...prev, data]);
+    mutaion.mutate(data);
     setOpen(false);
     setAddNotes(false);
     form.reset();
-
-    setTimeout(() => {
-      setOpen(true);
-    }, 500);
   }
 
   function onError(errors: typeof form.formState.errors) {
@@ -210,6 +301,54 @@ const Tasks = () => {
       }
     });
   }
+
+  const patchTask = async (id: string, changes: Partial<UpdateTaskInput>) => {
+    updateTask.mutate({
+      id,
+      changes,
+    });
+  };
+
+  const handleEditTask = (taskId: string) => {
+    const task = tasks?.find((task) => task.id === taskId);
+    if (!task) {
+      toast.error("Not task found");
+      return;
+    }
+
+    setEditTaskId(taskId);
+    setOriginalTask(task);
+    setOpen(true);
+    if (task.note) {
+      setAddNotes(true);
+    }
+    form.setValues({ ...task });
+  };
+
+  const onEdit = (formState: Task) => {
+    if (originalTask === null) {
+      toast.error("No task present.");
+      return;
+    }
+
+    const changes = buildDiff(originalTask, formState);
+
+    if (Object.keys(changes).length === 0) {
+      console.log("No changes made, not calling backend");
+      setOpen(false);
+      setAddNotes(false);
+      form.reset();
+
+      return;
+    }
+
+    patchTask(originalTask.id, changes);
+
+    toast.success("Successfully updated task.");
+    setOpen(false);
+    setAddNotes(false);
+    form.reset();
+  };
 
   return (
     <Card className="w-md">
@@ -252,7 +391,7 @@ const Tasks = () => {
       </CardHeader>
       <Separator />
       <CardContent className="flex flex-col gap-4">
-        {tasks.length > 0 && (
+        {tasks && tasks.length > 0 && (
           <>
             <DragDropProvider
               onDragEnd={(event) => {
@@ -267,14 +406,19 @@ const Tasks = () => {
                     const newTasks = [...tasks];
                     const [removed] = newTasks.splice(initialIndex, 1);
                     newTasks.splice(index, 0, removed);
-                    setTasks(newTasks);
+                    // setTasks(newTasks);
                   }
                 }
               }}
             >
               <ItemGroup>
-                {tasks.map((task: Task, index) => (
-                  <ItemComp key={task.createdAt} task={task} index={index} />
+                {tasks.map((task: TasksResponse) => (
+                  <ItemComp
+                    key={task.id}
+                    task={task}
+                    onEditTask={handleEditTask}
+                    onDeleteTask={(taskId) => deleteTask.mutate(taskId)}
+                  />
                 ))}
               </ItemGroup>
             </DragDropProvider>
@@ -313,11 +457,24 @@ const Tasks = () => {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <form onSubmit={form.handleSubmit(onSubmit, onError)}>
+            <form
+              onSubmit={form.handleSubmit(
+                editTaskId ? onEdit : onSubmit,
+                onError,
+              )}
+            >
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
-                  <CirclePlusIcon />
-                  Add Task
+                  {editTaskId ? (
+                    <>
+                      <EditIcon /> Edit Task
+                    </>
+                  ) : (
+                    <>
+                      <CirclePlusIcon />
+                      Add Task
+                    </>
+                  )}
                 </DialogTitle>
                 <DialogDescription>
                   Pomodoro is more fun with tasks to track
@@ -326,14 +483,14 @@ const Tasks = () => {
               <div className="-mx-4 no-scrollbar max-h-[70vh] overflow-y-auto px-4 pb-4">
                 <FieldGroup>
                   <Controller
-                    name="title"
+                    name="name"
                     control={form.control}
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="title">Title</FieldLabel>
+                        <FieldLabel htmlFor="name">Name</FieldLabel>
                         <Input
                           {...field}
-                          id="title"
+                          id="name"
                           placeholder="What are you working on?"
                           aria-invalid={fieldState.invalid}
                         />
@@ -344,77 +501,73 @@ const Tasks = () => {
                     )}
                   />
 
-                  <Controller
-                    name="description"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="description">
-                          Description
-                        </FieldLabel>
-                        <InputGroup>
-                          <InputGroupTextarea
-                            {...field}
-                            id="description"
-                            aria-invalid={fieldState.invalid}
-                            placeholder="A little bit more info..."
+                  <div className="flex flex-col gap-2">
+                    <Label>
+                      {editTaskId ? "Act. / Est Pomodoros" : "Est Pomodoros"}
+                    </Label>
+                    <div className="flex items-center gap-1">
+                      {editTaskId && (
+                        <>
+                          <Controller
+                            name="completedPomodoros"
+                            control={form.control}
+                            render={({ field, fieldState }) => (
+                              <Field className="w-24">
+                                <Input
+                                  {...field}
+                                  type="number"
+                                  aria-invalid={fieldState.invalid}
+                                  id="completedPomodoros"
+                                  min={TASK_CONSTRAINTS.completedPomodoros.min}
+                                />
+                              </Field>
+                            )}
                           />
-                          <InputGroupAddon align="block-end">
-                            <InputGroupText className="text-xs text-muted-foreground">
-                              {renderTextLeft(
-                                TASK_CONSTRAINTS.description.max,
-                                task_description?.length || 0,
-                              )}
-                            </InputGroupText>
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="estimatedPomodoros"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field className="w-48">
-                        <FieldLabel htmlFor="estimatedPomodoros">
-                          Est Pomodoros
-                        </FieldLabel>
-                        <div className="flex items-center justify-start gap-2">
-                          <Input
-                            {...field}
-                            type="number"
-                            aria-invalid={fieldState.invalid}
-                            id="estimatedPomodoros"
-                            min={TASK_CONSTRAINTS.estimatedPomodoros.min}
-                            className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                          />
-                          <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() =>
-                              field.onChange(Number(field.value) + 1)
-                            }
-                          >
-                            <ChevronUpIcon />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() =>
-                              field.onChange(Number(field.value) - 1)
-                            }
-                            disabled={
-                              Number(field.value) <=
-                              TASK_CONSTRAINTS.estimatedPomodoros.min
-                            }
-                          >
-                            <ChevronDownIcon />
-                          </Button>
-                        </div>
-                      </Field>
-                    )}
-                  />
+                          /
+                        </>
+                      )}
+                      <Controller
+                        name="estimatedPomodoros"
+                        control={form.control}
+                        render={({ field, fieldState }) => (
+                          <Field className="w-48">
+                            <div className="flex items-center justify-start gap-2">
+                              <Input
+                                {...field}
+                                type="number"
+                                aria-invalid={fieldState.invalid}
+                                id="estimatedPomodoros"
+                                min={TASK_CONSTRAINTS.estimatedPomodoros.min}
+                                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
+                              <Button
+                                variant="outline"
+                                type="button"
+                                onClick={() =>
+                                  field.onChange(Number(field.value) + 1)
+                                }
+                              >
+                                <ChevronUpIcon />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                type="button"
+                                onClick={() =>
+                                  field.onChange(Number(field.value) - 1)
+                                }
+                                disabled={
+                                  Number(field.value) <=
+                                  TASK_CONSTRAINTS.estimatedPomodoros.min
+                                }
+                              >
+                                <ChevronDownIcon />
+                              </Button>
+                            </div>
+                          </Field>
+                        )}
+                      />
+                    </div>
+                  </div>
 
                   {addNotes ? (
                     <Controller

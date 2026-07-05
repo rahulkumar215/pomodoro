@@ -1,16 +1,30 @@
-import { ChartColumn, CircleUserIcon, ClockCheck } from "lucide-react";
+import {
+  ChartColumn,
+  CircleUserIcon,
+  ClockCheck,
+  CrownIcon,
+  KeyboardIcon,
+  LogOut,
+  Trash2Icon,
+  UserCircleIcon,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Settings from "./settings";
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import type { User } from "@/consts/consts";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Link } from "react-router";
 
 const Header = () => {
-  const token = localStorage.getItem("token");
-  const [user, setUser] = useState<User | null>(
-    JSON.parse(localStorage.getItem("user") as string),
-  );
+  const token: string | null = localStorage.getItem("token");
+  const user: User = JSON.parse(localStorage.getItem("user") as string);
 
   return (
     <div className="flex items-center justify-between">
@@ -30,10 +44,41 @@ const Header = () => {
         <Settings />
 
         {token ? (
-          <Avatar>
-            <AvatarImage src={user?.avatarUrl} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Avatar>
+                  <AvatarImage src={user?.avatarUrl} />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-36">
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <UserCircleIcon />
+                  Account
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CrownIcon />
+                  Premium
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LogOut />
+                  Logout
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <KeyboardIcon />
+                  Shortcuts
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive">
+                  <Trash2Icon />
+                  Delete Account
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : (
           <Button asChild>
             <Link to="/signup">

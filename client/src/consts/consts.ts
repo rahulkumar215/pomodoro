@@ -85,13 +85,13 @@ export type ColorValue = (typeof colors)[ColorKey];
 
 // Settings Schema
 export const settingsSchema = z.object({
-  pomodoro_time: z.coerce
+  pomodoro_duration: z.coerce
     .number<number>()
     .min(1, "Pomodoro must be at least 1 minute."),
-  short_break_time: z.coerce
+  short_break_duration: z.coerce
     .number<number>()
     .min(1, "Short break must be at least 1 minute."),
-  long_break_time: z.coerce
+  long_break_duration: z.coerce
     .number<number>()
     .min(1, "Long break must be at least 1 minute."),
   auto_start_breaks: z.boolean(),
@@ -111,9 +111,9 @@ export const settingsSchema = z.object({
   pomodoro_theme: z.enum(COLOR_KEYS),
   short_break_theme: z.enum(COLOR_KEYS),
   long_break_theme: z.enum(COLOR_KEYS),
-  hour_format: z.enum(["24hr", "12hr"]),
+  hour_format: z.enum(["h24", "h12"]),
   dark_mode_when_running: z.boolean(),
-  reminder_type: z.enum(["Every", "Last"]),
+  reminder_type: z.enum(["every", "last"]),
   reminder_time: z.coerce
     .number<number>()
     .min(0, "Reminder time must be 1 at least min."),
@@ -122,9 +122,9 @@ export const settingsSchema = z.object({
 export type Settings = z.infer<typeof settingsSchema>;
 
 export const DEFAULT_SETTINGS: Settings = {
-  pomodoro_time: TABS.Pomodoro.timer,
-  short_break_time: TABS.Short_Break.timer,
-  long_break_time: TABS.Long_Break.timer,
+  pomodoro_duration: TABS.Pomodoro.timer,
+  short_break_duration: TABS.Short_Break.timer,
+  long_break_duration: TABS.Long_Break.timer,
   auto_start_breaks: false,
   auto_start_pomodoros: false,
   long_break_interval: 4,
@@ -138,30 +138,25 @@ export const DEFAULT_SETTINGS: Settings = {
   pomodoro_theme: "brickRed",
   short_break_theme: "tealGreen",
   long_break_theme: "slateBlue",
-  hour_format: "24hr",
+  hour_format: "h24",
   dark_mode_when_running: false,
-  reminder_type: "Every",
+  reminder_type: "every",
   reminder_time: 0,
 };
 
 export const TASK_CONSTRAINTS = {
-  title: { min: 1, max: 120 },
-  description: { max: 360 },
+  name: { min: 1, max: 120 },
   estimatedPomodoros: { min: 1 },
+  completedPomodoros: { min: 0 },
   note: { max: 120 },
 } as const;
 
 // Tasks Schema
 export const taskSchema = z.object({
-  title: z
+  name: z
     .string()
-    .min(TASK_CONSTRAINTS.title.min, "Title is required.")
-    .max(TASK_CONSTRAINTS.title.max, "Title max length reached."),
-  description: z
-    .string()
-    .max(TASK_CONSTRAINTS.description.max, "Description max length reached.")
-    .default("")
-    .optional(),
+    .min(TASK_CONSTRAINTS.name.min, "Name is required.")
+    .max(TASK_CONSTRAINTS.name.max, "Name max length reached."),
   estimatedPomodoros: z.coerce
     .number<number>()
     .min(
@@ -177,7 +172,6 @@ export const taskSchema = z.object({
     .max(TASK_CONSTRAINTS.note.max, "Notes maximum length reached.")
     .default("")
     .optional(),
-  createdAt: z.iso.datetime().default(new Date().toString()).optional(),
 });
 
 export const HIDDEN_FIELDS = [
@@ -185,10 +179,17 @@ export const HIDDEN_FIELDS = [
   "isComplete",
   "order",
   "projectId",
-  "createdAt",
 ] as const;
 
 export type Task = z.infer<typeof taskSchema>;
+
+export const tasksResponseSchema = taskSchema.extend({
+  id: z.uuid(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+});
+
+export type TasksResponse = z.infer<typeof tasksResponseSchema>;
 
 export const signupSchema = z
   .object({
@@ -245,3 +246,11 @@ export interface LoginResponse {
   user: User;
   token: string;
 }
+
+export const SessionType = {
+  pomodoro: "pomodoro",
+  short_break: "short_break",
+  long_break: "long_break",
+} as const;
+
+export type SessionType = (typeof SessionType)[keyof typeof SessionType];

@@ -6,5 +6,6 @@ const session = Router();
 
 session.use(authMiddleware);
 session.post("/", sessionController.createSession);
+session.get("/", sessionController.getSessions);
 
 export default session;

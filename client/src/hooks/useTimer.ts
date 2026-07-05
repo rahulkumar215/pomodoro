@@ -1,24 +1,26 @@
-import { TABS, type Settings, type Tab } from "@/consts/consts";
+import { SessionType, TABS, type Settings, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
 import { Sounds } from "@/consts/consts";
 import { useSettings } from "@/context/SettingsContext";
 import formattedTimer from "@/lib/formattedTimer";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 function getTimer(activeTab: Tab, settings: Settings) {
   let timer: number;
   switch (activeTab.type) {
     case "Pomodoro": {
-      timer = settings.pomodoro_time;
+      timer = settings.pomodoro_duration;
       break;
     }
     case "Short Break": {
-      timer = settings.short_break_time;
+      timer = settings.short_break_duration;
       break;
     }
     case "Long Break": {
-      timer = settings.long_break_time;
+      timer = settings.long_break_duration;
       break;
     }
   }
@@ -50,6 +52,7 @@ export default function useTimer() {
   } = useSound();
   const workerRef = useRef<Worker | null>(null);
   const focusTabRef = useRef(activeTab.type === "Pomodoro");
+  const startTimeRef = useRef<Date>(null);
   const handleStopTimerRef = useRef<() => void>(() => {});
   const [count, setCount] = useState<Counter>({
     focus: 1,
@@ -57,6 +60,24 @@ export default function useTimer() {
   });
   const localPomodoroCount = useRef(0);
   const enteredViaAutoTransition = useRef(false);
+  const queryClient = useQueryClient();
+
+  const addSession = async (data: {
+    type: SessionType;
+    startTime: Date;
+    endTime: Date;
+  }): Promise<void> => {
+    return await api.post("/sessions", data);
+  };
+
+  const mutation = useMutation({
+    mutationFn: addSession,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["sessions"],
+      });
+    },
+  });
 
   const createWorker = useCallback(() => {
     workerRef.current?.terminate();
@@ -76,13 +97,13 @@ export default function useTimer() {
 
       if (timeLeft > 0 && settings.reminder_time > 0) {
         if (
-          settings.reminder_type === "Every" &&
+          settings.reminder_type === "every" &&
           timeLeft % (settings.reminder_time * 60 * 1000) === 0
         ) {
           // Every 1 min
           showNotification(`${timeLeft / 60 / 1000} min left!`);
         } else if (
-          settings.reminder_type === "Last" &&
+          settings.reminder_type === "last" &&
           timeLeft === settings.reminder_time * 60 * 1000
         ) {
           // Last 1 min
@@ -106,7 +127,11 @@ export default function useTimer() {
   const startWorker = useCallback(() => {
     createWorker();
     if (!workerRef.current) return;
-    if (focusTabRef.current) playFocus({ loop: true });
+    setStarted(true);
+    if (focusTabRef.current) {
+      startTimeRef.current = new Date();
+      playFocus({ loop: true });
+    }
     workerRef.current.postMessage({
       id: new Date(),
       timer: timerRef.current,
@@ -115,7 +140,6 @@ export default function useTimer() {
 
   const handleStartTimer = useCallback(() => {
     if (!started && workerRef.current) {
-      setStarted(true);
       startWorker();
     } else {
       setStarted(false);
@@ -125,7 +149,6 @@ export default function useTimer() {
       workerRef.current?.terminate();
     }
   }, [started, startWorker, focusTabRef, stopFocus]);
-
   const handleChangeTab = useCallback(
     (value: Tab, auto: boolean = false) => {
       setActiveTab(value);
@@ -147,6 +170,11 @@ export default function useTimer() {
   const handleStopTimer = useCallback(() => {
     //stop focus
     if (focusTabRef.current) {
+      mutation.mutate({
+        type: "pomodoro",
+        startTime: startTimeRef.current!,
+        endTime: new Date(),
+      });
       stopFocus();
     }
     setStarted(false);
@@ -169,7 +197,6 @@ export default function useTimer() {
         focusTabRef.current = false;
       }
       if (settings.auto_start_breaks) {
-        setStarted(true);
         startWorker();
       }
     } else if (
@@ -186,7 +213,6 @@ export default function useTimer() {
       handleChangeTab(TABS.Pomodoro);
 
       if (settings.auto_start_pomodoros) {
-        setStarted(true);
         startWorker();
       }
     }
@@ -202,6 +228,7 @@ export default function useTimer() {
     showNotification,
     stopFocus,
     startWorker,
+    mutation,
   ]);
 
   useEffect(() => {

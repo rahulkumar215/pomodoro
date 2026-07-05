@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ClockCheckIcon } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
 import { signinSchema } from "@/consts/consts";
 import type { LoginResponse, SigninFormData } from "@/consts/consts";
@@ -25,6 +24,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError } from "@/lib/handleError";
 import api from "@/lib/api";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -42,11 +43,10 @@ export function LoginForm() {
     return response.data;
   };
 
-  const onSubmit = async (data: SigninFormData) => {
-    console.log(data);
-
-    try {
-      const { user, token } = await login(data);
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data: LoginResponse) => {
+      const { user, token } = data;
 
       localStorage.setItem("token", token || "");
       localStorage.setItem("user", JSON.stringify(user));
@@ -54,11 +54,17 @@ export function LoginForm() {
       toast.success("Successfully Logged in");
 
       setTimeout(() => {
-        navigate({ to: "/" });
+        navigate("/");
       }, 1000);
-    } catch (error) {
+    },
+    onError: (error) => {
       handleError(error);
-    }
+    },
+  });
+
+  const onSubmit = async (data: SigninFormData) => {
+    console.log(data);
+    mutation.mutate(data);
   };
 
   return (

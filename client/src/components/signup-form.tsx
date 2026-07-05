@@ -19,9 +19,10 @@ import type { SignupFormData } from "@/consts/consts";
 import api from "@/lib/api";
 import { handleError } from "@/lib/handleError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
 import { ClockCheckIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export function SignupForm() {
@@ -31,23 +32,25 @@ export function SignupForm() {
     mode: "onBlur",
   });
 
-  async function onSubmit(data: SignupFormData) {
-    // Do something with the form values.
-    console.log(data);
-    try {
-      const res = await api.post("/auth/signup", data);
-      if (res.status === 200) {
-        toast.success("Successfully Signed up!");
+  const mutation = useMutation({
+    mutationFn: async (data: SignupFormData) => {
+      return await api.post("/auth/signup", data);
+    },
+    onSuccess: () => {
+      toast.success("Successfully Signed up!");
 
-        setTimeout(() => {
-          navigate({ to: "/signin" });
-        }, 1000);
-      } else {
-        throw new Error("Something went wrong");
-      }
-    } catch (error) {
+      setTimeout(() => {
+        navigate("/signin");
+      }, 1000);
+    },
+    onError: (error) => {
       handleError(error);
-    }
+    },
+  });
+
+  async function onSubmit(data: SignupFormData) {
+    console.log(data);
+    mutation.mutate(data);
   }
   return (
     <div className="flex flex-col  gap-6">

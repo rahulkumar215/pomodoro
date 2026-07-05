@@ -1,5 +1,6 @@
 import { prisma } from "@/db";
 import { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
 
 export const createSession = async (
   req: Request,
@@ -28,5 +29,24 @@ export const createSession = async (
     data: {
       data: session,
     },
+  });
+};
+
+export const getSessions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const sessions = await prisma.session.findMany({
+    where: {
+      user_id: req.user.id,
+    },
+    omit: {
+      user_id: true,
+    },
+  });
+
+  res.status(StatusCodes.OK).json({
+    sessions,
   });
 };

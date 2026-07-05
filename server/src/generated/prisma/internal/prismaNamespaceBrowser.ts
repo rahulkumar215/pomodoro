@@ -113,14 +113,14 @@ export const TaskScalarFieldEnum = {
   id: 'id',
   name: 'name',
   note: 'note',
-  estimated_pomodoros: 'estimated_pomodoros',
-  is_complete: 'is_complete',
+  estimatedPomodoros: 'estimatedPomodoros',
+  isComplete: 'isComplete',
   order: 'order',
-  project_id: 'project_id',
-  user_id: 'user_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
+  projectId: 'projectId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]

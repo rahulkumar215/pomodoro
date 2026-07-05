@@ -27,12 +27,12 @@ export type AggregateTask = {
 }
 
 export type TaskAvgAggregateOutputType = {
-  estimated_pomodoros: number | null
+  estimatedPomodoros: number | null
   order: number | null
 }
 
 export type TaskSumAggregateOutputType = {
-  estimated_pomodoros: number | null
+  estimatedPomodoros: number | null
   order: number | null
 }
 
@@ -40,53 +40,53 @@ export type TaskMinAggregateOutputType = {
   id: string | null
   name: string | null
   note: string | null
-  estimated_pomodoros: number | null
-  is_complete: boolean | null
+  estimatedPomodoros: number | null
+  isComplete: boolean | null
   order: number | null
-  project_id: string | null
-  user_id: string | null
-  created_at: Date | null
-  updated_at: Date | null
-  deleted_at: Date | null
+  projectId: string | null
+  userId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TaskMaxAggregateOutputType = {
   id: string | null
   name: string | null
   note: string | null
-  estimated_pomodoros: number | null
-  is_complete: boolean | null
+  estimatedPomodoros: number | null
+  isComplete: boolean | null
   order: number | null
-  project_id: string | null
-  user_id: string | null
-  created_at: Date | null
-  updated_at: Date | null
-  deleted_at: Date | null
+  projectId: string | null
+  userId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TaskCountAggregateOutputType = {
   id: number
   name: number
   note: number
-  estimated_pomodoros: number
-  is_complete: number
+  estimatedPomodoros: number
+  isComplete: number
   order: number
-  project_id: number
-  user_id: number
-  created_at: number
-  updated_at: number
-  deleted_at: number
+  projectId: number
+  userId: number
+  createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
 
 export type TaskAvgAggregateInputType = {
-  estimated_pomodoros?: true
+  estimatedPomodoros?: true
   order?: true
 }
 
 export type TaskSumAggregateInputType = {
-  estimated_pomodoros?: true
+  estimatedPomodoros?: true
   order?: true
 }
 
@@ -94,42 +94,42 @@ export type TaskMinAggregateInputType = {
   id?: true
   name?: true
   note?: true
-  estimated_pomodoros?: true
-  is_complete?: true
+  estimatedPomodoros?: true
+  isComplete?: true
   order?: true
-  project_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
-  deleted_at?: true
+  projectId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TaskMaxAggregateInputType = {
   id?: true
   name?: true
   note?: true
-  estimated_pomodoros?: true
-  is_complete?: true
+  estimatedPomodoros?: true
+  isComplete?: true
   order?: true
-  project_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
-  deleted_at?: true
+  projectId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TaskCountAggregateInputType = {
   id?: true
   name?: true
   note?: true
-  estimated_pomodoros?: true
-  is_complete?: true
+  estimatedPomodoros?: true
+  isComplete?: true
   order?: true
-  project_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
-  deleted_at?: true
+  projectId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -223,14 +223,14 @@ export type TaskGroupByOutputType = {
   id: string
   name: string
   note: string | null
-  estimated_pomodoros: number
-  is_complete: boolean
+  estimatedPomodoros: number
+  isComplete: boolean
   order: number
-  project_id: string | null
-  user_id: string
-  created_at: Date
-  updated_at: Date
-  deleted_at: Date | null
+  projectId: string | null
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: TaskCountAggregateOutputType | null
   _avg: TaskAvgAggregateOutputType | null
   _sum: TaskSumAggregateOutputType | null
@@ -260,14 +260,14 @@ export type TaskWhereInput = {
   id?: Prisma.StringFilter<"Task"> | string
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
-  estimated_pomodoros?: Prisma.IntFilter<"Task"> | number
-  is_complete?: Prisma.BoolFilter<"Task"> | boolean
+  estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
-  project_id?: Prisma.StringNullableFilter<"Task"> | string | null
-  user_id?: Prisma.StringFilter<"Task"> | string
-  created_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  deleted_at?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  userId?: Prisma.StringFilter<"Task"> | string
+  createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -277,14 +277,14 @@ export type TaskOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
-  estimated_pomodoros?: Prisma.SortOrder
-  is_complete?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
+  isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
-  project_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -297,14 +297,14 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.TaskWhereInput | Prisma.TaskWhereInput[]
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
-  estimated_pomodoros?: Prisma.IntFilter<"Task"> | number
-  is_complete?: Prisma.BoolFilter<"Task"> | boolean
+  estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
-  project_id?: Prisma.StringNullableFilter<"Task"> | string | null
-  user_id?: Prisma.StringFilter<"Task"> | string
-  created_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  deleted_at?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  userId?: Prisma.StringFilter<"Task"> | string
+  createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -314,14 +314,14 @@ export type TaskOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
-  estimated_pomodoros?: Prisma.SortOrder
-  is_complete?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
+  isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
-  project_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  deleted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TaskCountOrderByAggregateInput
   _avg?: Prisma.TaskAvgOrderByAggregateInput
   _max?: Prisma.TaskMaxOrderByAggregateInput
@@ -336,26 +336,26 @@ export type TaskScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Task"> | string
   name?: Prisma.StringWithAggregatesFilter<"Task"> | string
   note?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
-  estimated_pomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
-  is_complete?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
+  estimatedPomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  isComplete?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
   order?: Prisma.IntWithAggregatesFilter<"Task"> | number
-  project_id?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
-  user_id?: Prisma.StringWithAggregatesFilter<"Task"> | string
-  created_at?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
-  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
-  deleted_at?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
+  projectId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"Task"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
 }
 
 export type TaskCreateInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
   user: Prisma.UserCreateNestedOneWithoutTasksInput
@@ -365,14 +365,14 @@ export type TaskUncheckedCreateInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  project_id?: string | null
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  projectId?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
 }
 
@@ -380,12 +380,12 @@ export type TaskUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
@@ -395,14 +395,14 @@ export type TaskUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  project_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
@@ -410,40 +410,40 @@ export type TaskCreateManyInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  project_id?: string | null
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  projectId?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TaskUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TaskUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  project_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TaskListRelationFilter = {
@@ -460,18 +460,18 @@ export type TaskCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
-  estimated_pomodoros?: Prisma.SortOrder
-  is_complete?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
+  isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
-  project_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  deleted_at?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TaskAvgOrderByAggregateInput = {
-  estimated_pomodoros?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -479,32 +479,32 @@ export type TaskMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
-  estimated_pomodoros?: Prisma.SortOrder
-  is_complete?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
+  isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
-  project_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  deleted_at?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TaskMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   note?: Prisma.SortOrder
-  estimated_pomodoros?: Prisma.SortOrder
-  is_complete?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
+  isComplete?: Prisma.SortOrder
   order?: Prisma.SortOrder
-  project_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  deleted_at?: Prisma.SortOrder
+  projectId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TaskSumOrderByAggregateInput = {
-  estimated_pomodoros?: Prisma.SortOrder
+  estimatedPomodoros?: Prisma.SortOrder
   order?: Prisma.SortOrder
 }
 
@@ -625,12 +625,12 @@ export type TaskCreateWithoutUserInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
 }
@@ -639,13 +639,13 @@ export type TaskUncheckedCreateWithoutUserInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  project_id?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
 }
 
@@ -682,26 +682,26 @@ export type TaskScalarWhereInput = {
   id?: Prisma.StringFilter<"Task"> | string
   name?: Prisma.StringFilter<"Task"> | string
   note?: Prisma.StringNullableFilter<"Task"> | string | null
-  estimated_pomodoros?: Prisma.IntFilter<"Task"> | number
-  is_complete?: Prisma.BoolFilter<"Task"> | boolean
+  estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
+  isComplete?: Prisma.BoolFilter<"Task"> | boolean
   order?: Prisma.IntFilter<"Task"> | number
-  project_id?: Prisma.StringNullableFilter<"Task"> | string | null
-  user_id?: Prisma.StringFilter<"Task"> | string
-  created_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Task"> | Date | string
-  deleted_at?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
+  projectId?: Prisma.StringNullableFilter<"Task"> | string | null
+  userId?: Prisma.StringFilter<"Task"> | string
+  createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Task"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Task"> | Date | string | null
 }
 
 export type TaskCreateWithoutProjectInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   sessions?: Prisma.SessionCreateNestedManyWithoutTaskInput
   user: Prisma.UserCreateNestedOneWithoutTasksInput
 }
@@ -710,13 +710,13 @@ export type TaskUncheckedCreateWithoutProjectInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutTaskInput
 }
 
@@ -750,12 +750,12 @@ export type TaskCreateWithoutSessionsInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   project?: Prisma.ProjectCreateNestedOneWithoutTasksInput
   user: Prisma.UserCreateNestedOneWithoutTasksInput
 }
@@ -764,14 +764,14 @@ export type TaskUncheckedCreateWithoutSessionsInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  project_id?: string | null
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  projectId?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TaskCreateOrConnectWithoutSessionsInput = {
@@ -794,12 +794,12 @@ export type TaskUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
 }
@@ -808,39 +808,39 @@ export type TaskUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  project_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TaskCreateManyUserInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  project_id?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  projectId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TaskUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneWithoutTasksNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
 }
@@ -849,13 +849,13 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  project_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
@@ -863,38 +863,38 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  project_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TaskCreateManyProjectInput = {
   id?: string
   name: string
   note?: string | null
-  estimated_pomodoros?: number
-  is_complete?: boolean
+  estimatedPomodoros?: number
+  isComplete?: boolean
   order?: number
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
-  deleted_at?: Date | string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TaskUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUpdateManyWithoutTaskNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTasksNestedInput
 }
@@ -903,13 +903,13 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutTaskNestedInput
 }
 
@@ -917,13 +917,13 @@ export type TaskUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  estimated_pomodoros?: Prisma.IntFieldUpdateOperationsInput | number
-  is_complete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
+  isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   order?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deleted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -961,14 +961,14 @@ export type TaskSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   note?: boolean
-  estimated_pomodoros?: boolean
-  is_complete?: boolean
+  estimatedPomodoros?: boolean
+  isComplete?: boolean
   order?: boolean
-  project_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  deleted_at?: boolean
+  projectId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.Task$projectArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -979,14 +979,14 @@ export type TaskSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   note?: boolean
-  estimated_pomodoros?: boolean
-  is_complete?: boolean
+  estimatedPomodoros?: boolean
+  isComplete?: boolean
   order?: boolean
-  project_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  deleted_at?: boolean
+  projectId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.Task$projectArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
@@ -995,14 +995,14 @@ export type TaskSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   note?: boolean
-  estimated_pomodoros?: boolean
-  is_complete?: boolean
+  estimatedPomodoros?: boolean
+  isComplete?: boolean
   order?: boolean
-  project_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  deleted_at?: boolean
+  projectId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   project?: boolean | Prisma.Task$projectArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["task"]>
@@ -1011,17 +1011,17 @@ export type TaskSelectScalar = {
   id?: boolean
   name?: boolean
   note?: boolean
-  estimated_pomodoros?: boolean
-  is_complete?: boolean
+  estimatedPomodoros?: boolean
+  isComplete?: boolean
   order?: boolean
-  project_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  deleted_at?: boolean
+  projectId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "note" | "estimated_pomodoros" | "is_complete" | "order" | "project_id" | "user_id" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["task"]>
+export type TaskOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "note" | "estimatedPomodoros" | "isComplete" | "order" | "projectId" | "userId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["task"]>
 export type TaskInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Task$projectArgs<ExtArgs>
   sessions?: boolean | Prisma.Task$sessionsArgs<ExtArgs>
@@ -1048,14 +1048,14 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     name: string
     note: string | null
-    estimated_pomodoros: number
-    is_complete: boolean
+    estimatedPomodoros: number
+    isComplete: boolean
     order: number
-    project_id: string | null
-    user_id: string
-    created_at: Date
-    updated_at: Date
-    deleted_at: Date | null
+    projectId: string | null
+    userId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["task"]>
   composites: {}
 }
@@ -1485,14 +1485,14 @@ export interface TaskFieldRefs {
   readonly id: Prisma.FieldRef<"Task", 'String'>
   readonly name: Prisma.FieldRef<"Task", 'String'>
   readonly note: Prisma.FieldRef<"Task", 'String'>
-  readonly estimated_pomodoros: Prisma.FieldRef<"Task", 'Int'>
-  readonly is_complete: Prisma.FieldRef<"Task", 'Boolean'>
+  readonly estimatedPomodoros: Prisma.FieldRef<"Task", 'Int'>
+  readonly isComplete: Prisma.FieldRef<"Task", 'Boolean'>
   readonly order: Prisma.FieldRef<"Task", 'Int'>
-  readonly project_id: Prisma.FieldRef<"Task", 'String'>
-  readonly user_id: Prisma.FieldRef<"Task", 'String'>
-  readonly created_at: Prisma.FieldRef<"Task", 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<"Task", 'DateTime'>
-  readonly deleted_at: Prisma.FieldRef<"Task", 'DateTime'>
+  readonly projectId: Prisma.FieldRef<"Task", 'String'>
+  readonly userId: Prisma.FieldRef<"Task", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Task", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Task", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Task", 'DateTime'>
 }
     
 

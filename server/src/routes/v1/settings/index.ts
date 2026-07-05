@@ -6,5 +6,7 @@ const settings = Router();
 
 settings.use(authMiddleware);
 settings.post("/", setttingsController.createSettings);
+settings.get("/", setttingsController.getSettings);
+settings.patch("/", setttingsController.updateSettings);
 
 export default settings;
