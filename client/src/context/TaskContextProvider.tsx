@@ -1,11 +1,11 @@
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { TaskContext } from "./TaskContext";
 import {
   tasksResponseSchema,
   type CreateTaskInput,
   type TasksResponse,
   type UpdateTaskInput,
-} from "@/schemas/task";
+} from "@/schemas/tasks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import z from "zod";
@@ -13,8 +13,10 @@ import { toast } from "sonner";
 
 function TaskContextProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const [activeTask, setActiveTask] = useState<TasksResponse | null>(null);
+  const isDragging = useRef(false);
 
-  const { data: tasks = [] } = useQuery({
+  const { data: fetchedTasks = [] } = useQuery({
     queryKey: ["tasks"],
     queryFn: async (): Promise<TasksResponse[]> => {
       console.log("fetcing tasks");
@@ -23,13 +25,24 @@ function TaskContextProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const [tasks, setTasks] = useState<TasksResponse[]>(fetchedTasks ?? []);
+
+  useEffect(() => {
+    if (fetchedTasks && !isDragging.current) {
+      setTasks(fetchedTasks);
+    }
+  }, [fetchedTasks]);
+
+  const setDragging = (val: boolean) => {
+    isDragging.current = val;
+  };
+
   const create = useMutation({
     mutationFn: async (data: CreateTaskInput) => {
       const response = await api.post("/tasks", data);
-      return response;
+      return tasksResponseSchema.parse(response.data.data.task);
     },
     onSuccess: async () => {
-      console.log("invalidating query");
       await queryClient.invalidateQueries({
         queryKey: ["tasks"],
       });
@@ -67,24 +80,29 @@ function TaskContextProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  return (
-    <TaskContext
-      value={{
-        tasks,
-        createTask: (data: CreateTaskInput) => create.mutate(data),
-        patchTask: ({
-          id,
-          changes,
-        }: {
-          id: string;
-          changes: Partial<UpdateTaskInput>;
-        }) => update.mutate({ id, changes }),
-        deleteTask: (taskId: string) => delTask.mutate(taskId),
-      }}
-    >
-      {children}
-    </TaskContext>
+  const values = useMemo(
+    () => ({
+      tasks: tasks.sort((a, b) => a.order - b.order),
+      setTasks,
+      setDragging,
+      createTask: create.mutate,
+      patchTask: update.mutate,
+      deleteTask: delTask.mutate,
+      activeTask,
+      setActiveTask,
+    }),
+    [
+      tasks,
+      setTasks,
+      create.mutate,
+      update.mutate,
+      delTask.mutate,
+      activeTask,
+      setActiveTask,
+    ],
   );
+
+  return <TaskContext value={values}>{children}</TaskContext>;
 }
 
 export default TaskContextProvider;

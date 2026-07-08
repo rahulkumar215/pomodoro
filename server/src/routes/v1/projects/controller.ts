@@ -1,27 +1,35 @@
 import { prisma } from "@/db";
 import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { createProjectSchema, updateProjectSchema } from "./projectsSchema";
+import { ValidationError } from "@/errors";
 
 export const createProject = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const { name, color } = req.body;
+  const result = createProjectSchema.safeParse(req.body);
 
-  // perform some validation here
+  if (!result.success) {
+    console.log(result.error);
+    throw new ValidationError("Invalid create payload.");
+  }
+
+  const { name, color } = result.data;
 
   const project = await prisma.project.create({
     data: {
       name: name,
       color: color,
-      user_id: req.user.id,
+      userId: req.user.id,
     },
   });
 
   res.status(200).json({
     status: "success",
     data: {
-      data: project,
+      project,
     },
   });
 };
@@ -31,12 +39,18 @@ export const listProjects = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const projects = await prisma.project.findMany();
-  res.status(200).json({
-    status: "success",
-    results: projects.length,
+  const projects = await prisma.project.findMany({
+    where: {
+      userId: req.user.id,
+    },
+    omit: {
+      userId: true,
+    },
+  });
+
+  res.status(StatusCodes.OK).json({
     data: {
-      data: projects,
+      projects,
     },
   });
 };
@@ -71,48 +85,48 @@ export const updateProject = async (
 ) => {
   const id = req.params.id;
 
-  if (!id || Array.isArray(id)) return next(new Error("Project id not found!"));
+  if (!id || Array.isArray(id))
+    throw new ValidationError("Project id not found!");
 
-  const { name, color } = req.body;
+  const result = updateProjectSchema.safeParse(req.body);
 
-  if (name === undefined && color === undefined)
-    return next(new Error("No fields provided to update!"));
+  if (!result.success) throw new ValidationError("Invalid update payload.");
+
+  const data = result.data;
 
   const project = await prisma.project.update({
     where: {
       id,
     },
-    data: {
-      ...(name !== undefined && { name }),
-      ...(color !== undefined && { color }),
-    },
+    data,
   });
 
   res.status(200).json({
     status: "success",
     data: {
-      data: project,
+      project,
     },
   });
 };
 
-export const deleteProject = (
+export const deleteProject = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
-  if (!id || Array.isArray(id)) return next(new Error("Project Id not found!"));
+  if (!id || Array.isArray(id))
+    throw new ValidationError("Project id not found.");
 
-  prisma.project.delete({
+  await prisma.project.delete({
     where: {
       id,
     },
   });
 
-  res.status(200).json({
-    status: "success",
+  res.status(StatusCodes.OK).json({
+    message: "Successfully project deleted",
   });
 };
 

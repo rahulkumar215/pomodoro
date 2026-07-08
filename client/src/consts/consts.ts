@@ -145,7 +145,7 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export const TASK_CONSTRAINTS = {
-  name: { min: 1, max: 120 },
+  name: { min: 1, max: 60 },
   estimatedPomodoros: { min: 1 },
   completedPomodoros: { min: 0 },
   note: { max: 120 },
@@ -246,10 +246,10 @@ export interface LoginResponse {
   token: string;
 }
 
-export const SessionType = {
+export const SessionTypes = {
   pomodoro: "pomodoro",
   short_break: "short_break",
   long_break: "long_break",
 } as const;
 
-export type SessionType = (typeof SessionType)[keyof typeof SessionType];
+export type SessionTypesType = (typeof SessionTypes)[keyof typeof SessionTypes];

@@ -1,4 +1,4 @@
-import { SessionType, TABS, type Settings, type Tab } from "@/consts/consts";
+import { SessionTypes, TABS, type Settings, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
@@ -7,6 +7,8 @@ import { useSettings } from "@/context/SettingsContext";
 import formattedTimer from "@/lib/formattedTimer";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
+import { useTasks } from "@/context/TaskContext";
+import type { CreateSessionInput } from "@/schemas/sessions";
 
 function getTimer(activeTab: Tab, settings: Settings) {
   let timer: number;
@@ -61,12 +63,9 @@ export default function useTimer() {
   const localPomodoroCount = useRef(0);
   const enteredViaAutoTransition = useRef(false);
   const queryClient = useQueryClient();
+  const { tasks, activeTask, patchTask } = useTasks();
 
-  const addSession = async (data: {
-    type: SessionType;
-    startTime: Date;
-    endTime: Date;
-  }): Promise<void> => {
+  const addSession = async (data: CreateSessionInput): Promise<void> => {
     return await api.post("/sessions", data);
   };
 
@@ -172,9 +171,31 @@ export default function useTimer() {
     if (focusTabRef.current) {
       mutation.mutate({
         type: "pomodoro",
-        startTime: startTimeRef.current!,
-        endTime: new Date(),
+        startTime: new Date(startTimeRef.current!).toISOString(),
+        endTime: new Date().toISOString(),
+        minutes: Math.floor(
+          (Date.now() - new Date(startTimeRef.current!).getTime()) / 1000 / 60,
+        ),
+        taskId: activeTask ? activeTask.id : null,
       });
+      if (activeTask && !activeTask.isComplete) {
+        const newCompletedPomodorCount = activeTask.completedPomodoros + 1;
+        const isTaskCompleted =
+          activeTask.estimatedPomodoros === newCompletedPomodorCount;
+        patchTask({
+          id: activeTask.id,
+          changes: {
+            completedPomodoros: activeTask.completedPomodoros + 1,
+            ...(isTaskCompleted &&
+              settings.auto_check_tasks && { isComplete: true }),
+            ...(isTaskCompleted &&
+              settings.auto_check_tasks &&
+              settings.check_to_bottom && {
+                order: tasks[tasks.length - 1].order + 1000,
+              }),
+          },
+        });
+      }
       stopFocus();
     }
     setStarted(false);

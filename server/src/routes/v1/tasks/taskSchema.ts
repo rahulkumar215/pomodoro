@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const TASK_CONSTRAINTS = {
-  name: { min: 1, max: 120 },
+  name: { min: 1, max: 60 },
   estimatedPomodoros: { min: 1 },
   completedPomodoros: { min: 0 },
   note: { max: 120 },

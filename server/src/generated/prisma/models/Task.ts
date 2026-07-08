@@ -29,13 +29,13 @@ export type AggregateTask = {
 export type TaskAvgAggregateOutputType = {
   estimatedPomodoros: number | null
   completedPomodoros: number | null
-  order: number | null
+  order: runtime.Decimal | null
 }
 
 export type TaskSumAggregateOutputType = {
   estimatedPomodoros: number | null
   completedPomodoros: number | null
-  order: number | null
+  order: runtime.Decimal | null
 }
 
 export type TaskMinAggregateOutputType = {
@@ -45,7 +45,7 @@ export type TaskMinAggregateOutputType = {
   estimatedPomodoros: number | null
   completedPomodoros: number | null
   isComplete: boolean | null
-  order: number | null
+  order: runtime.Decimal | null
   projectId: string | null
   userId: string | null
   createdAt: Date | null
@@ -60,7 +60,7 @@ export type TaskMaxAggregateOutputType = {
   estimatedPomodoros: number | null
   completedPomodoros: number | null
   isComplete: boolean | null
-  order: number | null
+  order: runtime.Decimal | null
   projectId: string | null
   userId: string | null
   createdAt: Date | null
@@ -236,7 +236,7 @@ export type TaskGroupByOutputType = {
   estimatedPomodoros: number
   completedPomodoros: number
   isComplete: boolean
-  order: number
+  order: runtime.Decimal
   projectId: string | null
   userId: string
   createdAt: Date
@@ -274,7 +274,7 @@ export type TaskWhereInput = {
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
   completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
-  order?: Prisma.IntFilter<"Task"> | number
+  order?: Prisma.DecimalFilter<"Task"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
   userId?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
@@ -313,7 +313,7 @@ export type TaskWhereUniqueInput = Prisma.AtLeast<{
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
   completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
-  order?: Prisma.IntFilter<"Task"> | number
+  order?: Prisma.DecimalFilter<"Task"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
   userId?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
@@ -354,7 +354,7 @@ export type TaskScalarWhereWithAggregatesInput = {
   estimatedPomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
   completedPomodoros?: Prisma.IntWithAggregatesFilter<"Task"> | number
   isComplete?: Prisma.BoolWithAggregatesFilter<"Task"> | boolean
-  order?: Prisma.IntWithAggregatesFilter<"Task"> | number
+  order?: Prisma.DecimalWithAggregatesFilter<"Task"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Task"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Task"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Task"> | Date | string
@@ -369,7 +369,7 @@ export type TaskCreateInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -385,7 +385,7 @@ export type TaskUncheckedCreateInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: string | null
   userId: string
   createdAt?: Date | string
@@ -401,7 +401,7 @@ export type TaskUpdateInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -417,7 +417,7 @@ export type TaskUncheckedUpdateInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -433,7 +433,7 @@ export type TaskCreateManyInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: string | null
   userId: string
   createdAt?: Date | string
@@ -448,7 +448,7 @@ export type TaskUpdateManyMutationInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -461,7 +461,7 @@ export type TaskUncheckedUpdateManyInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -633,6 +633,14 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type TaskCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.TaskCreateWithoutSessionsInput, Prisma.TaskUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.TaskCreateOrConnectWithoutSessionsInput
@@ -656,7 +664,7 @@ export type TaskCreateWithoutUserInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -671,7 +679,7 @@ export type TaskUncheckedCreateWithoutUserInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -715,7 +723,7 @@ export type TaskScalarWhereInput = {
   estimatedPomodoros?: Prisma.IntFilter<"Task"> | number
   completedPomodoros?: Prisma.IntFilter<"Task"> | number
   isComplete?: Prisma.BoolFilter<"Task"> | boolean
-  order?: Prisma.IntFilter<"Task"> | number
+  order?: Prisma.DecimalFilter<"Task"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.StringNullableFilter<"Task"> | string | null
   userId?: Prisma.StringFilter<"Task"> | string
   createdAt?: Prisma.DateTimeFilter<"Task"> | Date | string
@@ -730,7 +738,7 @@ export type TaskCreateWithoutProjectInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -745,7 +753,7 @@ export type TaskUncheckedCreateWithoutProjectInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -786,7 +794,7 @@ export type TaskCreateWithoutSessionsInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -801,7 +809,7 @@ export type TaskUncheckedCreateWithoutSessionsInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: string | null
   userId: string
   createdAt?: Date | string
@@ -832,7 +840,7 @@ export type TaskUpdateWithoutSessionsInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -847,7 +855,7 @@ export type TaskUncheckedUpdateWithoutSessionsInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -862,7 +870,7 @@ export type TaskCreateManyUserInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -876,7 +884,7 @@ export type TaskUpdateWithoutUserInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -891,7 +899,7 @@ export type TaskUncheckedUpdateWithoutUserInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -906,7 +914,7 @@ export type TaskUncheckedUpdateManyWithoutUserInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -920,7 +928,7 @@ export type TaskCreateManyProjectInput = {
   estimatedPomodoros?: number
   completedPomodoros?: number
   isComplete?: boolean
-  order?: number
+  order?: runtime.Decimal | runtime.DecimalJsLike | number | string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -934,7 +942,7 @@ export type TaskUpdateWithoutProjectInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -949,7 +957,7 @@ export type TaskUncheckedUpdateWithoutProjectInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -964,7 +972,7 @@ export type TaskUncheckedUpdateManyWithoutProjectInput = {
   estimatedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   completedPomodoros?: Prisma.IntFieldUpdateOperationsInput | number
   isComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  order?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1100,7 +1108,7 @@ export type $TaskPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     estimatedPomodoros: number
     completedPomodoros: number
     isComplete: boolean
-    order: number
+    order: runtime.Decimal
     projectId: string | null
     userId: string
     createdAt: Date
@@ -1538,7 +1546,7 @@ export interface TaskFieldRefs {
   readonly estimatedPomodoros: Prisma.FieldRef<"Task", 'Int'>
   readonly completedPomodoros: Prisma.FieldRef<"Task", 'Int'>
   readonly isComplete: Prisma.FieldRef<"Task", 'Boolean'>
-  readonly order: Prisma.FieldRef<"Task", 'Int'>
+  readonly order: Prisma.FieldRef<"Task", 'Decimal'>
   readonly projectId: Prisma.FieldRef<"Task", 'String'>
   readonly userId: Prisma.FieldRef<"Task", 'String'>
   readonly createdAt: Prisma.FieldRef<"Task", 'DateTime'>

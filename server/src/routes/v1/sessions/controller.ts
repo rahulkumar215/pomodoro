@@ -1,33 +1,34 @@
 import { prisma } from "@/db";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
+import { createSessionSchema } from "./sessionSchema";
+import { ValidationError } from "@/errors";
 
 export const createSession = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const { type, startTime, endTime, taskId } = req.body;
+  const result = createSessionSchema.safeParse(req.body);
 
-  const minutes = Math.floor(
-    (new Date(endTime) - new Date(startTime)) / 1000 / 60,
-  );
+  if (!result.success) {
+    console.log(result.error);
+    throw new ValidationError("Invalid craete payload");
+  }
+
+  const data = result.data;
 
   const session = await prisma.session.create({
     data: {
-      type,
-      start_time: startTime,
-      end_time: endTime,
-      minutes,
-      task_id: taskId,
-      user_id: req.user.id,
+      ...data,
+      userId: req.user.id,
     },
   });
 
-  res.status(200).json({
-    status: "success",
+  res.status(StatusCodes.CREATED).json({
+    message: "Successfully session created.",
     data: {
-      data: session,
+      session,
     },
   });
 };
@@ -39,10 +40,10 @@ export const getSessions = async (
 ) => {
   const sessions = await prisma.session.findMany({
     where: {
-      user_id: req.user.id,
+      userId: req.user.id,
     },
     omit: {
-      user_id: true,
+      userId: true,
     },
   });
 

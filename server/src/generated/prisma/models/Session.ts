@@ -37,37 +37,37 @@ export type SessionSumAggregateOutputType = {
 export type SessionMinAggregateOutputType = {
   id: string | null
   type: $Enums.Session_Types | null
-  start_time: Date | null
-  end_time: Date | null
+  startTime: Date | null
+  endTime: Date | null
   minutes: number | null
-  task_id: string | null
-  user_id: string | null
-  created_at: Date | null
-  updated_at: Date | null
+  taskId: string | null
+  userId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SessionMaxAggregateOutputType = {
   id: string | null
   type: $Enums.Session_Types | null
-  start_time: Date | null
-  end_time: Date | null
+  startTime: Date | null
+  endTime: Date | null
   minutes: number | null
-  task_id: string | null
-  user_id: string | null
-  created_at: Date | null
-  updated_at: Date | null
+  taskId: string | null
+  userId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type SessionCountAggregateOutputType = {
   id: number
   type: number
-  start_time: number
-  end_time: number
+  startTime: number
+  endTime: number
   minutes: number
-  task_id: number
-  user_id: number
-  created_at: number
-  updated_at: number
+  taskId: number
+  userId: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -83,37 +83,37 @@ export type SessionSumAggregateInputType = {
 export type SessionMinAggregateInputType = {
   id?: true
   type?: true
-  start_time?: true
-  end_time?: true
+  startTime?: true
+  endTime?: true
   minutes?: true
-  task_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
+  taskId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type SessionMaxAggregateInputType = {
   id?: true
   type?: true
-  start_time?: true
-  end_time?: true
+  startTime?: true
+  endTime?: true
   minutes?: true
-  task_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
+  taskId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type SessionCountAggregateInputType = {
   id?: true
   type?: true
-  start_time?: true
-  end_time?: true
+  startTime?: true
+  endTime?: true
   minutes?: true
-  task_id?: true
-  user_id?: true
-  created_at?: true
-  updated_at?: true
+  taskId?: true
+  userId?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -206,13 +206,13 @@ export type SessionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type SessionGroupByOutputType = {
   id: string
   type: $Enums.Session_Types
-  start_time: Date
-  end_time: Date
+  startTime: Date
+  endTime: Date
   minutes: number
-  task_id: string | null
-  user_id: string
-  created_at: Date
-  updated_at: Date
+  taskId: string | null
+  userId: string
+  createdAt: Date
+  updatedAt: Date
   _count: SessionCountAggregateOutputType | null
   _avg: SessionAvgAggregateOutputType | null
   _sum: SessionSumAggregateOutputType | null
@@ -241,13 +241,13 @@ export type SessionWhereInput = {
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   id?: Prisma.StringFilter<"Session"> | string
   type?: Prisma.EnumSession_TypesFilter<"Session"> | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFilter<"Session"> | Date | string
-  end_time?: Prisma.DateTimeFilter<"Session"> | Date | string
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
+  endTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   minutes?: Prisma.IntFilter<"Session"> | number
-  task_id?: Prisma.StringNullableFilter<"Session"> | string | null
-  user_id?: Prisma.StringFilter<"Session"> | string
-  created_at?: Prisma.DateTimeFilter<"Session"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Session"> | Date | string
+  taskId?: Prisma.StringNullableFilter<"Session"> | string | null
+  userId?: Prisma.StringFilter<"Session"> | string
+  createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -255,13 +255,13 @@ export type SessionWhereInput = {
 export type SessionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  start_time?: Prisma.SortOrder
-  end_time?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   minutes?: Prisma.SortOrder
-  task_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   task?: Prisma.TaskOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -272,13 +272,13 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SessionWhereInput[]
   NOT?: Prisma.SessionWhereInput | Prisma.SessionWhereInput[]
   type?: Prisma.EnumSession_TypesFilter<"Session"> | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFilter<"Session"> | Date | string
-  end_time?: Prisma.DateTimeFilter<"Session"> | Date | string
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
+  endTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   minutes?: Prisma.IntFilter<"Session"> | number
-  task_id?: Prisma.StringNullableFilter<"Session"> | string | null
-  user_id?: Prisma.StringFilter<"Session"> | string
-  created_at?: Prisma.DateTimeFilter<"Session"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Session"> | Date | string
+  taskId?: Prisma.StringNullableFilter<"Session"> | string | null
+  userId?: Prisma.StringFilter<"Session"> | string
+  createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
   task?: Prisma.XOR<Prisma.TaskNullableScalarRelationFilter, Prisma.TaskWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -286,13 +286,13 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
 export type SessionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  start_time?: Prisma.SortOrder
-  end_time?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   minutes?: Prisma.SortOrder
-  task_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  taskId?: Prisma.SortOrderInput | Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _avg?: Prisma.SessionAvgOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
@@ -306,23 +306,23 @@ export type SessionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SessionScalarWhereWithAggregatesInput | Prisma.SessionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Session"> | string
   type?: Prisma.EnumSession_TypesWithAggregatesFilter<"Session"> | $Enums.Session_Types
-  start_time?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
-  end_time?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  startTime?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  endTime?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
   minutes?: Prisma.IntWithAggregatesFilter<"Session"> | number
-  task_id?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
-  user_id?: Prisma.StringWithAggregatesFilter<"Session"> | string
-  created_at?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
-  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  taskId?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
+  userId?: Prisma.StringWithAggregatesFilter<"Session"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Session"> | Date | string
 }
 
 export type SessionCreateInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  created_at?: Date | string
-  updated_at?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   task?: Prisma.TaskCreateNestedOneWithoutSessionsInput
   user: Prisma.UserCreateNestedOneWithoutSessionsInput
 }
@@ -330,23 +330,23 @@ export type SessionCreateInput = {
 export type SessionUncheckedCreateInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  task_id?: string | null
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
+  taskId?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneWithoutSessionsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutSessionsNestedInput
 }
@@ -354,47 +354,47 @@ export type SessionUpdateInput = {
 export type SessionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  task_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionCreateManyInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  task_id?: string | null
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
+  taskId?: string | null
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  task_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionListRelationFilter = {
@@ -410,13 +410,13 @@ export type SessionOrderByRelationAggregateInput = {
 export type SessionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  start_time?: Prisma.SortOrder
-  end_time?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   minutes?: Prisma.SortOrder
-  task_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SessionAvgOrderByAggregateInput = {
@@ -426,25 +426,25 @@ export type SessionAvgOrderByAggregateInput = {
 export type SessionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  start_time?: Prisma.SortOrder
-  end_time?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   minutes?: Prisma.SortOrder
-  task_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SessionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  start_time?: Prisma.SortOrder
-  end_time?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   minutes?: Prisma.SortOrder
-  task_id?: Prisma.SortOrder
-  user_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type SessionSumOrderByAggregateInput = {
@@ -542,23 +542,23 @@ export type EnumSession_TypesFieldUpdateOperationsInput = {
 export type SessionCreateWithoutUserInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  created_at?: Date | string
-  updated_at?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   task?: Prisma.TaskCreateNestedOneWithoutSessionsInput
 }
 
 export type SessionUncheckedCreateWithoutUserInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  task_id?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
+  taskId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionCreateOrConnectWithoutUserInput = {
@@ -593,35 +593,35 @@ export type SessionScalarWhereInput = {
   NOT?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
   id?: Prisma.StringFilter<"Session"> | string
   type?: Prisma.EnumSession_TypesFilter<"Session"> | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFilter<"Session"> | Date | string
-  end_time?: Prisma.DateTimeFilter<"Session"> | Date | string
+  startTime?: Prisma.DateTimeFilter<"Session"> | Date | string
+  endTime?: Prisma.DateTimeFilter<"Session"> | Date | string
   minutes?: Prisma.IntFilter<"Session"> | number
-  task_id?: Prisma.StringNullableFilter<"Session"> | string | null
-  user_id?: Prisma.StringFilter<"Session"> | string
-  created_at?: Prisma.DateTimeFilter<"Session"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"Session"> | Date | string
+  taskId?: Prisma.StringNullableFilter<"Session"> | string | null
+  userId?: Prisma.StringFilter<"Session"> | string
+  createdAt?: Prisma.DateTimeFilter<"Session"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Session"> | Date | string
 }
 
 export type SessionCreateWithoutTaskInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  created_at?: Date | string
-  updated_at?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutSessionsInput
 }
 
 export type SessionUncheckedCreateWithoutTaskInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionCreateOrConnectWithoutTaskInput = {
@@ -653,89 +653,89 @@ export type SessionUpdateManyWithWhereWithoutTaskInput = {
 export type SessionCreateManyUserInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  task_id?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
+  taskId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   task?: Prisma.TaskUpdateOneWithoutSessionsNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  task_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  task_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionCreateManyTaskInput = {
   id?: string
   type: $Enums.Session_Types
-  start_time: Date | string
-  end_time: Date | string
+  startTime: Date | string
+  endTime: Date | string
   minutes: number
-  user_id: string
-  created_at?: Date | string
-  updated_at?: Date | string
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type SessionUpdateWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutSessionsNestedInput
 }
 
 export type SessionUncheckedUpdateWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type SessionUncheckedUpdateManyWithoutTaskInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumSession_TypesFieldUpdateOperationsInput | $Enums.Session_Types
-  start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  end_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minutes?: Prisma.IntFieldUpdateOperationsInput | number
-  user_id?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -743,13 +743,13 @@ export type SessionUncheckedUpdateManyWithoutTaskInput = {
 export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   type?: boolean
-  start_time?: boolean
-  end_time?: boolean
+  startTime?: boolean
+  endTime?: boolean
   minutes?: boolean
-  task_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+  taskId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   task?: boolean | Prisma.Session$taskArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
@@ -757,13 +757,13 @@ export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   type?: boolean
-  start_time?: boolean
-  end_time?: boolean
+  startTime?: boolean
+  endTime?: boolean
   minutes?: boolean
-  task_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+  taskId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   task?: boolean | Prisma.Session$taskArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
@@ -771,13 +771,13 @@ export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   type?: boolean
-  start_time?: boolean
-  end_time?: boolean
+  startTime?: boolean
+  endTime?: boolean
   minutes?: boolean
-  task_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+  taskId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   task?: boolean | Prisma.Session$taskArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
@@ -785,16 +785,16 @@ export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type SessionSelectScalar = {
   id?: boolean
   type?: boolean
-  start_time?: boolean
-  end_time?: boolean
+  startTime?: boolean
+  endTime?: boolean
   minutes?: boolean
-  task_id?: boolean
-  user_id?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+  taskId?: boolean
+  userId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "start_time" | "end_time" | "minutes" | "task_id" | "user_id" | "created_at" | "updated_at", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "startTime" | "endTime" | "minutes" | "taskId" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   task?: boolean | Prisma.Session$taskArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -817,13 +817,13 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     type: $Enums.Session_Types
-    start_time: Date
-    end_time: Date
+    startTime: Date
+    endTime: Date
     minutes: number
-    task_id: string | null
-    user_id: string
-    created_at: Date
-    updated_at: Date
+    taskId: string | null
+    userId: string
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["session"]>
   composites: {}
 }
@@ -1251,13 +1251,13 @@ export interface Prisma__SessionClient<T, Null = never, ExtArgs extends runtime.
 export interface SessionFieldRefs {
   readonly id: Prisma.FieldRef<"Session", 'String'>
   readonly type: Prisma.FieldRef<"Session", 'Session_Types'>
-  readonly start_time: Prisma.FieldRef<"Session", 'DateTime'>
-  readonly end_time: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly startTime: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly endTime: Prisma.FieldRef<"Session", 'DateTime'>
   readonly minutes: Prisma.FieldRef<"Session", 'Int'>
-  readonly task_id: Prisma.FieldRef<"Session", 'String'>
-  readonly user_id: Prisma.FieldRef<"Session", 'String'>
-  readonly created_at: Prisma.FieldRef<"Session", 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly taskId: Prisma.FieldRef<"Session", 'String'>
+  readonly userId: Prisma.FieldRef<"Session", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Session", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Session", 'DateTime'>
 }
     
 

@@ -1,5 +1,6 @@
 import { TASK_CONSTRAINTS } from "@/consts/consts";
 import z from "zod";
+import { projectsResponseSchema } from "./projects";
 // Tasks Schema
 const taskShape = {
   name: z
@@ -27,9 +28,9 @@ export const createTaskSchema = z.object({
   estimatedPomodoros: taskShape.estimatedPomodoros.default(1),
   completedPomodoros: taskShape.completedPomodoros.default(0),
   isComplete: taskShape.isComplete.default(false),
-  order: taskShape.order.default(0).optional(),
-  projectId: taskShape.projectId.default(null).optional(),
-  note: taskShape.note.default("").optional(),
+  order: taskShape.order.default(0),
+  projectId: taskShape.projectId.default(null),
+  note: taskShape.note.default(""),
 });
 
 export const updateTaskSchema = z
@@ -41,6 +42,7 @@ export const updateTaskSchema = z
 
 export const tasksResponseSchema = z.object(taskShape).extend({
   id: z.uuid(),
+  project: projectsResponseSchema.nullable().optional(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });

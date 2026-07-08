@@ -101,9 +101,9 @@ export const ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
   color: 'color',
-  user_id: 'user_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -130,13 +130,13 @@ export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof Task
 export const SessionScalarFieldEnum = {
   id: 'id',
   type: 'type',
-  start_time: 'start_time',
-  end_time: 'end_time',
+  startTime: 'startTime',
+  endTime: 'endTime',
   minutes: 'minutes',
-  task_id: 'task_id',
-  user_id: 'user_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  taskId: 'taskId',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]

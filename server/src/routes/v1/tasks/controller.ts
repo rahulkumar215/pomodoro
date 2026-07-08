@@ -15,9 +15,19 @@ export const createTask = async (
     throw new ValidationError("Invalid values provided");
   }
 
+  const lastTask = await prisma.task.findFirst({
+    where: { userId: req.user.id },
+    orderBy: {
+      order: "desc",
+    },
+  });
+
+  const newOrder = lastTask ? lastTask.order.plus(1000) : 1000;
+
   const task = await prisma.task.create({
     data: {
       ...result.data,
+      order: newOrder,
       userId: req.user.id,
     },
   });
@@ -25,7 +35,7 @@ export const createTask = async (
   res.status(200).json({
     status: "success",
     data: {
-      data: task,
+      task,
     },
   });
 };
@@ -36,8 +46,14 @@ export const listTasks = async (req: Request, res: Response) => {
       userId: req.user.id,
       deletedAt: null,
     },
+    include: {
+      project: true,
+    },
     omit: {
       userId: true,
+    },
+    orderBy: {
+      order: "asc",
     },
   });
 
