@@ -9,10 +9,7 @@ import formattedTimer from "@/lib/formattedTimer";
 import useTimer from "@/hooks/useTimer";
 import Header from "@/components/header";
 import Tasks from "@/components/tasks/tasks";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api";
 import { useTasks } from "@/context/TaskContext";
-import type { SessionsResponse } from "@/schemas/sessions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CircleCheckIcon, FolderKanbanIcon } from "lucide-react";
 import Projects from "@/components/projects/projects";
@@ -27,27 +24,6 @@ function Index() {
     count,
   } = useTimer();
   const { activeTask } = useTasks();
-
-  const {
-    isPending,
-    isError,
-    data: sessions,
-    error,
-  } = useQuery({
-    queryKey: ["sessions"],
-    queryFn: async (): Promise<SessionsResponse[]> => {
-      const response = await api.get("/sessions");
-      return response.data.sessions;
-    },
-  });
-
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
-
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
 
   return (
     <div className="p-2 flex flex-col gap-6">
@@ -95,18 +71,6 @@ function Index() {
             <Projects />
           </TabsContent>
         </Tabs>
-
-        {sessions.map((session) => (
-          <div
-            key={session.id}
-            className="text-xs text-left p-2 border mb-2 border-white rounded-md"
-          >
-            <p>Session Type : {session.type}</p>
-            <p>Start Time : {new Date(session.startTime).toLocaleString()}</p>
-            <p>End Time : {new Date(session.endTime).toLocaleString()}</p>
-            <p>Minutes : {session.minutes}</p>
-          </div>
-        ))}
       </div>
     </div>
   );
