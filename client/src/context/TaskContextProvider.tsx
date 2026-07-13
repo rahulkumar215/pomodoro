@@ -19,7 +19,6 @@ function TaskContextProvider({ children }: { children: ReactNode }) {
   const { data: fetchedTasks = [] } = useQuery({
     queryKey: ["tasks"],
     queryFn: async (): Promise<TasksResponse[]> => {
-      console.log("fetcing tasks");
       const response = await api.get("/tasks");
       return z.array(tasksResponseSchema).parse(response.data.tasks);
     },
@@ -27,11 +26,11 @@ function TaskContextProvider({ children }: { children: ReactNode }) {
 
   const [tasks, setTasks] = useState<TasksResponse[]>(fetchedTasks ?? []);
 
-  useEffect(() => {
-    if (fetchedTasks && !isDragging.current) {
-      setTasks(fetchedTasks);
-    }
-  }, [fetchedTasks]);
+  // useEffect(() => {
+  //   if (fetchedTasks && !isDragging.current) {
+  //     setTasks(fetchedTasks);
+  //   }
+  // }, [fetchedTasks]);
 
   const setDragging = (val: boolean) => {
     isDragging.current = val;

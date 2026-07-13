@@ -389,6 +389,8 @@ export const ModelName = {
   Task: 'Task',
   Session: 'Session',
   Settings: 'Settings',
+  SignupToken: 'SignupToken',
+  Token: 'Token',
   plan: 'plan'
 } as const
 
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "project" | "task" | "session" | "settings" | "plan"
+    modelProps: "user" | "project" | "task" | "session" | "settings" | "signupToken" | "token" | "plan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -779,6 +781,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SignupToken: {
+      payload: Prisma.$SignupTokenPayload<ExtArgs>
+      fields: Prisma.SignupTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SignupTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SignupTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.SignupTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SignupTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        findMany: {
+          args: Prisma.SignupTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>[]
+        }
+        create: {
+          args: Prisma.SignupTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        createMany: {
+          args: Prisma.SignupTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SignupTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.SignupTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        update: {
+          args: Prisma.SignupTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.SignupTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SignupTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SignupTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.SignupTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SignupTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.SignupTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSignupToken>
+        }
+        groupBy: {
+          args: Prisma.SignupTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SignupTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SignupTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SignupTokenCountAggregateOutputType> | number
+        }
+      }
+    }
+    Token: {
+      payload: Prisma.$TokenPayload<ExtArgs>
+      fields: Prisma.TokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        findFirst: {
+          args: Prisma.TokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        findMany: {
+          args: Prisma.TokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>[]
+        }
+        create: {
+          args: Prisma.TokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        createMany: {
+          args: Prisma.TokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>[]
+        }
+        delete: {
+          args: Prisma.TokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        update: {
+          args: Prisma.TokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.TokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.TokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TokenPayload>
+        }
+        aggregate: {
+          args: Prisma.TokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateToken>
+        }
+        groupBy: {
+          args: Prisma.TokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TokenCountAggregateOutputType> | number
+        }
+      }
+    }
     plan: {
       payload: Prisma.$planPayload<ExtArgs>
       fields: Prisma.planFieldRefs
@@ -987,6 +1137,27 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const SignupTokenScalarFieldEnum = {
+  email: 'email',
+  token: 'token',
+  tokenExpiry: 'tokenExpiry'
+} as const
+
+export type SignupTokenScalarFieldEnum = (typeof SignupTokenScalarFieldEnum)[keyof typeof SignupTokenScalarFieldEnum]
+
+
+export const TokenScalarFieldEnum = {
+  userId: 'userId',
+  token: 'token',
+  tokenExpiry: 'tokenExpiry',
+  createdAt: 'createdAt',
+  revoked: 'revoked',
+  replacedBy: 'replacedBy'
+} as const
+
+export type TokenScalarFieldEnum = (typeof TokenScalarFieldEnum)[keyof typeof TokenScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {
@@ -1305,6 +1476,8 @@ export type GlobalOmitConfig = {
   task?: Prisma.TaskOmit
   session?: Prisma.SessionOmit
   settings?: Prisma.SettingsOmit
+  signupToken?: Prisma.SignupTokenOmit
+  token?: Prisma.TokenOmit
   plan?: Prisma.planOmit
 }
 

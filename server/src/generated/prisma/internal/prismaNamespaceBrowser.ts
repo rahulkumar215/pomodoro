@@ -56,6 +56,8 @@ export const ModelName = {
   Task: 'Task',
   Session: 'Session',
   Settings: 'Settings',
+  SignupToken: 'SignupToken',
+  Token: 'Token',
   plan: 'plan'
 } as const
 
@@ -170,6 +172,27 @@ export const SettingsScalarFieldEnum = {
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const SignupTokenScalarFieldEnum = {
+  email: 'email',
+  token: 'token',
+  tokenExpiry: 'tokenExpiry'
+} as const
+
+export type SignupTokenScalarFieldEnum = (typeof SignupTokenScalarFieldEnum)[keyof typeof SignupTokenScalarFieldEnum]
+
+
+export const TokenScalarFieldEnum = {
+  userId: 'userId',
+  token: 'token',
+  tokenExpiry: 'tokenExpiry',
+  createdAt: 'createdAt',
+  revoked: 'revoked',
+  replacedBy: 'replacedBy'
+} as const
+
+export type TokenScalarFieldEnum = (typeof TokenScalarFieldEnum)[keyof typeof TokenScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {

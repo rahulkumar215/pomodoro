@@ -57,8 +57,18 @@ export const getSessions = async (
     where: {
       userId: req.user.id,
     },
+    include: {
+      task: {
+        include: {
+          project: true,
+        },
+      },
+    },
     omit: {
       userId: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
     skip: Number(page) * Number(take),
     take: Number(take),

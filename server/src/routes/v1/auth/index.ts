@@ -3,12 +3,34 @@ import { authMiddleware } from "@/middleware/auth";
 import * as authController from "./controller";
 import { Router } from "express";
 import { validateData } from "@/middleware/validationMiddleware";
-import { signupSchema } from "./authSchemas";
+import {
+  forgetPasswordScehma,
+  resetPasswordSchema,
+  setPasswordSchema,
+  signinSchema,
+  signupSchema,
+} from "./authSchemas";
 
 const router = Router();
 
 router.post("/signup", validateData(signupSchema), authController.signup);
-router.post("/signin", authController.signin);
+router.post(
+  "/set-password/:token",
+  validateData(setPasswordSchema),
+  authController.setPassword,
+);
+router.post("/signin", validateData(signinSchema), authController.signin);
+router.post("/refresh", authController.refreshToken);
 router.get("/me", authMiddleware, authController.me);
+router.post(
+  "/forgot-password",
+  validateData(forgetPasswordScehma),
+  authController.forgetPassword,
+);
+router.post(
+  "/reset-password/:token",
+  validateData(resetPasswordSchema),
+  authController.resetPassword,
+);
 
 export default router;

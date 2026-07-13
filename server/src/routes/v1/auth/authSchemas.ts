@@ -1,8 +1,13 @@
 import { z } from "zod";
 
-export const signupSchema = z
+export const signupSchema = z.object({
+  email: z.email("Invalid email address"),
+});
+
+export const forgetPasswordScehma = z.object(signupSchema);
+
+export const setPasswordSchema = z
   .object({
-    email: z.email("Invalid email address"),
     password: z
       .string("Password is missing")
       .min(8, "Password must be at least 8 characters long")
@@ -27,6 +32,8 @@ export const signupSchema = z
       });
     }
   });
+
+export const resetPasswordSchema = z.object(setPasswordSchema);
 
 export const signinSchema = z.object({
   email: z.email("Invalid email address"),

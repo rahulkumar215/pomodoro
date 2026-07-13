@@ -12,7 +12,7 @@
 export const Interval = {
   month: 'month',
   year: 'year',
-  infinite: 'infinite'
+  lifetime: 'lifetime'
 } as const
 
 export type Interval = (typeof Interval)[keyof typeof Interval]

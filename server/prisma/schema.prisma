@@ -31,6 +31,7 @@ model User {
   tasks                Task[]
   sessions             Session[]
   settings             Settings?
+  token Token[]
   created_at           DateTime       @default(now())
   updated_at           DateTime       @default(now()) @updatedAt
 
@@ -116,6 +117,26 @@ model Settings {
   @@map("settings")
 }
 
+model SignupToken {
+  email String
+  token String @unique
+  tokenExpiry DateTime
+
+  @@map("signup_token")
+}
+
+model Token {
+  user  User @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+  token String @unique
+  tokenExpiry DateTime @map("token_expiry")
+  createdAt DateTime @default(now()) @map("created_at")
+  revoked Boolean @default(false)
+  replacedBy String?
+
+  @@map("token")
+}
+
 model plan {
   id          String       @unique
   name        String
@@ -127,7 +148,7 @@ model plan {
 enum Interval {
   month
   year
-  infinite
+  lifetime
 }
 
 enum Billing_Type {

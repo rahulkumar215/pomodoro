@@ -39,7 +39,9 @@ export function LoginForm() {
   });
 
   const login = async (data: SigninFormData): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/signin", data);
+    const response = await api.post<LoginResponse>("/auth/signin", data, {
+      withCredentials: true,
+    });
     return response.data;
   };
 

@@ -43,6 +43,16 @@ export type Session = Prisma.SessionModel
  */
 export type Settings = Prisma.SettingsModel
 /**
+ * Model SignupToken
+ * 
+ */
+export type SignupToken = Prisma.SignupTokenModel
+/**
+ * Model Token
+ * 
+ */
+export type Token = Prisma.TokenModel
+/**
  * Model plan
  * 
  */
