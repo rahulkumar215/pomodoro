@@ -53,7 +53,7 @@ export type ColorKey = keyof typeof colors;
 export const COLOR_KEYS = Object.keys(colors) as [ColorKey, ...ColorKey[]];
 export type ColorValue = (typeof colors)[ColorKey];
 
-export const settingsSchema = z.object({
+const settingsShape = {
   pomodoro_duration: z.coerce
     .number<number>()
     .min(1, "Pomodoro must be at least 1 minute."),
@@ -86,4 +86,12 @@ export const settingsSchema = z.object({
   reminder_time: z.coerce
     .number<number>()
     .min(0, "Reminder time must be 1 at least min."),
-});
+};
+
+export const createSettingsSchema = z.object(settingsShape);
+export const updateSettingsSchema = z
+  .object(settingsShape)
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided to update.",
+  });

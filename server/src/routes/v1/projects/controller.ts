@@ -1,32 +1,23 @@
 import { prisma } from "@/db";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { createProjectSchema, updateProjectSchema } from "./projectsSchema";
-import { ValidationError } from "@/errors";
+import { NotFoundError, ValidationError } from "@/errors";
+import { PrismaClientKnownRequestError } from "@/generated/prisma/internal/prismaNamespace";
 
 export const createProject = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const result = createProjectSchema.safeParse(req.body);
-
-  if (!result.success) {
-    console.log(result.error);
-    throw new ValidationError("Invalid create payload.");
-  }
-
-  const { name, color } = result.data;
-
+  const data = req.body;
   const project = await prisma.project.create({
     data: {
-      name: name,
-      color: color,
+      ...data,
       userId: req.user.id,
     },
   });
 
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     status: "success",
     data: {
       project,
@@ -40,15 +31,13 @@ export const listProjects = async (
   next: NextFunction,
 ) => {
   const projects = await prisma.project.findMany({
-    where: {
-      userId: req.user.id,
-    },
-    omit: {
-      userId: true,
-    },
+    where: { userId: req.user.id },
+    omit: { userId: true },
   });
 
   res.status(StatusCodes.OK).json({
+    status: "success",
+    results: projects.length,
     data: {
       projects,
     },
@@ -62,20 +51,32 @@ export const getProject = async (
 ) => {
   const id = req.params.id;
 
-  if (!id || Array.isArray(id)) return next(new Error("Project id not found!"));
+  if (!id || Array.isArray(id))
+    throw new ValidationError("Project id not found.");
 
-  const project = await prisma.project.findUnique({
-    where: {
-      id,
-    },
-  });
+  try {
+    const project = await prisma.project.findUnique({
+      where: {
+        id,
+      },
+    });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: project,
-    },
-  });
+    res.status(StatusCodes.OK).json({
+      status: "success",
+      data: {
+        data: project,
+      },
+    });
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new NotFoundError("Project", id);
+    }
+
+    throw error;
+  }
 };
 
 export const updateProject = async (
@@ -88,25 +89,29 @@ export const updateProject = async (
   if (!id || Array.isArray(id))
     throw new ValidationError("Project id not found!");
 
-  const result = updateProjectSchema.safeParse(req.body);
+  const data = req.body;
 
-  if (!result.success) throw new ValidationError("Invalid update payload.");
+  try {
+    await prisma.project.update({
+      where: {
+        id,
+      },
+      data,
+    });
 
-  const data = result.data;
+    res.status(StatusCodes.OK).json({
+      message: "Successfully updated task.",
+    });
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new NotFoundError("Project", id);
+    }
 
-  const project = await prisma.project.update({
-    where: {
-      id,
-    },
-    data,
-  });
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      project,
-    },
-  });
+    throw error;
+  }
 };
 
 export const deleteProject = async (
@@ -119,17 +124,24 @@ export const deleteProject = async (
   if (!id || Array.isArray(id))
     throw new ValidationError("Project id not found.");
 
-  await prisma.project.delete({
-    where: {
-      id,
-    },
-  });
+  try {
+    await prisma.project.delete({
+      where: {
+        id,
+      },
+    });
 
-  res.status(StatusCodes.OK).json({
-    message: "Successfully project deleted",
-  });
-};
+    res.status(StatusCodes.OK).json({
+      message: "Successfully project deleted",
+    });
+  } catch (error) {
+    if (
+      error instanceof PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      throw new NotFoundError("Project", id);
+    }
 
-export const listProjectTasks = (req: Request, res: Response) => {
-  res.status(200).json([]);
+    throw error;
+  }
 };

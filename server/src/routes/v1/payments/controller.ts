@@ -2,6 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { createRazorPayInstance } from "../razorypay/controller";
 import crypto from "crypto";
 import config from "@/config";
+import { prisma } from "@/db";
+import { NotFoundError, ValidationError } from "@/errors";
+import { StatusCodes } from "http-status-codes";
+import appConfig from "@/config";
 
 const razorPayInstance = createRazorPayInstance();
 
@@ -11,36 +15,30 @@ export const createOrder = async (
   next: NextFunction,
 ) => {
   // Do not accept amount from client
-  const { planId, amount } = req.body;
+  const { planId } = req.body;
 
   // fetch the plan amount from the plan id
+  const plan = await prisma.plan.findUnique({
+    where: { id: planId },
+  });
+
+  if (!plan) throw new NotFoundError("Plan", planId);
 
   const options = {
-    amount: amount * 100,
+    amount: plan.price * 100,
     currency: "INR",
     notes: {
       app_user_id: req.user.id,
     },
   };
 
-  try {
-    razorPayInstance.orders.create(options, (err, order) => {
-      if (err) {
-        return res.status(500).json({
-          status: "failed",
-          message: "Something went wrong",
-        });
-      }
-
-      res.header("Access-Control-Allow-Origin", "*");
-      return res.status(200).json(order);
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: "failed",
-      message: "Something went wrong",
-    });
-  }
+  razorPayInstance.orders.create(options, (err, order) => {
+    if (err) {
+      throw err;
+    }
+    res.header("Access-Control-Allow-Origin", "*");
+    return res.status(StatusCodes.OK).json(order);
+  });
 };
 
 export const verifyPayment = async (
@@ -76,7 +74,6 @@ export const createSubscription = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log("Req Body", req.body);
   const subscription = await razorPayInstance.subscriptions.create({
     plan_id: req.body.planId,
     quantity: 1,
@@ -86,7 +83,7 @@ export const createSubscription = async (
     },
   });
 
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     subscriptionId: subscription.id,
   });
 };
@@ -97,7 +94,7 @@ export const verifySubscription = async (
   next: NextFunction,
 ) => {
   const { payment_id, subscription_id, signature } = req.body;
-  const hmac = crypto.createHmac("sha256", config.razorpay_secret);
+  const hmac = crypto.createHmac("sha256", appConfig.RAZORPAY_SECRET);
   hmac.update(payment_id + "|" + subscription_id);
   const generatedSignature = hmac.digest("hex");
 

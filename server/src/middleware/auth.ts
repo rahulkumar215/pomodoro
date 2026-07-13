@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JsonWebTokenError, Jwt } from "jsonwebtoken";
-import config from "../config";
 import { prisma } from "../db";
+import appConfig from "@/config";
+import { UnauthorizedError, ValidationError } from "@/errors";
 
 export async function authMiddleware(
   req: Request,
@@ -16,7 +17,7 @@ export async function authMiddleware(
   try {
     if (token) {
       // use this docs : https://www.npmjs.com/package/jsonwebtoken when you come back to make the code good
-      const decoded = jwt.verify(token, config.jwt_secret);
+      const decoded = jwt.verify(token, appConfig.JWT_SECRET);
 
       if (typeof decoded !== "object" || !("email" in decoded))
         throw new Error("Invalid Token");
@@ -34,7 +35,7 @@ export async function authMiddleware(
         },
       });
 
-      if (!user) throw new Error("User does not exist");
+      if (!user) throw new ValidationError("User does not exist");
 
       req.user = user;
       next();
@@ -42,8 +43,6 @@ export async function authMiddleware(
       throw new Error("Token not found!");
     }
   } catch (error: any) {
-    res.status(401).send({
-      message: error.message,
-    });
+    throw new UnauthorizedError(error.message);
   }
 }

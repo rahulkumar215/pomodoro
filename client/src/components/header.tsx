@@ -226,8 +226,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const [openPremium, setOpenPremium] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<{
-    planId?: string;
-    price?: number;
+    planId: string;
     billingType: "one_time" | "recurring";
   } | null>(null);
 
@@ -252,22 +251,19 @@ const Header = () => {
       document.body.appendChild(script);
     });
   };
-  const onPayment = async (amount: number) => {
+  const onPayment = async (planId: string) => {
     // create order
     try {
       const options = {
-        planId: 1,
-        amount,
+        planId,
       };
       const res = await api.post("/payments/createOrder", options);
       const data = res.data;
-      console.log(data);
       const paymentObject = new (window as any).Razorpay({
         key: import.meta.env.VITE_RAZORPAY_API_KEY,
         order_id: data.id,
         ...data,
         handler: function (response: any) {
-          console.log(response);
           const options2 = {
             order_id: response.razorpay_order_id,
             payment_id: response.razorpay_payment_id,
@@ -462,7 +458,6 @@ const Header = () => {
                       onClick={() =>
                         setSelectedPlan({
                           billingType: plan.billingType,
-                          price: plan.price,
                           planId: plan.id,
                         })
                       }
@@ -478,13 +473,13 @@ const Header = () => {
             <Button
               className="w-full"
               onClick={() => {
-                if (!selectedPlan) {
+                if (selectedPlan === null) {
                   alert("Kindly select a plan");
                   return;
                 }
 
                 if (selectedPlan.billingType === "one_time") {
-                  onPayment(selectedPlan.price);
+                  onPayment(selectedPlan.planId);
                 } else if (selectedPlan.billingType === "recurring") {
                   onSubscription(selectedPlan.planId);
                 }

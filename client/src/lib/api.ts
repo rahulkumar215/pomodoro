@@ -15,18 +15,15 @@ async function getNewAccessToken() {
     refreshPromise = api
       .post("/auth/refresh", {}, { withCredentials: true })
       .then((res) => {
-        console.log(res);
         localStorage.setItem("token", res.data.accessToken);
         return res.data.accessToken;
       })
       .catch((err) => {
-        console.log(err);
         localStorage.setItem("token", "");
-        throw err; // propagate failure to every waiting caller
+        throw err;
       })
       .finally(() => {
-        console.log("called finally");
-        refreshPromise = null; // reset so the *next* 401 can trigger a fresh call
+        refreshPromise = null;
       });
   }
   return refreshPromise;
@@ -52,13 +49,10 @@ api.interceptors.response.use(
 
       try {
         const newToken = await getNewAccessToken();
-        console.log(newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return api(originalRequest); // retry the original call
+        return api(originalRequest);
       } catch (refreshError) {
-        // refresh itself failed — refresh token is dead/expired
         localStorage.setItem("token", "");
-        // window.location.href = "/signin";
         return Promise.reject(refreshError);
       }
     }

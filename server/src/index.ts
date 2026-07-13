@@ -1,8 +1,8 @@
-import config from "@/config";
 import { createServer } from "@/server";
+import appConfig from "./config";
 
 const server = createServer();
 
-server.listen(config.port, () => {
-  console.log(`App is running on port ${config.port}!`);
+server.listen(appConfig.PORT, () => {
+  console.log(`App is running on port ${appConfig.PORT}!`);
 });

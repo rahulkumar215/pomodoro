@@ -1,3 +1,4 @@
+import appConfig from "@/config";
 import nodemailer from "nodemailer";
 
 interface MailOptions {
@@ -11,13 +12,13 @@ const sendEmail = (options: MailOptions) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "rk83029014@gmail.com",
-      pass: "tfha uiuu rwhk tqiy",
+      user: appConfig.EMAIL_USERNAME,
+      pass: appConfig.EMAIL_PASSWORD,
     },
   });
 
   const mailOptions = {
-    from: "Rahul Vishwakarma <rk83029014@gmail.com>",
+    from: `${appConfig.EMAIL_NAME} <${appConfig.USER_EMAIL}>`,
     to: options.email,
     subject: options.subject,
     ...(options.message && { text: options.message }),

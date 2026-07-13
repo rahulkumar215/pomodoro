@@ -8,6 +8,7 @@ import appConfig from "./config";
 
 export const createServer = () => {
   const app = express();
+
   app
     .disable("x-powered-by")
     .use(morgan("dev"))

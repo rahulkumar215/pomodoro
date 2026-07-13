@@ -12,6 +12,7 @@ plans.get("/", async (req: Request, res: Response, next: NextFunction) => {
   });
 
   res.status(StatusCodes.OK).json({
+    status: "success",
     data: {
       plans,
     },
