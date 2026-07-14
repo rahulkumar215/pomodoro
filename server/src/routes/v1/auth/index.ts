@@ -32,5 +32,6 @@ router.post(
   validateData(resetPasswordSchema),
   authController.resetPassword,
 );
+router.post("/logout", authController.logout);
 
 export default router;

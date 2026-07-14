@@ -136,7 +136,7 @@ export const signin = async (req: Request, res: Response) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      path: "/api/v1/auth/refresh",
+      path: "/api/v1/auth",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -317,13 +317,39 @@ export const refreshToken = async (
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
     secure: true,
-    path: "/api/v1/auth/refresh",
+    path: "/api/v1/auth",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   res.status(StatusCodes.OK).json({
     accessToken,
+  });
+};
+
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token) throw new ValidationError("No refresh token provided");
+
+  await prisma.token.updateMany({
+    where: { token: hashToken(token) },
+    data: { revoked: true },
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "strict",
+    path: "api/v1/auth",
+    secure: true,
+  });
+
+  res.status(StatusCodes.OK).json({
+    messaage: "Logged out successfully.",
   });
 };
 
