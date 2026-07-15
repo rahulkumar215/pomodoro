@@ -18,14 +18,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { ClockCheckIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { signinSchema } from "@/consts/consts";
-import type { LoginResponse, SigninFormData } from "@/consts/consts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError } from "@/lib/handleError";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
+import {
+  signinSchema,
+  type LoginResponse,
+  type SigninFormData,
+} from "@/schemas/auth";
 
 export function LoginForm() {
   const navigate = useNavigate();

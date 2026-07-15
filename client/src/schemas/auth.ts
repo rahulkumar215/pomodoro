@@ -49,3 +49,20 @@ export const signinSchema = z.object({
       "Password must contain at least one special character",
     ),
 });
+
+export interface User {
+  name: string;
+  avatarUrl: string;
+  email: string;
+}
+
+export interface LoginResponse {
+  user: User;
+  token: string;
+}
+
+export type SignupFormData = z.infer<typeof signupSchema>;
+export type SetPasswordData = z.infer<typeof setPasswordSchema>;
+export type ForgetPasswordData = z.infer<typeof forgetPasswordScehma>;
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
+export type SigninFormData = z.infer<typeof signinSchema>;

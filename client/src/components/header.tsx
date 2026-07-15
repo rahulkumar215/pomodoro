@@ -23,7 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import type { SessionsResponse } from "@/schemas/sessions";
@@ -46,6 +46,8 @@ import { useSessions } from "@/hooks/useSessions";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { cx } from "class-variance-authority";
+import { handleError } from "@/lib/handleError";
+import { toast } from "sonner";
 
 const columnHelper = createColumnHelper<SessionsResponse>();
 
@@ -225,6 +227,7 @@ const Header = () => {
   const user: User = JSON.parse(localStorage.getItem("user") as string);
   const [open, setOpen] = useState(false);
   const [openPremium, setOpenPremium] = useState(false);
+  const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<{
     planId: string;
     billingType: "one_time" | "recurring";
@@ -341,6 +344,27 @@ const Header = () => {
   //   </div>
   // );
 
+  const handleLogout = async () => {
+    try {
+      const response = await api.post(
+        "/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+
+      toast.success(response.data.message);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      localStorage.setItem("token", "");
+      localStorage.setItem("user", "");
+
+      navigate("/signin");
+    }
+  };
+
   return (
     <div className="flex items-center justify-between">
       <h2 className="flex items-center gap-x-2">
@@ -378,7 +402,7 @@ const Header = () => {
                   <CrownIcon />
                   Premium
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleLogout()}>
                   <LogOut />
                   Logout
                 </DropdownMenuItem>

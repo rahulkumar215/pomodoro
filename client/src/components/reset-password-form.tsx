@@ -16,23 +16,24 @@ import {
 import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import { handleError } from "@/lib/handleError";
-import { signupSchema, type SignupFormData } from "@/schemas/auth";
+import { resetPasswordSchema, type ResetPasswordData } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ClockCheckIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
-export function SignupForm() {
-  const form = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+export function ResetPasswordForm() {
+  const { token } = useParams();
+  const form = useForm<ResetPasswordData>({
+    resolver: zodResolver(resetPasswordSchema),
     mode: "onBlur",
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: SignupFormData) => {
-      return await api.post("/auth/signup", data);
+    mutationFn: async (data: ResetPasswordData) => {
+      return await api.post(`/auth/reset-password/${token}`, data);
     },
     onSuccess: (data) => {
       toast.success(data.data.message);
@@ -42,11 +43,11 @@ export function SignupForm() {
     },
   });
 
-  async function onSubmit(data: SignupFormData) {
+  async function onSubmit(data: ResetPasswordData) {
     mutation.mutate(data);
   }
   return (
-    <div className="flex flex-col  gap-6">
+    <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2 justify-center">
         <ClockCheckIcon />
         <span className="text-2xl font-bold">Pomodoro</span>
@@ -54,39 +55,15 @@ export function SignupForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
+          <CardTitle>Set New Password</CardTitle>
           <CardDescription>
-            Enter your information below to create your account
+            Set new password below for your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <Input
-                      {...field}
-                      id="email"
-                      type="email"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="m@example.com"
-                    />
-                    <FieldDescription>
-                      We&apos;ll use this to contact you. We will not share your
-                      email with anyone else.
-                    </FieldDescription>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              {/* <Controller
                 name="password"
                 control={form.control}
                 render={({ field, fieldState }) => (
@@ -129,12 +106,12 @@ export function SignupForm() {
                     )}
                   </Field>
                 )}
-              /> */}
+              />
               <FieldGroup>
                 <Field>
-                  <Button type="submit">Create Account</Button>
+                  <Button type="submit">Reset Password</Button>
                   <FieldDescription className="px-6 text-center">
-                    Already have an account? <Link to="/signin">Sign in</Link>
+                    Remember your password? <Link to="/signin">Sign in</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>

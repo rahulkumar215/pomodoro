@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import api from "@/lib/api";
 import { handleError } from "@/lib/handleError";
-import { signupSchema, type SignupFormData } from "@/schemas/auth";
+import { forgetPasswordScehma, type ForgetPasswordData } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { ClockCheckIcon } from "lucide-react";
@@ -24,15 +24,15 @@ import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { toast } from "sonner";
 
-export function SignupForm() {
-  const form = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+export function ForgotPasswordForm() {
+  const form = useForm<ForgetPasswordData>({
+    resolver: zodResolver(forgetPasswordScehma),
     mode: "onBlur",
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: SignupFormData) => {
-      return await api.post("/auth/signup", data);
+    mutationFn: async (data: ForgetPasswordData) => {
+      return await api.post("/auth/forgot-password", data);
     },
     onSuccess: (data) => {
       toast.success(data.data.message);
@@ -42,7 +42,7 @@ export function SignupForm() {
     },
   });
 
-  async function onSubmit(data: SignupFormData) {
+  async function onSubmit(data: ForgetPasswordData) {
     mutation.mutate(data);
   }
   return (
@@ -54,10 +54,8 @@ export function SignupForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>
-            Enter your information below to create your account
-          </CardDescription>
+          <CardTitle>Forgot Password</CardTitle>
+          <CardDescription>Enter your registered email</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -86,55 +84,11 @@ export function SignupForm() {
                 )}
               />
 
-              {/* <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="password"
-                      type="password"
-                    />
-                    <FieldDescription>
-                      Must be at least 8 characters long.
-                    </FieldDescription>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="confirmPassword"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="confirm-password">
-                      Confirm Password
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      aria-invalid={fieldState.invalid}
-                      id="confirm-password"
-                      type="password"
-                    />
-                    <FieldDescription>
-                      Please confirm your password.
-                    </FieldDescription>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              /> */}
               <FieldGroup>
                 <Field>
-                  <Button type="submit">Create Account</Button>
+                  <Button type="submit">Forgot Password</Button>
                   <FieldDescription className="px-6 text-center">
-                    Already have an account? <Link to="/signin">Sign in</Link>
+                    Remember your password? <Link to="/signin">Sign in</Link>
                   </FieldDescription>
                 </Field>
               </FieldGroup>

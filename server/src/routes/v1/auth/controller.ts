@@ -87,6 +87,7 @@ export const setPassword = async (
       name: "Pomodoro User",
       email: stored.email,
       password: hashedPassword,
+      is_verified: true,
     },
   });
 
@@ -204,7 +205,7 @@ export const forgetPassword = async (
   });
 
   res.status(StatusCodes.OK).json({
-    message: "Link to reset your password has been sent to your email",
+    message: "Reset password link sent to email.",
   });
 };
 
@@ -237,7 +238,7 @@ export const resetPassword = async (
   if (!validToken)
     throw new ValidationError("Invalid or expired password reset token");
 
-  const hashedPassword = await bcrypt.hash(password, appConfig.SALT);
+  const hashedPassword = await bcrypt.hash(password, Number(appConfig.SALT));
 
   const user = await prisma.user.update({
     where: { id: validToken.userId },
@@ -349,7 +350,7 @@ export const logout = async (
   });
 
   res.status(StatusCodes.OK).json({
-    messaage: "Logged out successfully.",
+    message: "Logged out successfully.",
   });
 };
 
