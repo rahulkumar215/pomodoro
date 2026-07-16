@@ -2,8 +2,7 @@ import { authMiddleware } from "@/middleware/auth";
 import { Router } from "express";
 import * as setttingsController from "./controller";
 import { validateData } from "@/middleware/validationMiddleware";
-import { createSettingsSchema } from "./settingsSchema";
-import { updateSessionSchema } from "../sessions/sessionSchema";
+import { createSettingsSchema, updateSettingsSchema } from "./settingsSchema";
 
 const settings = Router();
 
@@ -16,7 +15,7 @@ settings.post(
 settings.get("/", setttingsController.getSettings);
 settings.patch(
   "/",
-  validateData(updateSessionSchema),
+  validateData(updateSettingsSchema),
   setttingsController.updateSettings,
 );
 

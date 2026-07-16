@@ -13,6 +13,7 @@ import {
   ChevronUpIcon,
   CirclePlusIcon,
   EditIcon,
+  LockIcon,
   PlusIcon,
 } from "lucide-react";
 import {
@@ -52,6 +53,8 @@ function TaskForm({
   setAddProject,
   projects,
   task_note,
+  isPremium,
+  handleAddProject,
 }) {
   return (
     <Dialog
@@ -191,6 +194,45 @@ function TaskForm({
                   (addProject || addNotes) && "flex-col items-start",
                 )}
               >
+                {addNotes ? (
+                  <Controller
+                    name="note"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="note">Add Note</FieldLabel>
+                        <InputGroup>
+                          <InputGroupTextarea
+                            {...field}
+                            id="note"
+                            placeholder="Some notes..."
+                            aria-invalid={fieldState.invalid}
+                          />
+                          <InputGroupAddon align="block-end">
+                            <InputGroupText className="text-xs text-muted-foreground">
+                              {renderTextLeft(
+                                TASK_CONSTRAINTS.note.max,
+                                task_note?.length || 0,
+                              )}
+                            </InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                ) : (
+                  <Button
+                    variant="link"
+                    className="w-fit p-0"
+                    onClick={() => setAddNotes(true)}
+                  >
+                    <PlusIcon /> Add Note
+                  </Button>
+                )}
+
                 {addProject ? (
                   <Controller
                     name="projectId"
@@ -232,48 +274,9 @@ function TaskForm({
                   <Button
                     variant="link"
                     className="w-fit p-0"
-                    onClick={() => setAddProject(true)}
+                    onClick={handleAddProject}
                   >
-                    <PlusIcon /> Add Project
-                  </Button>
-                )}
-
-                {addNotes ? (
-                  <Controller
-                    name="note"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="note">Add Note</FieldLabel>
-                        <InputGroup>
-                          <InputGroupTextarea
-                            {...field}
-                            id="note"
-                            placeholder="Some notes..."
-                            aria-invalid={fieldState.invalid}
-                          />
-                          <InputGroupAddon align="block-end">
-                            <InputGroupText className="text-xs text-muted-foreground">
-                              {renderTextLeft(
-                                TASK_CONSTRAINTS.note.max,
-                                task_note?.length || 0,
-                              )}
-                            </InputGroupText>
-                          </InputGroupAddon>
-                        </InputGroup>
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                ) : (
-                  <Button
-                    variant="link"
-                    className="w-fit p-0"
-                    onClick={() => setAddNotes(true)}
-                  >
-                    <PlusIcon /> Add Note
+                    <PlusIcon /> Add Project {!isPremium && <LockIcon />}
                   </Button>
                 )}
               </div>

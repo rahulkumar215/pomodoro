@@ -13,7 +13,7 @@ function App() {
       <Toaster position="top-right" />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route index element={<Index />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/set-password/:token" element={<SetPassword />} />

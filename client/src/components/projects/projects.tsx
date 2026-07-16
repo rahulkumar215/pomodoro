@@ -74,6 +74,8 @@ import {
   useUpdateProject,
 } from "@/hooks/useProjects";
 import { Button } from "../ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { usePlanDialog } from "@/context/PlamDialogContext";
 
 const ItemComp = ({
   project,
@@ -148,6 +150,8 @@ const ItemComp = ({
 function Projects() {
   const [open, setOpen] = useState(false);
   const [editProjectId, setEditProjectId] = useState<string | null>(null);
+  const { isPremium } = useAuth();
+  const { setOpenPlanDialog } = usePlanDialog();
 
   const form = useForm<CreateProjectInput>({
     resolver: zodResolver(createProjectSchema),
@@ -168,6 +172,15 @@ function Projects() {
     create.mutate(data);
     setOpen(false);
     form.reset();
+  };
+
+  const handleCreateProject = () => {
+    if (!isPremium) {
+      alert("This feature is limited to premium users only.");
+      setOpenPlanDialog(true);
+      return;
+    }
+    setOpen(true);
   };
 
   const handleEditProject = (projectId: string) => {
@@ -228,7 +241,7 @@ function Projects() {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent className="flex-row justify-center gap-2">
-              <Button onClick={() => setOpen(true)}>
+              <Button onClick={handleCreateProject}>
                 <PlusCircleIcon />
                 Create Project
               </Button>

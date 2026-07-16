@@ -36,6 +36,8 @@ import { useProjects } from "@/hooks/useProjects";
 import { buildDiff } from "@/lib/utils";
 import TaskItemComp from "./task-item";
 import TaskForm from "./task-form";
+import { useAuth } from "@/context/AuthContext";
+import { usePlanDialog } from "@/context/PlamDialogContext";
 
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
@@ -43,6 +45,8 @@ const Tasks = () => {
   const [open, setOpen] = useState(false);
   const [editTaskId, setEditTaskId] = useState<string | null>(null);
   const [originalTask, setOriginalTask] = useState<TasksResponse | null>(null);
+  const { isPremium } = useAuth();
+  const { setOpenPlanDialog } = usePlanDialog();
 
   const { settings } = useSettings();
   const {
@@ -176,6 +180,15 @@ const Tasks = () => {
     form.reset();
   };
 
+  const handleAddProject = () => {
+    if (!isPremium) {
+      alert("This feature is limited to premium users only.");
+      setOpenPlanDialog(true);
+      return;
+    }
+    setAddProject(true);
+  };
+
   return (
     <Card className="w-md">
       <CardHeader className="flex justify-between items-center">
@@ -307,6 +320,8 @@ const Tasks = () => {
           setAddProject={setAddProject}
           projects={projects}
           task_note={task_note}
+          isPremium={isPremium}
+          handleAddProject={handleAddProject}
         />
       </CardContent>
     </Card>

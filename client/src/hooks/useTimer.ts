@@ -1,4 +1,4 @@
-import { SessionTypes, TABS, type Settings, type Tab } from "@/consts/consts";
+import { TABS, type Settings, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
@@ -37,6 +37,7 @@ type Counter = {
 
 export default function useTimer() {
   const { settings } = useSettings();
+  console.log(settings);
   const [activeTab, setActiveTab] = useState<Tab>(TABS.Pomodoro);
   const [started, setStarted] = useState(false);
   const [timer, setTimer] = useState<number>(getTimer(activeTab, settings));

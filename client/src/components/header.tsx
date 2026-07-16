@@ -1,20 +1,17 @@
 import {
   ChartColumn,
-  CheckCircleIcon,
   CircleUserIcon,
   ClockCheck,
   CrownIcon,
-  KeyboardIcon,
+  EllipsisVerticalIcon,
   LogOut,
   MoreHorizontalIcon,
-  RocketIcon,
   Trash2Icon,
   UserCircleIcon,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Settings from "./settings";
-import type { User } from "@/consts/consts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Link, useNavigate } from "react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import type { SessionsResponse } from "@/schemas/sessions";
 import {
@@ -32,7 +29,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  type ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -43,11 +39,11 @@ import {
   TableRow,
 } from "./ui/table";
 import { useSessions } from "@/hooks/useSessions";
-import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
-import { cx } from "class-variance-authority";
 import { handleError } from "@/lib/handleError";
 import { toast } from "sonner";
+import { usePlanDialog } from "@/context/PlamDialogContext";
+import { useAuth } from "@/context/AuthContext";
 
 const columnHelper = createColumnHelper<SessionsResponse>();
 
@@ -124,8 +120,7 @@ export function DataTable({ columns }) {
     pageSize: 10, //default page size
   });
 
-  const { isPending, isError, error, data, isFetching, isPlaceholderData } =
-    useSessions(pagination);
+  const { isPending, isError, error, data } = useSessions(pagination);
 
   const serverPageCount = Math.ceil(
     data?.totalCount ?? 0 / pagination.pageSize,
@@ -224,125 +219,10 @@ export function DataTable({ columns }) {
 
 const Header = () => {
   const token: string | null = localStorage.getItem("token");
-  const user: User = JSON.parse(localStorage.getItem("user") as string);
   const [open, setOpen] = useState(false);
-  const [openPremium, setOpenPremium] = useState(false);
+  const { user } = useAuth();
+  const { setOpenPlanDialog } = usePlanDialog();
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState<{
-    planId: string;
-    billingType: "one_time" | "recurring";
-  } | null>(null);
-
-  const { data: plans } = useQuery({
-    queryKey: ["plans"],
-    queryFn: async () => {
-      const response = await api.get("/plans");
-      return response.data.data.plans;
-    },
-  });
-
-  const loadScript = (src: string) => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
-  const onPayment = async (planId: string) => {
-    // create order
-    try {
-      const options = {
-        planId,
-      };
-      const res = await api.post("/payments/createOrder", options);
-      const data = res.data;
-      const paymentObject = new (window as any).Razorpay({
-        key: import.meta.env.VITE_RAZORPAY_API_KEY,
-        order_id: data.id,
-        ...data,
-        handler: function (response: any) {
-          const options2 = {
-            order_id: response.razorpay_order_id,
-            payment_id: response.razorpay_payment_id,
-            signature: response.razorpay_signature,
-          };
-          api
-            .post("/payments/verifyPayment", options2)
-            .then((res) => {
-              console.log(res.data);
-              if (res.status === 200) {
-                alert("Payment Successful");
-              } else {
-                alert("Payment Failed");
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        },
-      });
-      paymentObject.open();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const onSubscription = async (planId: string) => {
-    try {
-      const { data } = await api.post("payments/createSubscription", {
-        planId,
-      });
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_API_KEY,
-        subscription_id: data.subscriptionId,
-        name: "Rahul Vishwakarma",
-        description: "Monthly Test Plan",
-        handler: function (response: any) {
-          const options2 = {
-            payment_id: response.razorpay_payment_id,
-            subscription_id: response.razorpay_subscription_id,
-            signature: response.razorpay_signature,
-          };
-          api.post("/payments/verifySubscription", options2).then((res) => {
-            if (res.status === 200) {
-              alert("Subscription Successful");
-            } else {
-              alert("Subscription Failed");
-            }
-          });
-        },
-        theme: {
-          color: "#F37254",
-        },
-      };
-      const rzp = new (window as any).Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    loadScript("https://checkout.razorpay.com/v1/checkout.js");
-  }, []);
-  // return (
-  //   <div className="flex items-center gap-6 flex-col">
-  //     Razor Pay Integration
-  //     <div className="flex gap-4 items-center">
-  //       <Button onClick={() => onSubscription("plan_T7Fz3v0j92fNhO")}>
-  //         ₹300 / month
-  //       </Button>
-  //       <Button onClick={() => onSubscription("plan_T7FtJLgweReVcY")}>
-  //         ₹1800 / year
-  //       </Button>
-  //       <Button onClick={() => onPayment(5400)}>₹5400 / lifetime</Button>
-  //     </div>
-  //   </div>
-  // );
 
   const handleLogout = async () => {
     try {
@@ -398,17 +278,13 @@ const Header = () => {
                   <UserCircleIcon />
                   Account
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenPremium(true)}>
+                <DropdownMenuItem onClick={() => setOpenPlanDialog(true)}>
                   <CrownIcon />
                   Premium
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLogout()}>
                   <LogOut />
                   Logout
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <KeyboardIcon />
-                  Shortcuts
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive">
@@ -419,12 +295,36 @@ const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild>
-            <Link to="/signup">
-              <CircleUserIcon />
-              Sign In
-            </Link>
-          </Button>
+          <>
+            {" "}
+            <Button asChild>
+              <Link to="/signup">
+                <CircleUserIcon />
+                Sign In
+              </Link>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon">
+                  <EllipsisVerticalIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-36">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
+                    <Link to="/signin">
+                      <LogOut />
+                      Sign In
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setOpenPlanDialog(true)}>
+                    <CrownIcon />
+                    Premium
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         )}
       </div>
 
@@ -435,84 +335,6 @@ const Header = () => {
           </DialogHeader>
 
           <DataTable columns={columns} />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={openPremium} onOpenChange={(open) => setOpenPremium(open)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <CrownIcon /> Premium
-            </DialogTitle>
-          </DialogHeader>
-
-          <div>
-            <h3>More abilities</h3>
-
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="size-4" />
-              Add Projects
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="size-4" />
-              Download Report
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="size-4" />
-              No ads
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircleIcon className="size-4" />
-              ... and all the future updates
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <h3>Select Plan</h3>
-            <div className="grid grid-cols-3 gap-6">
-              {plans && plans.length > 0
-                ? plans.map((plan) => (
-                    <Button
-                      key={plan.id}
-                      className={cx(
-                        "flex h-24 flex-col items-center justify-center gap-1",
-                        selectedPlan?.planId === plan.id &&
-                          "border-6 border-red-600",
-                      )}
-                      onClick={() =>
-                        setSelectedPlan({
-                          billingType: plan.billingType,
-                          planId: plan.id,
-                        })
-                      }
-                    >
-                      <span className="text-xs uppercase">{plan.name}</span>
-                      <span className="text-2xl">₹{plan.price}</span>
-                      <span className="text-xs">/ {plan.interval}</span>
-                    </Button>
-                  ))
-                : "No Plan Found."}
-            </div>
-
-            <Button
-              className="w-full"
-              onClick={() => {
-                if (selectedPlan === null) {
-                  alert("Kindly select a plan");
-                  return;
-                }
-
-                if (selectedPlan.billingType === "one_time") {
-                  onPayment(selectedPlan.planId);
-                } else if (selectedPlan.billingType === "recurring") {
-                  onSubscription(selectedPlan.planId);
-                }
-              }}
-            >
-              <RocketIcon />
-              Purchase the plan
-            </Button>
-          </div>
         </DialogContent>
       </Dialog>
     </div>

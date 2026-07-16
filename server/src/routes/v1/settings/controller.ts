@@ -21,9 +21,7 @@ export const createSettings = async (
 
     res.status(StatusCodes.CREATED).json({
       status: "success",
-      data: {
-        data: settings,
-      },
+      data: { settings },
     });
   } catch (error) {
     if (
@@ -49,8 +47,11 @@ export const getSettings = async (
       },
     });
 
+    if (!settings) throw new NotFoundError("Settings", req.user.id);
+
     res.status(StatusCodes.OK).json({
-      settings,
+      status: "success",
+      data: { settings },
     });
   } catch (error) {
     if (
@@ -72,7 +73,7 @@ export const updateSettings = async (
   const settingsData = req.body;
 
   try {
-    const settings = await prisma.settings.upsert({
+    await prisma.settings.upsert({
       where: {
         user_id: req.user.id,
       },
@@ -82,12 +83,6 @@ export const updateSettings = async (
       create: {
         ...settingsData,
         user_id: req.user.id,
-      },
-      omit: {
-        id: true,
-        user_id: true,
-        created_at: true,
-        updated_at: true,
       },
     });
 

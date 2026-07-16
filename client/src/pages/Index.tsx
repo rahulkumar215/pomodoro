@@ -13,6 +13,7 @@ import { useTasks } from "@/context/TaskContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CircleCheckIcon, FolderKanbanIcon } from "lucide-react";
 import Projects from "@/components/projects/projects";
+import PlanModal from "@/components/premium/PlanModal";
 
 function Index() {
   const {
@@ -72,9 +73,9 @@ function Index() {
           </TabsContent>
         </Tabs>
       </div>
+      <PlanModal />
     </div>
   );
-
 }
 
 export default Index;
