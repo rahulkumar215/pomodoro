@@ -1,4 +1,4 @@
-import { TABS, type Settings, type Tab } from "@/consts/consts";
+import { TABS, type Tab } from "@/consts/consts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNotification } from "./useNotification";
 import { useSound } from "./useSound";
@@ -10,6 +10,7 @@ import api from "@/lib/api";
 import { useTasks } from "@/context/TaskContext";
 import type { CreateSessionInput } from "@/schemas/sessions";
 import { getTimer } from "@/lib/utils";
+import type { CountInput } from "@/pages/Index";
 
 type Counter = {
   focus: number;
@@ -37,14 +38,34 @@ export default function useTimer() {
   const focusTabRef = useRef(activeTab.type === "Pomodoro");
   const startTimeRef = useRef<Date>(null);
   const handleStopTimerRef = useRef<() => void>(() => {});
-  const [count, setCount] = useState<Counter>({
-    focus: 1,
-    break: 1,
+  const [sessionCount, setSessionCount] = useState<Counter>(() => {
+    const saved = localStorage.getItem("sessionCount");
+    return saved !== null
+      ? JSON.parse(saved)
+      : {
+          focus: 1,
+          break: 1,
+        };
   });
   const localPomodoroCount = useRef(0);
   const enteredViaAutoTransition = useRef(false);
   const queryClient = useQueryClient();
   const { tasks, activeTask, patchTask } = useTasks();
+
+  const handleUpdateCount = ({ count, type }: CountInput) => {
+    setSessionCount((prev) => ({
+      ...prev,
+      ...(type === "focus" && { focus: count }),
+      ...(type === "break" && { break: count }),
+    }));
+    localStorage.setItem(
+      "sessionCount",
+      JSON.stringify({
+        focus: type === "focus" ? count : sessionCount.focus,
+        break: type === "break" ? count : sessionCount.break,
+      }),
+    );
+  };
 
   const addSession = async (data: CreateSessionInput): Promise<void> => {
     return await api.post("/sessions", data);
@@ -185,10 +206,10 @@ export default function useTimer() {
     workerRef.current?.terminate();
 
     if (activeTab.type === "Pomodoro") {
-      setCount((prev) => ({
-        ...prev,
-        focus: prev.focus + 1,
-      }));
+      handleUpdateCount({
+        count: sessionCount.focus + 1,
+        type: "focus",
+      });
       enteredViaAutoTransition.current = true;
       localPomodoroCount.current++;
       if (localPomodoroCount.current === settings.long_break_interval) {
@@ -206,10 +227,10 @@ export default function useTimer() {
       activeTab.type === "Long Break"
     ) {
       if (enteredViaAutoTransition.current) {
-        setCount((prev) => ({
-          ...prev,
-          break: prev.break + 1,
-        }));
+        handleUpdateCount({
+          count: sessionCount.break + 1,
+          type: "break",
+        });
       }
       enteredViaAutoTransition.current = true;
       handleChangeTab(TABS.Pomodoro);
@@ -269,7 +290,7 @@ export default function useTimer() {
     setActiveTab,
     handleStartTimer,
     handleChangeTab,
-    count,
-    setCount,
+    sessionCount,
+    handleUpdateCount,
   };
 }

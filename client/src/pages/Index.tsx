@@ -17,7 +17,6 @@ import Projects from "@/components/projects/projects";
 import PlanModal from "@/components/premium/PlanModal";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -35,7 +34,7 @@ const countSchema = z.object({
   type: z.enum(["focus", "break"]),
 });
 
-type CountInput = z.infer<typeof countSchema>;
+export type CountInput = z.infer<typeof countSchema>;
 
 function Index() {
   const {
@@ -44,8 +43,8 @@ function Index() {
     activeTab,
     handleStartTimer,
     handleChangeTab,
-    count,
-    setCount,
+    sessionCount,
+    handleUpdateCount,
   } = useTimer();
   const { activeTask } = useTasks();
   const [open, setOpen] = useState(false);
@@ -60,11 +59,7 @@ function Index() {
 
   const onSubmit = (data: CountInput) => {
     const { count, type } = data;
-    setCount((prev) => ({
-      ...prev,
-      ...(type === "focus" && { focus: count }),
-      ...(type === "break" && { break: count }),
-    }));
+    handleUpdateCount({ count, type });
     setOpen(false);
   };
 
@@ -95,12 +90,12 @@ function Index() {
             onClick={() => {
               setOpen(true);
               form.setValues({
-                count: count.focus,
+                count: sessionCount.focus,
                 type: "focus",
               });
             }}
           >
-            #{count.focus}
+            #{sessionCount.focus}
           </Button>
         ) : (
           <Button
@@ -108,12 +103,12 @@ function Index() {
             onClick={() => {
               setOpen(true);
               form.setValues({
-                count: count.break,
+                count: sessionCount.break,
                 type: "break",
               });
             }}
           >
-            #{count.break}
+            #{sessionCount.break}
           </Button>
         )}
         <p>{activeTask ? activeTask.name : activeTab.message}</p>
