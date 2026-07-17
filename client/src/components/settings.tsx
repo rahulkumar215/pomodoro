@@ -520,7 +520,7 @@ const SettingsComp = () => {
                 Theme
               </FieldLegend>
               <FieldGroup>
-                <Controller
+                {/* <Controller
                   name="pomodoro_theme"
                   control={form.control}
                   render={({ field, fieldState }) => {
@@ -655,7 +655,7 @@ const SettingsComp = () => {
                       )}
                     </Field>
                   )}
-                />
+                /> */}
 
                 <Controller
                   name="hour_format"
@@ -686,7 +686,7 @@ const SettingsComp = () => {
                   )}
                 />
 
-                <Controller
+                {/* <Controller
                   name="dark_mode_when_running"
                   control={form.control}
                   render={({ field, fieldState }) => (
@@ -705,7 +705,7 @@ const SettingsComp = () => {
                       )}
                     </Field>
                   )}
-                />
+                /> */}
               </FieldGroup>
             </FieldSet>
 
