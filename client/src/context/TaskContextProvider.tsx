@@ -9,11 +9,11 @@ function TaskContextProvider({ children }: { children: ReactNode }) {
   const { data: fetchedTasks = [] } = useFetchTasks();
   const [tasks, setTasks] = useState<TasksResponse[]>(fetchedTasks ?? []);
 
-  // useEffect(() => {
-  //   if (fetchedTasks && !isDragging.current) {
-  //     setTasks(fetchedTasks);
-  //   }
-  // }, [fetchedTasks]);
+  useEffect(() => {
+    if (fetchedTasks && !isDragging.current) {
+      setTasks(fetchedTasks);
+    }
+  }, [fetchedTasks]);
 
   const setDragging = (val: boolean) => {
     isDragging.current = val;

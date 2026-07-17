@@ -675,8 +675,8 @@ const SettingsComp = () => {
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="item-aligned">
-                          <SelectItem value="24hr">24hr</SelectItem>
-                          <SelectItem value="12hr">12hr</SelectItem>
+                          <SelectItem value="h24">24hr</SelectItem>
+                          <SelectItem value="h12">12hr</SelectItem>
                         </SelectContent>
                       </Select>
                       {fieldState.invalid && (

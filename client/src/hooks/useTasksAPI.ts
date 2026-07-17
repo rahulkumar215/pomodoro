@@ -1,4 +1,3 @@
-import { useAuth } from "@/context/AuthContext";
 import api from "@/lib/api";
 import {
   tasksResponseSchema,
@@ -16,7 +15,7 @@ export const useFetchTasks = () => {
     queryKey: ["tasks"],
     queryFn: async (): Promise<TasksResponse[]> => {
       const response = await api.get("/tasks");
-      return z.array(tasksResponseSchema).parse(response.data.tasks);
+      return z.array(tasksResponseSchema).parse(response.data.data.tasks);
     },
     enabled: !!token,
   });

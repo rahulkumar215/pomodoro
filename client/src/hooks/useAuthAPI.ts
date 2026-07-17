@@ -3,7 +3,7 @@ import api from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useFetchUser = () => {
-  const token = localStorage.getItem("token ");
+  const token = localStorage.getItem("token");
   return useQuery({
     queryKey: ["user"],
     queryFn: async (): Promise<User> => {

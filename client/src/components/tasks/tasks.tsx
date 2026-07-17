@@ -105,7 +105,7 @@ const Tasks = () => {
       {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour12: settings.hour_format === "h12",
       },
     )} (${(totalTime / 60).toFixed(1)}h)`;
   };
