@@ -1,6 +1,14 @@
 import api from "@/lib/api";
-import type { SessionsListResponse } from "@/schemas/sessions";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import type {
+  CreateSessionInput,
+  SessionsListResponse,
+} from "@/schemas/sessions";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useSessions = (pagination: any) => {
   return useQuery({
@@ -12,5 +20,21 @@ export const useSessions = (pagination: any) => {
       return response.data;
     },
     placeholderData: keepPreviousData,
+  });
+};
+
+const addSession = async (data: CreateSessionInput) => {
+  return await api.post("/sessions", data);
+};
+
+export const useCreateSession = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: addSession,
+    onSuccess: async () => {
+      await qc.invalidateQueries({
+        queryKey: ["sessions"],
+      });
+    },
   });
 };

@@ -5,13 +5,11 @@ import { useSound } from "./useSound";
 import { Sounds } from "@/consts/consts";
 import { useSettings } from "@/context/SettingsContext";
 import formattedTimer from "@/lib/formattedTimer";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
 import { useTasks } from "@/context/TaskContext";
-import type { CreateSessionInput } from "@/schemas/sessions";
 import { getTimer } from "@/lib/utils";
 import type { CountInput } from "@/pages/Index";
 import { useUpdateTask } from "./useTasksAPI";
+import { useCreateSession } from "./useSessions";
 
 type Counter = {
   focus: number;
@@ -20,6 +18,7 @@ type Counter = {
 
 export default function useTimer() {
   const { settings } = useSettings();
+  const token = localStorage.getItem("token");
   const [activeTab, setActiveTab] = useState<Tab>(TABS.Pomodoro);
   const [started, setStarted] = useState(false);
   const [timer, setTimer] = useState<number>(getTimer(activeTab, settings));
@@ -50,7 +49,6 @@ export default function useTimer() {
   });
   const localPomodoroCount = useRef(0);
   const enteredViaAutoTransition = useRef(false);
-  const queryClient = useQueryClient();
   const { tasks, activeTask } = useTasks();
   const patchTask = useUpdateTask();
 
@@ -72,18 +70,7 @@ export default function useTimer() {
     [sessionCount],
   );
 
-  const addSession = async (data: CreateSessionInput): Promise<void> => {
-    return await api.post("/sessions", data);
-  };
-
-  const mutation = useMutation({
-    mutationFn: addSession,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["sessions"],
-      });
-    },
-  });
+  const mutation = useCreateSession();
 
   const createWorker = useCallback(() => {
     workerRef.current?.terminate();
@@ -178,15 +165,19 @@ export default function useTimer() {
   const handleStopTimer = useCallback(() => {
     //stop focus
     if (focusTabRef.current) {
-      mutation.mutate({
-        type: "pomodoro",
-        startTime: new Date(startTimeRef.current!).toISOString(),
-        endTime: new Date().toISOString(),
-        minutes: Math.floor(
-          (Date.now() - new Date(startTimeRef.current!).getTime()) / 1000 / 60,
-        ),
-        taskId: activeTask ? activeTask.id : null,
-      });
+      if (token) {
+        mutation.mutate({
+          type: "pomodoro",
+          startTime: new Date(startTimeRef.current!).toISOString(),
+          endTime: new Date().toISOString(),
+          minutes: Math.floor(
+            (Date.now() - new Date(startTimeRef.current!).getTime()) /
+              1000 /
+              60,
+          ),
+          taskId: activeTask ? activeTask.id : null,
+        });
+      }
       if (activeTask && !activeTask.isComplete) {
         const newCompletedPomodorCount = activeTask.completedPomodoros + 1;
         const isTaskCompleted =
@@ -247,6 +238,7 @@ export default function useTimer() {
       }
     }
   }, [
+    token,
     activeTab.type,
     focusTabRef,
     handleChangeTab,
