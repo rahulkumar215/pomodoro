@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import api from "@/lib/api";
 import {
   tasksResponseSchema,
@@ -10,12 +11,14 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 export const useFetchTasks = () => {
+  const token = localStorage.getItem("token");
   return useQuery({
     queryKey: ["tasks"],
     queryFn: async (): Promise<TasksResponse[]> => {
       const response = await api.get("/tasks");
       return z.array(tasksResponseSchema).parse(response.data.tasks);
     },
+    enabled: !!token,
   });
 };
 

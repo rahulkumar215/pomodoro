@@ -8,12 +8,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import z from "zod";
 
 export const useProjects = () => {
+  const token = localStorage.getItem("token");
   return useQuery({
     queryKey: ["projects"],
     queryFn: async (): Promise<ProjectsResponses[]> => {
       const response = await api.get("/projects");
       return z.array(projectsResponseSchema).parse(response.data.data.projects);
     },
+    enabled: !!token,
   });
 };
 
