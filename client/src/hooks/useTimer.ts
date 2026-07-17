@@ -11,6 +11,7 @@ import { useTasks } from "@/context/TaskContext";
 import type { CreateSessionInput } from "@/schemas/sessions";
 import { getTimer } from "@/lib/utils";
 import type { CountInput } from "@/pages/Index";
+import { useUpdateTask } from "./useTasksAPI";
 
 type Counter = {
   focus: number;
@@ -50,7 +51,8 @@ export default function useTimer() {
   const localPomodoroCount = useRef(0);
   const enteredViaAutoTransition = useRef(false);
   const queryClient = useQueryClient();
-  const { tasks, activeTask, patchTask } = useTasks();
+  const { tasks, activeTask } = useTasks();
+  const patchTask = useUpdateTask();
 
   const handleUpdateCount = ({ count, type }: CountInput) => {
     setSessionCount((prev) => ({

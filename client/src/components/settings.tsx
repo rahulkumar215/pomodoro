@@ -112,7 +112,7 @@ const SettingsComp = () => {
         <SheetHeader>
           <SheetTitle>Settings</SheetTitle>
           <SheetDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+            Chaning settings will refresh the page.
           </SheetDescription>
         </SheetHeader>
 

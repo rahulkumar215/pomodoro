@@ -1,41 +1,16 @@
-import { type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { DEFAULT_SETTINGS } from "@/consts/consts";
 import { type Settings } from "@/consts/consts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api";
-import { handleError } from "@/lib/handleError";
 import { SettingsContext } from "./SettingsContext";
+import { useUpdateSettings } from "@/hooks/useSettingsAPI";
 
 export function SettingsContextProvider({ children }: { children: ReactNode }) {
-  // const prevSettings = localStorage.getItem("settings");
-  // const [settings, setSettings] = useState<Settings>(
-  //   prevSettings ? JSON.parse(prevSettings) : DEFAULT_SETTINGS,
-  // );
-
-  const qc = useQueryClient();
-
-  const { data: settings = DEFAULT_SETTINGS } = useQuery({
-    queryKey: ["settings"],
-    queryFn: async () => {
-      const response = await api.get("/settings");
-      return response.data.data.settings;
-    },
+  const [settings] = useState<Settings>(() => {
+    const saved = localStorage.getItem("settings");
+    return saved !== null ? JSON.parse(saved) : DEFAULT_SETTINGS;
   });
 
-  const mutate = useMutation({
-    mutationFn: async (data: Settings): Promise<Settings> => {
-      const response = await api.patch("/settings", data);
-      return response.data.settings;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({
-        queryKey: ["settings"],
-      });
-    },
-    onError: (error) => {
-      handleError(error);
-    },
-  });
+  const mutate = useUpdateSettings();
 
   function handleSaveSettings(settings: Settings) {
     mutate.mutate(settings);

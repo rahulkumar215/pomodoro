@@ -73,7 +73,7 @@ export const updateSettings = async (
   const settingsData = req.body;
 
   try {
-    await prisma.settings.upsert({
+    const settings = await prisma.settings.upsert({
       where: {
         user_id: req.user.id,
       },
@@ -88,6 +88,9 @@ export const updateSettings = async (
 
     res.status(StatusCodes.OK).json({
       message: "Successfully updated settings.",
+      data: {
+        settings,
+      },
     });
   } catch (error) {
     if (
