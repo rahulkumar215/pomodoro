@@ -5,7 +5,6 @@ import {
   CrownIcon,
   EllipsisVerticalIcon,
   LogOut,
-  MoreHorizontalIcon,
   Trash2Icon,
   UserCircleIcon,
 } from "lucide-react";
@@ -29,6 +28,7 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  type ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -102,19 +102,13 @@ export const columns = [
       <span className="font-medium">{getValue()} min</span>
     ),
   }),
-
-  columnHelper.display({
-    id: "actions",
-    header: "",
-    cell: ({ row }) => (
-      <Button variant="ghost" size="icon">
-        <MoreHorizontalIcon className="size-4" />
-      </Button>
-    ),
-  }),
 ];
 
-export function DataTable({ columns }) {
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+}
+
+export function DataTable({ columns }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size

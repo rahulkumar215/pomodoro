@@ -37,7 +37,6 @@ type Counter = {
 
 export default function useTimer() {
   const { settings } = useSettings();
-  console.log(settings);
   const [activeTab, setActiveTab] = useState<Tab>(TABS.Pomodoro);
   const [started, setStarted] = useState(false);
   const [timer, setTimer] = useState<number>(getTimer(activeTab, settings));
@@ -290,5 +289,6 @@ export default function useTimer() {
     handleStartTimer,
     handleChangeTab,
     count,
+    setCount,
   };
 }
