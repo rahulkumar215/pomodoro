@@ -32,6 +32,7 @@ export async function authMiddleware(
           email: true,
           avatar_url: true,
           is_verified: true,
+          is_premium: true,
         },
       });
 

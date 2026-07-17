@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { createContext, useContext } from "react";
 
 export interface User {
   name: string;
@@ -13,8 +8,7 @@ export interface User {
 }
 
 interface AuthContext {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  user: User | null | undefined;
   isPremium: boolean;
 }
 

@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { AuthContext, type User } from "./AuthContext";
+import { AuthContext } from "./AuthContext";
+import { useFetchUser } from "@/hooks/useAuthAPI";
 
 export function AuthContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
-  const isPremium = user?.isPremium ? true : false;
+  const { data: user } = useFetchUser();
+  const isPremium = user?.isPremium ?? false;
 
   return (
     <AuthContext
       value={{
         user,
-        setUser,
         isPremium,
       }}
     >

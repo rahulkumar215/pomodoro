@@ -358,11 +358,17 @@ export const me = (req: Request, res: Response) => {
   const user = req.user;
 
   if (user) {
-    res.send({
-      name: user.name,
-      email: user.email,
-      avatarUrl: user.avatar_url,
-      isVerified: user.is_verified,
+    res.status(StatusCodes.OK).json({
+      status: "success",
+      data: {
+        user: {
+          name: user.name,
+          email: user.email,
+          avatarUrl: user.avatar_url,
+          isVerified: user.is_verified,
+          isPremium: user.is_premium,
+        },
+      },
     });
   } else {
     throw new UnauthorizedError("Unauthorized");
