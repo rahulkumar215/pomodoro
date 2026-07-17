@@ -114,8 +114,7 @@ export function DataTable({ columns }: DataTableProps<TData, TValue>) {
     pageSize: 10, //default page size
   });
 
-  const { isPending, isFetching, isError, error, data } =
-    useSessions(pagination);
+  const { isPending, isError, error, data } = useSessions(pagination);
 
   const serverPageCount = Math.ceil(
     data?.totalCount ?? 0 / pagination.pageSize,
