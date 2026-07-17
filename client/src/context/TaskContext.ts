@@ -1,24 +1,10 @@
-import {
-  type CreateTaskInput,
-  type TasksResponse,
-  type UpdateTaskInput,
-} from "@/schemas/tasks";
+import { type TasksResponse } from "@/schemas/tasks";
 import { createContext, useContext } from "react";
 
 export type TasksContextType = {
   tasks: TasksResponse[];
   setDragging: (val: boolean) => void;
   setTasks: (tasks: TasksResponse[]) => void;
-  createTask: (task: CreateTaskInput) => void;
-  patchTask: ({
-    id,
-    changes,
-  }: {
-    id: string;
-    changes: Partial<UpdateTaskInput>;
-  }) => void;
-  deleteTask: (taskId: string) => void;
-
   activeTask: TasksResponse | null;
   setActiveTask: (task: TasksResponse | null) => void;
 };

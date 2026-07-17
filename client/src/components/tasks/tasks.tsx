@@ -38,6 +38,11 @@ import TaskItemComp from "./task-item";
 import TaskForm from "./task-form";
 import { useAuth } from "@/context/AuthContext";
 import { usePlanDialog } from "@/context/PlamDialogContext";
+import {
+  useCreateTask,
+  useDeleteTask,
+  useUpdateTask,
+} from "@/hooks/useTasksAPI";
 
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
@@ -49,16 +54,12 @@ const Tasks = () => {
   const { setOpenPlanDialog } = usePlanDialog();
 
   const { settings } = useSettings();
-  const {
-    tasks,
-    setTasks,
-    setDragging,
-    createTask,
-    patchTask,
-    deleteTask,
-    activeTask,
-    setActiveTask,
-  } = useTasks();
+  const { tasks, setTasks, setDragging, activeTask, setActiveTask } =
+    useTasks();
+
+  const createTask = useCreateTask();
+  const patchTask = useUpdateTask();
+  const deleteTask = useDeleteTask();
   const { data: projects = [] } = useProjects();
 
   const totalEstimatedPomodoros = tasks
