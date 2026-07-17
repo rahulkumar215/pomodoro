@@ -68,16 +68,6 @@ function TaskForm({
         }
       }}
     >
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="border-dashed h-12"
-          onClick={() => setOpen(true)}
-        >
-          <CirclePlusIcon />
-          Add Task
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <form
           onSubmit={form.handleSubmit(editTaskId ? onEdit : onSubmit, onError)}

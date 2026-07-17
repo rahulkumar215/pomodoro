@@ -8,6 +8,8 @@ import { usePlanDialog } from "@/context/PlamDialogContext";
 import { onPayment } from "@/lib/onPayment";
 import { onSubscription } from "@/lib/onSubscription";
 import { cx } from "class-variance-authority";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router";
 
 function PlanModal() {
   const { openPlanDialog, setOpenPlanDialog } = usePlanDialog();
@@ -15,6 +17,8 @@ function PlanModal() {
     planId: string;
     billingType: "one_time" | "recurring";
   } | null>(null);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const { data: plans } = useQuery({
     queryKey: ["plans"],
@@ -103,6 +107,12 @@ function PlanModal() {
             onClick={() => {
               if (selectedPlan === null) {
                 alert("Kindly select a plan");
+                return;
+              }
+
+              if (!user) {
+                alert("Please signin to proceed.");
+                navigate("/signin");
                 return;
               }
 

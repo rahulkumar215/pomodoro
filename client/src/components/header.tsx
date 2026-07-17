@@ -292,7 +292,7 @@ const Header = () => {
           <>
             {" "}
             <Button asChild>
-              <Link to="/signup">
+              <Link to="/signin">
                 <CircleUserIcon />
                 Sign In
               </Link>

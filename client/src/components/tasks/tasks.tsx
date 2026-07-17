@@ -13,7 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { CheckIcon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
+import {
+  CheckIcon,
+  CirclePlusIcon,
+  EllipsisVerticalIcon,
+  Trash2Icon,
+} from "lucide-react";
 
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,7 +55,7 @@ const Tasks = () => {
   const [open, setOpen] = useState(false);
   const [editTaskId, setEditTaskId] = useState<string | null>(null);
   const [originalTask, setOriginalTask] = useState<TasksResponse | null>(null);
-  const { isPremium } = useAuth();
+  const { user, isPremium } = useAuth();
   const { setOpenPlanDialog } = usePlanDialog();
 
   const { settings } = useSettings();
@@ -190,6 +195,14 @@ const Tasks = () => {
     setAddProject(true);
   };
 
+  const handleAddTask = () => {
+    if (!user) {
+      alert("Please signin to create a task.");
+      return;
+    }
+    setOpen(true);
+  };
+
   return (
     <Card className="w-md">
       <CardHeader className="flex justify-between items-center">
@@ -202,11 +215,9 @@ const Tasks = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit">
-              <DropdownMenuItem asChild>
-                <Button>
-                  <Trash2Icon />
-                  Clear Finished Tasks
-                </Button>
+              <DropdownMenuItem>
+                <Trash2Icon />
+                Clear Finished Tasks
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CheckIcon />
@@ -324,6 +335,14 @@ const Tasks = () => {
           isPremium={isPremium}
           handleAddProject={handleAddProject}
         />
+        <Button
+          variant="outline"
+          className="border-dashed h-12"
+          onClick={handleAddTask}
+        >
+          <CirclePlusIcon />
+          Add Task
+        </Button>
       </CardContent>
     </Card>
   );
