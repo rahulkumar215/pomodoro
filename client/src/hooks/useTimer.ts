@@ -54,20 +54,23 @@ export default function useTimer() {
   const { tasks, activeTask } = useTasks();
   const patchTask = useUpdateTask();
 
-  const handleUpdateCount = ({ count, type }: CountInput) => {
-    setSessionCount((prev) => ({
-      ...prev,
-      ...(type === "focus" && { focus: count }),
-      ...(type === "break" && { break: count }),
-    }));
-    localStorage.setItem(
-      "sessionCount",
-      JSON.stringify({
-        focus: type === "focus" ? count : sessionCount.focus,
-        break: type === "break" ? count : sessionCount.break,
-      }),
-    );
-  };
+  const handleUpdateCount = useCallback(
+    ({ count, type }: CountInput) => {
+      setSessionCount((prev) => ({
+        ...prev,
+        ...(type === "focus" && { focus: count }),
+        ...(type === "break" && { break: count }),
+      }));
+      localStorage.setItem(
+        "sessionCount",
+        JSON.stringify({
+          focus: type === "focus" ? count : sessionCount.focus,
+          break: type === "break" ? count : sessionCount.break,
+        }),
+      );
+    },
+    [sessionCount],
+  );
 
   const addSession = async (data: CreateSessionInput): Promise<void> => {
     return await api.post("/sessions", data);
@@ -96,7 +99,7 @@ export default function useTimer() {
       const timeLeft = e.data.timeLeft;
       setTimer(timeLeft);
       timerRef.current = timeLeft;
-      document.title = `${formattedTimer(timeLeft)} ${activeTab.message}}`;
+      document.title = `${formattedTimer(timeLeft)} - ${activeTask ? activeTask.name : activeTab.message}`;
 
       if (timeLeft > 0 && settings.reminder_time > 0) {
         if (
@@ -121,6 +124,7 @@ export default function useTimer() {
 
     workerRef.current = worker;
   }, [
+    activeTask,
     settings.reminder_time,
     settings.reminder_type,
     showNotification,
@@ -161,13 +165,14 @@ export default function useTimer() {
       setStarted(false);
       focusTabRef.current = value.type === "Pomodoro";
       workerRef.current?.terminate();
+      document.title = `${formattedTimer(newTimer)} - ${activeTask ? activeTask.name : value.message}`;
       if (!auto) {
         enteredViaAutoTransition.current = false;
         stopFocus();
         stopAlarm();
       }
     },
-    [settings, stopAlarm, stopFocus],
+    [activeTask, settings, stopAlarm, stopFocus],
   );
 
   const handleStopTimer = useCallback(() => {
@@ -254,6 +259,13 @@ export default function useTimer() {
     stopFocus,
     startWorker,
     mutation,
+    activeTask,
+    handleUpdateCount,
+    patchTask,
+    sessionCount,
+    settings.auto_check_tasks,
+    settings.check_to_bottom,
+    tasks,
   ]);
 
   useEffect(() => {
