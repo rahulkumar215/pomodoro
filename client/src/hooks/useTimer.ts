@@ -9,26 +9,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { useTasks } from "@/context/TaskContext";
 import type { CreateSessionInput } from "@/schemas/sessions";
-
-function getTimer(activeTab: Tab, settings: Settings) {
-  let timer: number;
-  switch (activeTab.type) {
-    case "Pomodoro": {
-      timer = settings.pomodoro_duration;
-      break;
-    }
-    case "Short Break": {
-      timer = settings.short_break_duration;
-      break;
-    }
-    case "Long Break": {
-      timer = settings.long_break_duration;
-      break;
-    }
-  }
-
-  return timer * 60 * 1000;
-}
+import { getTimer } from "@/lib/utils";
 
 type Counter = {
   focus: number;
