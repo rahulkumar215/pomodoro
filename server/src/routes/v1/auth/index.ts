@@ -9,6 +9,8 @@ import {
   setPasswordSchema,
   signinSchema,
   signupSchema,
+  updateUserEmailSchema,
+  updateUserSchema,
 } from "./authSchemas";
 
 const router = Router();
@@ -33,5 +35,18 @@ router.post(
   authController.resetPassword,
 );
 router.post("/logout", authController.logout);
+router.patch(
+  "/user",
+  authMiddleware,
+  validateData(updateUserSchema),
+  authController.updateUser,
+);
+router.post(
+  "/user-email",
+  authMiddleware,
+  validateData(updateUserEmailSchema),
+  authController.updateUserEmail,
+);
 
+router.post("/user-otp-verify", authMiddleware, authController.verifyUserOTP);
 export default router;

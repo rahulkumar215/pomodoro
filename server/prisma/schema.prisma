@@ -125,6 +125,14 @@ model SignupToken {
   @@map("signup_token")
 }
 
+model OtpToken {
+  email String
+  otp String @unique
+  otpExpiry DateTime @map("otp_expiry")
+
+  @@map("otp_token")
+}
+
 model Token {
   user  User @relation(fields: [userId], references: [id])
   userId String @map("user_id")

@@ -7,6 +7,7 @@ import { UnauthorizedError, ValidationError } from "@/errors";
 import sendEmail from "@/utils/email";
 import { StatusCodes } from "http-status-codes";
 import appConfig from "@/config";
+import otpGenerator from "otp-generator";
 
 function signAccessToken(email: string) {
   return jwt.sign({ email }, appConfig.JWT_SECRET, {
@@ -373,4 +374,103 @@ export const me = (req: Request, res: Response) => {
   } else {
     throw new UnauthorizedError("Unauthorized");
   }
+};
+
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const data = req.body;
+
+  const user = await prisma.user.update({
+    where: { id: req.user.id },
+    data,
+    select: { name: true },
+  });
+
+  res.status(StatusCodes.OK).json({
+    status: "success",
+    data: {
+      user,
+    },
+  });
+};
+
+export const updateUserEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const email = req.body.email;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (user) throw new ValidationError("This email is already in use.");
+
+  const otp = otpGenerator.generate(6, {
+    specialChars: false,
+    lowerCaseAlphabets: false,
+  });
+  const hash = hashToken(otp);
+
+  await prisma.otpToken.create({
+    data: {
+      email,
+      otp: hash,
+      otpExpiry: new Date(Date.now() + 5.5 * 60 * 60 * 10000 + 60000),
+    },
+  });
+
+  sendEmail({
+    email,
+    subject: "The Code for Email Change",
+    html: `<p>Hi ${req.user.name}</p>
+      <p>This is the code for changing your email:</p>
+      <p>${otp}</p>
+      <p>The otp will expire in 10 minutes.</p>`,
+  });
+
+  res.status(StatusCodes.OK).json({
+    message: "OTP has been sent to your mail.",
+  });
+};
+
+export const verifyUserOTP = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const otp = req.body.otp;
+
+  if (!otp) throw new ValidationError("OTP not present");
+
+  const saved = await prisma.otpToken.findUnique({
+    where: { otp: hashToken(otp) },
+  });
+
+  if (!saved || saved.otpExpiry < new Date())
+    throw new ValidationError("OTP not present or expired");
+
+  const user = await prisma.user.update({
+    where: { id: req.user.id },
+    data: { email: saved.email },
+    select: { email: true },
+  });
+
+  const accessToken = signAccessToken(user.email);
+
+  res.status(StatusCodes.OK).json({
+    status: "success",
+    token: accessToken,
+    data: {
+      user,
+    },
+  });
+
+  await prisma.otpToken.deleteMany({
+    where: { email: user.email },
+  });
 };

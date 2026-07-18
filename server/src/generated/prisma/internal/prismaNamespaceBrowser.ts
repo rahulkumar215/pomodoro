@@ -57,6 +57,7 @@ export const ModelName = {
   Session: 'Session',
   Settings: 'Settings',
   SignupToken: 'SignupToken',
+  OtpToken: 'OtpToken',
   Token: 'Token',
   plan: 'plan'
 } as const
@@ -181,6 +182,15 @@ export const SignupTokenScalarFieldEnum = {
 } as const
 
 export type SignupTokenScalarFieldEnum = (typeof SignupTokenScalarFieldEnum)[keyof typeof SignupTokenScalarFieldEnum]
+
+
+export const OtpTokenScalarFieldEnum = {
+  email: 'email',
+  otp: 'otp',
+  otpExpiry: 'otpExpiry'
+} as const
+
+export type OtpTokenScalarFieldEnum = (typeof OtpTokenScalarFieldEnum)[keyof typeof OtpTokenScalarFieldEnum]
 
 
 export const TokenScalarFieldEnum = {

@@ -49,3 +49,11 @@ export const signinSchema = z.object({
       "Password must contain at least one special character",
     ),
 });
+
+export const updateUserSchema = z.object({
+  name: z.string(),
+});
+
+export const updateUserEmailSchema = z.object({
+  email: z.email(),
+});

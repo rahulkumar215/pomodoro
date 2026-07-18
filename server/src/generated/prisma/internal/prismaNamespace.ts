@@ -390,6 +390,7 @@ export const ModelName = {
   Session: 'Session',
   Settings: 'Settings',
   SignupToken: 'SignupToken',
+  OtpToken: 'OtpToken',
   Token: 'Token',
   plan: 'plan'
 } as const
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "project" | "task" | "session" | "settings" | "signupToken" | "token" | "plan"
+    modelProps: "user" | "project" | "task" | "session" | "settings" | "signupToken" | "otpToken" | "token" | "plan"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -855,6 +856,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OtpToken: {
+      payload: Prisma.$OtpTokenPayload<ExtArgs>
+      fields: Prisma.OtpTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OtpTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OtpTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.OtpTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OtpTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        findMany: {
+          args: Prisma.OtpTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>[]
+        }
+        create: {
+          args: Prisma.OtpTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        createMany: {
+          args: Prisma.OtpTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OtpTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.OtpTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        update: {
+          args: Prisma.OtpTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.OtpTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OtpTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OtpTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.OtpTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OtpTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.OtpTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOtpToken>
+        }
+        groupBy: {
+          args: Prisma.OtpTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OtpTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OtpTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OtpTokenCountAggregateOutputType> | number
+        }
+      }
+    }
     Token: {
       payload: Prisma.$TokenPayload<ExtArgs>
       fields: Prisma.TokenFieldRefs
@@ -1146,6 +1221,15 @@ export const SignupTokenScalarFieldEnum = {
 } as const
 
 export type SignupTokenScalarFieldEnum = (typeof SignupTokenScalarFieldEnum)[keyof typeof SignupTokenScalarFieldEnum]
+
+
+export const OtpTokenScalarFieldEnum = {
+  email: 'email',
+  otp: 'otp',
+  otpExpiry: 'otpExpiry'
+} as const
+
+export type OtpTokenScalarFieldEnum = (typeof OtpTokenScalarFieldEnum)[keyof typeof OtpTokenScalarFieldEnum]
 
 
 export const TokenScalarFieldEnum = {
@@ -1477,6 +1561,7 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   settings?: Prisma.SettingsOmit
   signupToken?: Prisma.SignupTokenOmit
+  otpToken?: Prisma.OtpTokenOmit
   token?: Prisma.TokenOmit
   plan?: Prisma.planOmit
 }

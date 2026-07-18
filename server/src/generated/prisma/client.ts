@@ -72,6 +72,11 @@ export type Settings = Prisma.SettingsModel
  */
 export type SignupToken = Prisma.SignupTokenModel
 /**
+ * Model OtpToken
+ * 
+ */
+export type OtpToken = Prisma.OtpTokenModel
+/**
  * Model Token
  * 
  */
