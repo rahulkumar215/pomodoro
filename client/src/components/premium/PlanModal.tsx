@@ -77,7 +77,7 @@ function PlanModal() {
 
         <div className="flex flex-col gap-4">
           <h3>Select Plan</h3>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-3">
             {plans && plans.length > 0
               ? plans.map((plan) => (
                   <Button
@@ -85,7 +85,7 @@ function PlanModal() {
                     className={cx(
                       "flex h-24 flex-col items-center justify-center gap-1",
                       selectedPlan?.planId === plan.id &&
-                        "border-6 border-red-600",
+                        "transform -translate-y-1 shadow-2xl ring-1 ring-purple-600 ",
                     )}
                     onClick={() =>
                       setSelectedPlan({

@@ -1,16 +1,23 @@
 import {
+  CalendarIcon,
   ChartColumn,
+  ChartColumnIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
   CircleUserIcon,
   ClockCheck,
+  ClockIcon,
   CrownIcon,
   EllipsisVerticalIcon,
+  FlameIcon,
   LogOut,
-  MoonIcon,
-  SunIcon,
+  SquarePenIcon,
   Trash2Icon,
   UserCircleIcon,
 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Settings from "./settings";
 import {
@@ -23,7 +30,14 @@ import {
 } from "./ui/dropdown-menu";
 import { Link, useNavigate } from "react-router";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import type { SessionsResponse } from "@/schemas/sessions";
 import {
   createColumnHelper,
@@ -46,6 +60,14 @@ import { handleError } from "@/lib/handleError";
 import { toast } from "sonner";
 import { usePlanDialog } from "@/context/PlamDialogContext";
 import { useAuth } from "@/context/AuthContext";
+import { Input } from "./ui/input";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z, { size } from "zod";
+import { Field, FieldError, FieldLabel } from "./ui/field";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 const columnHelper = createColumnHelper<SessionsResponse>();
 
@@ -110,10 +132,33 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
 }
 
+const username = z.object({
+  name: z
+    .string({ error: "Name is required." })
+    .min(3, "Name should be at least 3 char long.")
+    .max(30, "Name max length reached"),
+});
+
+type UserNameInput = z.infer<typeof username>;
+
+const useremail = z.object({
+  email: z.email({ error: "Email is required" }),
+});
+
+type UserEmailInput = z.infer<typeof useremail>;
+
+const otpSchema = z.object({
+  otp: z
+    .string({ error: "OTP is required" })
+    .length(6, { error: "OTP must be exactly 6 characters" }),
+});
+
+type OTPInput = z.infer<typeof otpSchema>;
+
 export function DataTable({ columns }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
-    pageIndex: 0, //initial page index
-    pageSize: 10, //default page size
+    pageIndex: 0,
+    pageSize: 10,
   });
 
   const { isPending, isError, error, data } = useSessions(pagination);
@@ -135,78 +180,118 @@ export function DataTable({ columns }: DataTableProps<TData, TValue>) {
   });
 
   return (
-    <div className="rounded-md border">
-      <div>Hours Focused: {data?.hoursFocused}</div>
-      <div>Days Accessed: {data?.daysAccessed}</div>
-      <div>Streak Days: {data?.streakDays}</div>
-      {isPending ? (
-        <div>Loading...</div>
-      ) : isError ? (
-        <div>Error: {error.message}</div>
-      ) : (
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-3 gap-2">
+        <Card className="py-2">
+          <CardContent className="grid grid-cols-2 grid-rows-2 px-2">
+            <ClockIcon />
+            <span className="text-xl font-bold self-end text-right">
+              {data?.hoursFocused}
+            </span>
+            <span className="col-span-2 self-end text-right">
+              Hours Focused
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="py-2">
+          <CardContent className="grid grid-cols-2 grid-rows-2 px-2">
+            <CalendarIcon />
+            <span className="text-xl font-bold self-end text-right">
+              {data?.daysAccessed}
+            </span>
+            <span className="col-span-2 self-end text-right">
+              Days Accessed
+            </span>
+          </CardContent>
+        </Card>
+        <Card className="py-2">
+          <CardContent className="grid grid-cols-2 grid-rows-2 px-2">
+            <FlameIcon />
+            <span className="text-xl font-bold self-end text-right">
+              {data?.streakDays}
+            </span>
+            <span className="col-span-2 self-end text-right">Streak Days</span>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="border rounded-lg">
+        {isPending ? (
+          <div className="flex w-full max-w-sm flex-col gap-2 p-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div className="flex gap-4" key={index}>
+                <Skeleton className="h-4 flex-1" />
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-20" />
+              </div>
             ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+          </div>
+        ) : isError ? (
+          <div>Error: {error.message}</div>
+        ) : (
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+      </div>
 
       <div className="flex items-center justify-center  gap-2">
         <Button
-          className="border rounded p-1"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          {"<<"}
+          <ChevronsLeftIcon />
         </Button>
         <Button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          {"<"}
+          <ChevronLeftIcon />
         </Button>
         <span>
           {table.getState().pagination.pageIndex + 1} of{" "}
@@ -216,41 +301,14 @@ export function DataTable({ columns }: DataTableProps<TData, TValue>) {
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          {">"}
+          <ChevronRightIcon />
         </Button>
         <Button
-          className="border rounded p-1"
           onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
-          {">>"}
+          <ChevronsRightIcon />
         </Button>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              table.setPageIndex(page);
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
       </div>
     </div>
   );
@@ -259,9 +317,92 @@ export function DataTable({ columns }: DataTableProps<TData, TValue>) {
 const Header = () => {
   const token: string | null = localStorage.getItem("token");
   const [open, setOpen] = useState(false);
+  const [openAccount, setOpenAccount] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
+  const [openVerifyEmail, setOpenVerifyEmail] = useState(false);
   const { user } = useAuth();
   const { setOpenPlanDialog } = usePlanDialog();
+  const qc = useQueryClient();
   const navigate = useNavigate();
+
+  const form = useForm({
+    resolver: zodResolver(username),
+    defaultValues: {
+      name: "",
+    },
+    mode: "onChange",
+  });
+
+  const formEmail = useForm({
+    resolver: zodResolver(useremail),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const formOTP = useForm({
+    resolver: zodResolver(otpSchema),
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+  const submitOTP = useMutation({
+    mutationFn: async (data: OTPInput) => {
+      const response = await api.post("/auth/user-otp-verify", data);
+
+      return response.data;
+    },
+    onSuccess: (data) => {
+      const token = data.token;
+      localStorage.setItem("token", token);
+      qc.invalidateQueries({
+        queryKey: ["user"],
+      });
+      toast.success("Email has been successfully changed");
+    },
+    onError: () => {
+      toast.error("OTP invalid or exipred.");
+    },
+  });
+
+  const onSubmitOTP = (data: OTPInput) => {
+    submitOTP.mutate(data);
+    setOpenVerifyEmail(false);
+    setOpenEmail(false);
+    setOpenAccount(false);
+  };
+
+  const updateEmail = useMutation({
+    mutationFn: async (data: UserEmailInput) => {
+      const response = await api.post("/auth/user-email", data);
+      return response.status;
+    },
+    onSuccess: () => {
+      setOpenVerifyEmail(true);
+    },
+  });
+
+  const onSubmitEmail = (data: UserEmailInput) => {
+    updateEmail.mutate(data);
+  };
+
+  const update = useMutation({
+    mutationFn: async (data: UserNameInput) => {
+      const response = await api.patch("/auth/user", data);
+      return response.status;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({
+        queryKey: ["user"],
+      });
+      toast.success("User's name updated successfully.");
+    },
+  });
+
+  const onSubmit = (data: UserNameInput) => {
+    update.mutate(data);
+  };
 
   const handleLogout = async () => {
     try {
@@ -293,27 +434,30 @@ const Header = () => {
         Pomodoro
       </h2>
 
-      <div className="flex items-center gap-4">
-        <Button onClick={() => setOpen(true)}>
+      <div className="flex items-center gap-2">
+        <Button onClick={() => setOpen(true)} size="sm">
           <ChartColumn />
-          Reprot
+          <span className="hidden sm:inline">Reprot</span>
         </Button>
 
         <Settings />
 
         {token ? (
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar>
-                  <AvatarImage src={user?.avatarUrl} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-              </Button>
+            <DropdownMenuTrigger>
+              <Avatar>
+                <AvatarImage src={user?.avatarUrl} />
+                <AvatarFallback>{user?.name[0] || "CN"}</AvatarFallback>
+              </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-36">
+            <DropdownMenuContent>
               <DropdownMenuGroup>
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setOpenAccount(true);
+                    form.setValue("name", user?.name || "");
+                  }}
+                >
                   <UserCircleIcon />
                   Account
                 </DropdownMenuItem>
@@ -325,26 +469,23 @@ const Header = () => {
                   <LogOut />
                   Logout
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {/* <DropdownMenuSeparator />
                 <DropdownMenuItem variant="destructive">
                   <Trash2Icon />
                   Delete Account
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <>
-            {" "}
-            <Button asChild>
-              <Link to="/signin">
-                <CircleUserIcon />
-                Sign In
-              </Link>
-            </Button>
+            <Link to="/signin" className={buttonVariants({ size: "sm" })}>
+              <CircleUserIcon />
+              <span className="hidden sm:inline">Sign In</span>
+            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon">
+                <Button size="sm">
                   <EllipsisVerticalIcon />
                 </Button>
               </DropdownMenuTrigger>
@@ -368,12 +509,177 @@ const Header = () => {
       </div>
 
       <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-        <DialogContent className="overflow-scroll max-h-11/12 ">
+        <DialogContent className="overflow-auto max-h-11/12 sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Pomodoro Report</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <ChartColumnIcon />
+              Pomodoro Report
+            </DialogTitle>
           </DialogHeader>
 
           <DataTable columns={columns} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={openAccount}
+        onOpenChange={(open) => {
+          setOpenAccount(open);
+          form.reset();
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Account</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-[max-content_2fr] gap-2 items-center mb-2">
+              <Avatar size="lg" className="sm:size-16!">
+                <AvatarImage src={user?.avatarUrl} />
+                <AvatarFallback className="sm:text-2xl">
+                  {user?.name[0] || "CN"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col gap-2">
+                <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        {...field}
+                        type="text"
+                        aria-disabled={fieldState.invalid}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <div className="flex gap-1 items-center">
+                  <p>{user?.email}</p>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setOpenEmail(true)}
+                  >
+                    <SquarePenIcon />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={openEmail}
+        onOpenChange={(open) => {
+          setOpenEmail(open);
+          formEmail.reset();
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Email</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={formEmail.handleSubmit(onSubmitEmail)}>
+            <div className="mb-2">
+              <Controller
+                name="email"
+                control={formEmail.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">
+                      Please input the new email address
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="example@email.com"
+                      aria-invalid={fieldState.invalid}
+                      id="email"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={openVerifyEmail}
+        onOpenChange={(open) => {
+          setOpenVerifyEmail(open);
+          formOTP.reset();
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Email</DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={formOTP.handleSubmit(onSubmitOTP)}>
+            <div className="mb-2">
+              <Controller
+                name="otp"
+                control={formOTP.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="otp">
+                      We have sent the 6 digit code to your new email. Please
+                      paste the code here.
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      type="otp"
+                      placeholder="6 digit code"
+                      aria-invalid={fieldState.invalid}
+                      id="otp"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Close
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

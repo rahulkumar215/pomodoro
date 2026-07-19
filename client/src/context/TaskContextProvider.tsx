@@ -6,7 +6,7 @@ import { useFetchTasks } from "@/hooks/useTasksAPI";
 function TaskContextProvider({ children }: { children: ReactNode }) {
   const [activeTask, setActiveTask] = useState<TasksResponse | null>(null);
   const isDragging = useRef(false);
-  const { data: fetchedTasks = [] } = useFetchTasks();
+  const { data: fetchedTasks } = useFetchTasks();
   const [tasks, setTasks] = useState<TasksResponse[]>(fetchedTasks ?? []);
 
   useEffect(() => {

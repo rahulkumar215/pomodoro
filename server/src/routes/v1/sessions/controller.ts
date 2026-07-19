@@ -87,6 +87,9 @@ export const getSessions = async (
   const { page, take } = req.query;
 
   const aggregations = await prisma.session.aggregate({
+    where: {
+      userId: req.user.id,
+    },
     _count: true,
     _sum: {
       minutes: true,

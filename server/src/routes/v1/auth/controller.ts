@@ -108,13 +108,6 @@ export const signin = async (req: Request, res: Response) => {
     where: {
       email: email,
     },
-    select: {
-      id: true,
-      name: true,
-      avatar_url: true,
-      password: true,
-      email: true,
-    },
   });
 
   if (!user) throw new ValidationError("User does not exists.");
@@ -144,11 +137,6 @@ export const signin = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({
       token: accessToken,
-      user: {
-        name: user.name,
-        email: user.email,
-        avatarUrl: user.avatar_url,
-      },
     });
   } else {
     throw new ValidationError("Invalid email or password");
@@ -381,11 +369,11 @@ export const updateUser = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const data = req.body;
+  const { name } = req.body;
 
   const user = await prisma.user.update({
     where: { id: req.user.id },
-    data,
+    data: { name },
     select: { name: true },
   });
 

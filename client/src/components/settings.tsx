@@ -24,8 +24,6 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ALARM_SOUND_KEYS,
-  COLOR_KEYS,
-  colors,
   FOCUS_SOUND_KEYS,
   settingsSchema,
   Sounds,
@@ -51,13 +49,6 @@ import {
 import { useSound } from "@/hooks/useSound";
 import { useState } from "react";
 import { Slider } from "./ui/slider";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import { useSettings } from "@/context/SettingsContext";
 
 const SettingsComp = () => {
@@ -95,20 +86,23 @@ const SettingsComp = () => {
   const [prevFocusSoundVolume, setPrevFocusSoundVolume] = useState<number>(0);
 
   function onSubmit(data: Settings) {
-    // Do something with the form values.
-    console.log(data);
     updateSettings(data);
   }
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>
+        <Button size="sm">
           <SettingsIcon />
-          Settings
+          <span className="hidden sm:inline">Settings</span>
         </Button>
       </SheetTrigger>
-      <SheetContent className=" overflow-y-scroll">
+      <SheetContent
+        className="overflow-y-auto"
+        style={{
+          scrollbarWidth: "none",
+        }}
+      >
         <SheetHeader>
           <SheetTitle>Settings</SheetTitle>
           <SheetDescription>
@@ -785,7 +779,7 @@ const SettingsComp = () => {
   );
 };
 
-const PopOverComp = ({ text }) => (
+const PopOverComp = ({ text }: { text: string }) => (
   <Popover>
     <PopoverTrigger asChild>
       <Button variant="ghost">

@@ -40,6 +40,7 @@ import { colors, TASK_CONSTRAINTS } from "@/consts/consts";
 import { cx } from "class-variance-authority";
 
 function TaskForm({
+  tasks,
   open,
   setOpen,
   form,
@@ -55,6 +56,7 @@ function TaskForm({
   task_note,
   isPremium,
   handleAddProject,
+  handleAddTask,
 }) {
   return (
     <Dialog
@@ -68,6 +70,18 @@ function TaskForm({
         }
       }}
     >
+      {tasks.length > 0 && (
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="border-dashed h-12"
+            onClick={handleAddTask}
+          >
+            <CirclePlusIcon />
+            Create Task
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <form
           onSubmit={form.handleSubmit(editTaskId ? onEdit : onSubmit, onError)}

@@ -17,6 +17,8 @@ import {
   CheckIcon,
   CirclePlusIcon,
   EllipsisVerticalIcon,
+  FolderCodeIcon,
+  PlusCircleIcon,
   Trash2Icon,
 } from "lucide-react";
 
@@ -48,6 +50,14 @@ import {
   useDeleteTask,
   useUpdateTask,
 } from "@/hooks/useTasksAPI";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
 
 const Tasks = () => {
   const [addNotes, setAddNotes] = useState(false);
@@ -204,36 +214,12 @@ const Tasks = () => {
   };
 
   return (
-    <Card className="w-md">
+    <Card>
       <CardHeader className="flex justify-between items-center">
         <CardTitle>Tasks</CardTitle>
-        <CardAction>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary">
-                <EllipsisVerticalIcon />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-fit">
-              <DropdownMenuItem>
-                <Trash2Icon />
-                Clear Finished Tasks
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CheckIcon />
-                Clear act pomodoros
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Trash2Icon />
-                Clear all tasks
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardAction>
       </CardHeader>
-      <Separator />
       <CardContent className="flex flex-col gap-4">
-        {tasks && tasks.length > 0 && (
+        {tasks && tasks.length > 0 ? (
           <>
             <DragDropProvider
               onDragStart={() => {
@@ -316,9 +302,29 @@ const Tasks = () => {
               </div>
             </div>
           </>
+        ) : (
+          <Empty className="border border-dashed">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <FolderCodeIcon />
+              </EmptyMedia>
+              <EmptyTitle>No Task Yet</EmptyTitle>
+              <EmptyDescription>
+                You haven&apos;t created any task yet. Get started by creating
+                your first task.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent className="flex-row justify-center gap-2">
+              <Button onClick={handleAddTask}>
+                <PlusCircleIcon />
+                Create Task
+              </Button>
+            </EmptyContent>
+          </Empty>
         )}
 
         <TaskForm
+          tasks={tasks}
           open={open}
           setOpen={setOpen}
           form={form}
@@ -334,15 +340,8 @@ const Tasks = () => {
           task_note={task_note}
           isPremium={isPremium}
           handleAddProject={handleAddProject}
+          handleAddTask={handleAddTask}
         />
-        <Button
-          variant="outline"
-          className="border-dashed h-12"
-          onClick={handleAddTask}
-        >
-          <CirclePlusIcon />
-          Add Task
-        </Button>
       </CardContent>
     </Card>
   );

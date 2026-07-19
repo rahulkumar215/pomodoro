@@ -64,56 +64,63 @@ function Index() {
   };
 
   return (
-    <div className="p-2 flex flex-col gap-6">
+    <div className="p-2 flex flex-col gap-12">
       <Header />
-      <div className="flex flex-col gap-6 items-center">
-        <div className="flex gap-2 items-center justify-center">
-          {Object.entries(TABS).map(([key, value]) => (
-            <Button
-              key={key}
-              onClick={() => handleChangeTab(value)}
-              variant="secondary"
-              className={cx(
-                activeTab.type === value.type &&
-                  "bg-white text-secondary hover:bg-gray-100",
-              )}
-            >
-              {value.type}
-            </Button>
-          ))}
+      <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-6 bg-muted xl:w-8/12 p-6">
+          <div className="flex gap-2 items-center justify-center">
+            {Object.entries(TABS).map(([key, value]) => (
+              <Button
+                key={key}
+                onClick={() => handleChangeTab(value)}
+                variant={
+                  activeTab.type === value.type ? "default" : "secondary"
+                }
+                size="sm"
+              >
+                {value.type}
+              </Button>
+            ))}
+          </div>
+          <h1 className="text-8xl! leading-9">{formattedTimer(timer)}</h1>
+          <Button onClick={handleStartTimer} className="px-12 py-5 text-xl">
+            {started ? "Stop" : "Start"}
+          </Button>
+          <div>
+            {activeTab.type === "Pomodoro" ? (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setOpen(true);
+                  form.setValues({
+                    count: sessionCount.focus,
+                    type: "focus",
+                  });
+                }}
+              >
+                #{sessionCount.focus}
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setOpen(true);
+                  form.setValues({
+                    count: sessionCount.break,
+                    type: "break",
+                  });
+                }}
+              >
+                #{sessionCount.break}
+              </Button>
+            )}
+            <p>{activeTask ? activeTask.name : activeTab.message}</p>
+          </div>
         </div>
-        <h1>{formattedTimer(timer)}</h1>
-        <Button onClick={handleStartTimer}>{started ? "Stop" : "Start"}</Button>
-        {activeTab.type === "Pomodoro" ? (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setOpen(true);
-              form.setValues({
-                count: sessionCount.focus,
-                type: "focus",
-              });
-            }}
-          >
-            #{sessionCount.focus}
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setOpen(true);
-              form.setValues({
-                count: sessionCount.break,
-                type: "break",
-              });
-            }}
-          >
-            #{sessionCount.break}
-          </Button>
-        )}
-        <p>{activeTask ? activeTask.name : activeTab.message}</p>
+      </div>
 
-        <Tabs defaultValue="tasks">
+      <div className="flex items-center justify-center">
+        <Tabs defaultValue="tasks" className="xl:w-8/12">
           <TabsList>
             <TabsTrigger value="tasks">
               <CircleCheckIcon />

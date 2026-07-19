@@ -19,6 +19,7 @@ export const onSubscription = async (planId: string) => {
         api.post("/payments/verifySubscription", options2).then((res) => {
           if (res.status === 200) {
             alert("Subscription Successful");
+            window.location.reload();
           } else {
             alert("Subscription Failed");
           }

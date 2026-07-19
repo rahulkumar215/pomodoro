@@ -212,7 +212,7 @@ function Projects() {
   };
 
   return (
-    <Card className="w-md">
+    <Card>
       <CardHeader className="flex justify-between items-center">
         <CardTitle>Projects</CardTitle>
       </CardHeader>

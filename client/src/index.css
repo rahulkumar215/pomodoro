@@ -79,7 +79,7 @@
 
   --chart-5: oklch(0.269 0 0);
 
-  --radius: 0.625rem;
+  --radius: 0.359rem;
 
   --sidebar: oklch(0.985 0 0);
 
@@ -119,11 +119,10 @@
 }
 
 #root {
-  width: 1126px;
+  width: 806px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -135,7 +134,8 @@ body {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
@@ -159,6 +159,7 @@ h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }

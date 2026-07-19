@@ -23,7 +23,7 @@ import { handleError } from "@/lib/handleError";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   signinSchema,
   type LoginResponse,
@@ -32,6 +32,7 @@ import {
 
 export function LoginForm() {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const form = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -51,11 +52,12 @@ export function LoginForm() {
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data: LoginResponse) => {
-      const { user, token } = data;
+      const { token } = data;
 
       localStorage.setItem("token", token || "");
-      localStorage.setItem("user", JSON.stringify(user));
-
+      qc.invalidateQueries({
+        queryKey: ["user"],
+      });
       toast.success("Successfully Logged in");
 
       setTimeout(() => {
