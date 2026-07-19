@@ -8,10 +8,9 @@
     "strict": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@erros/*": ["src/errors/*"]
+      "@/*": ["./src/*"],
+      "@erros/*": ["./src/errors/*"]
     }
   },
   "include": ["src/**/*"],
