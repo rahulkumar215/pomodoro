@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { createRazorPayInstance } from "../razorypay/controller";
 import crypto from "crypto";
-import config from "@/config";
 import { prisma } from "@/db";
-import { NotFoundError, ValidationError } from "@/errors";
+import { NotFoundError } from "@/errors";
 import { StatusCodes } from "http-status-codes";
 import appConfig from "@/config";
 
@@ -49,7 +48,7 @@ export const verifyPayment = async (
   const { order_id, payment_id, signature } = req.body;
 
   // create hmac object
-  const hmac = crypto.createHmac("sha256", config.razorpay_secret);
+  const hmac = crypto.createHmac("sha256", appConfig.RAZORPAY_SECRET);
 
   hmac.update(order_id + "|" + payment_id);
 

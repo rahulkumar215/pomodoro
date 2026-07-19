@@ -42,7 +42,9 @@ function longestDateStreak(dateStrings: string[]) {
 function removeDuplicatesInPlace(daysUsed: string[]) {
   if (daysUsed.length === 0) return [];
 
-  daysUsed.sort((a, b) => a - b);
+  daysUsed.sort(
+    (a, b) => Number(new Date(a).getTime()) - Number(new Date(b).getTime()),
+  );
 
   let i = 0; // Pointer for the last known unique element
 

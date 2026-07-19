@@ -2,7 +2,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { AppError } from "@/errors/appError";
 import appConfig from "@/config";
 
-const sendErrorDev = (err: unknown, res: Response) => {
+const sendErrorDev = (err: Error | AppError | any, res: Response) => {
   console.log(err);
   res.status(err.statusCode).json({
     status: err.status,
@@ -12,7 +12,7 @@ const sendErrorDev = (err: unknown, res: Response) => {
   });
 };
 
-const sendErrorProd = (err: unknown, res: Response) => {
+const sendErrorProd = (err: Error | AppError | any, res: Response) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -30,7 +30,7 @@ const sendErrorProd = (err: unknown, res: Response) => {
 };
 
 const globalErrorHandler: ErrorRequestHandler = (
-  err: unknown,
+  err: Error | AppError | any,
   req: Request,
   res: Response,
   next: NextFunction,
