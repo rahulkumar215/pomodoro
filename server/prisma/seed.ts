@@ -1,8 +1,13 @@
 // prisma/seed.ts
 //
-// Seeds the database with a single user ("Rahul") and 320 sessions spread over
-// the last ~60 days so dashboard charts/aggregations have something realistic
-// to render. No projects and no tasks — sessions only.
+// Seeds the database with two users — a personal account and the public demo
+// account — plus 320 pomodoro sessions each, spread over the last ~60 days so
+// dashboard charts/aggregations have something realistic to render. Users and
+// pomodoro sessions only: no breaks, plans, projects, tasks or settings.
+//
+// Settings are deliberately left unseeded. The client falls back to its own
+// DEFAULT_SETTINGS and PATCH /settings upserts, so a user without a settings
+// row behaves exactly like a freshly signed-up one.
 //
 // Run with:  tsx prisma/seed.ts
 // or wire it up as the official Prisma seed command (see notes at bottom).
@@ -15,10 +20,6 @@ import {
   Prisma,
   Auth_Providers,
   Session_Types,
-  Hour_Formats,
-  Reminder_Types,
-  Billing_Type,
-  Interval,
 } from "../src/generated/prisma/client";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
@@ -30,10 +31,6 @@ function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function pick<T>(arr: T[]): T {
-  return arr[randInt(0, arr.length - 1)];
-}
-
 function randomDateWithinLastNDays(days: number): Date {
   const now = Date.now();
   const past = now - randInt(0, days) * 24 * 60 * 60 * 1000;
@@ -43,50 +40,24 @@ function randomDateWithinLastNDays(days: number): Date {
   return d;
 }
 
-const SESSION_DURATIONS = {
-  pomodoro: 25,
-  short_break: 5,
-  long_break: 15,
-};
+const POMODORO_MINUTES = 25;
 
 // ---------- main ----------
 
 async function main() {
-  console.log("Clearing existing data...");
-  // Delete in FK-safe order
+  console.log("Clearing existing users and their data...");
+  // No relation in the schema declares onDelete: Cascade, so every table that
+  // references user must be cleared before user itself or the delete is
+  // rejected. These stay even though the seed no longer creates them.
+  //
+  // plan is intentionally NOT cleared: it is reference data read by GET /plan
+  // and the Razorpay checkout flow, and nothing here recreates it.
   await prisma.session.deleteMany();
   await prisma.task.deleteMany();
   await prisma.project.deleteMany();
   await prisma.settings.deleteMany();
+  await prisma.token.deleteMany();
   await prisma.user.deleteMany();
-  await prisma.plan.deleteMany();
-
-  console.log("Creating plans...");
-  await prisma.plan.createMany({
-    data: [
-      {
-        id: "pro_lifetime_plan",
-        name: "Lifetime",
-        price: 5400,
-        billingType: Billing_Type.one_time,
-        interval: Interval.lifetime,
-      },
-      {
-        id: "plan_T7Fz3v0j92fNhO",
-        name: "Monthly",
-        price: 300,
-        billingType: Billing_Type.recurring,
-        interval: Interval.month,
-      },
-      {
-        id: "plan_T7FtJLgweReVcY",
-        name: "Yearly",
-        price: 1800,
-        billingType: Billing_Type.recurring,
-        interval: Interval.year,
-      },
-    ],
-  });
 
   console.log("Creating user (Rahul)...");
   // Hash the password the same way the signup route does (bcrypt, 10 rounds).
@@ -99,56 +70,45 @@ async function main() {
       auth_provider: Auth_Providers.email,
       is_verified: true,
       is_premium: true,
-      settings: {
-        create: {
-          pomodoro_duration: 25,
-          short_break_duration: 5,
-          long_break_duration: 15,
-          long_break_interval: 4,
-          auto_start_breaks: false,
-          auto_start_pomodoros: false,
-          auto_check_tasks: false,
-          check_to_bottom: false,
-          alarm_sound: "bell.mp3",
-          alarm_sound_repeat: 1,
-          alarm_sound_volume: 80,
-          focus_sound: "rain.mp3",
-          focus_sound_volume: 50,
-          pomodoro_theme: "#EF4444",
-          short_break_theme: "#22C55E",
-          long_break_theme: "#3B82F6",
-          hour_format: Hour_Formats.h24,
-          dark_mode_when_running: true,
-          reminder_type: Reminder_Types.every,
-          reminder_time: 5,
-        },
-      },
     },
   });
 
-  console.log("Creating 320 sessions...");
+  // Public demo account. Its credentials are displayed on the sign-in page so
+  // visitors can try the app without going through email verification, so it
+  // must stay separate from any real account.
+  console.log("Creating public demo user...");
+  const demoUser = await prisma.user.create({
+    data: {
+      name: "Demo User",
+      email: "demo@pomodoro.test",
+      password: await bcrypt.hash("DemoPomodoro@2026", 10),
+      auth_provider: Auth_Providers.email,
+      is_verified: true,
+      is_premium: true,
+    },
+  });
+
+  console.log("Creating 320 pomodoro sessions per user...");
   const SESSION_COUNT = 320;
-  const sessionTypeWeights: Session_Types[] = [
-    ...Array(10).fill(Session_Types.pomodoro), // ~60% pomodoro
-  ];
 
   const sessionData: Prisma.SessionCreateManyInput[] = [];
-  for (let i = 0; i < SESSION_COUNT; i++) {
-    const type = pick(sessionTypeWeights);
-    const minutes = SESSION_DURATIONS[type];
+  for (const seededUser of [user, demoUser]) {
+    for (let i = 0; i < SESSION_COUNT; i++) {
+      const startTime = randomDateWithinLastNDays(60);
+      const endTime = new Date(
+        startTime.getTime() + POMODORO_MINUTES * 60 * 1000,
+      );
 
-    const startTime = randomDateWithinLastNDays(60);
-    const endTime = new Date(startTime.getTime() + minutes * 60 * 1000);
-
-    sessionData.push({
-      type,
-      startTime,
-      endTime,
-      minutes,
-      taskId: null, // no tasks in this seed — all sessions are freestanding
-      userId: user.id,
-      createdAt: startTime,
-    });
+      sessionData.push({
+        type: Session_Types.pomodoro, // breaks are not seeded
+        startTime,
+        endTime,
+        minutes: POMODORO_MINUTES,
+        taskId: null, // no tasks in this seed — all sessions are freestanding
+        userId: seededUser.id,
+        createdAt: startTime,
+      });
+    }
   }
 
   // createMany is much faster than looping .create() for bulk inserts
@@ -156,7 +116,7 @@ async function main() {
 
   const totalSessions = await prisma.session.count();
   console.log(
-    `Done. Seeded 1 user (${user.email}) and ${totalSessions} sessions.`,
+    `Done. Seeded 2 users (${user.email}, ${demoUser.email}) and ${totalSessions} sessions.`,
   );
 }
 

@@ -44,7 +44,7 @@ export const signup = async (
     },
   });
 
-  sendEmail({
+  await sendEmail({
     email,
     subject: "Please set your password",
     html: `<h1>Please set Password</h1>
@@ -183,7 +183,7 @@ export const forgetPassword = async (
     },
   });
 
-  sendEmail({
+  await sendEmail({
     email,
     subject: "Please reset your password",
     html: `<h1>Reset Your Password</h1>
@@ -242,17 +242,19 @@ export const resetPassword = async (
     },
   });
 
-  sendEmail({
-    email: user.email,
-    subject: "Password changed successfully",
-    html: `<h1>Your password has been changed successfully.</h1>
+  // Courtesy notification only — the response has already been sent, so a
+  // failure here must not surface as an error the client can no longer receive.
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "Password changed successfully",
+      html: `<h1>Your password has been changed successfully.</h1>
     <p>Hi, ${user.name}</p>
     <p>Your password has been changed successfully.</p>`,
-  });
-
-  res
-    .status(StatusCodes.OK)
-    .send({ message: "Password changed successfully." });
+    });
+  } catch (error) {
+    console.error("Failed to send password-change notification:", error);
+  }
 };
 
 export const refreshToken = async (
@@ -412,7 +414,7 @@ export const updateUserEmail = async (
     },
   });
 
-  sendEmail({
+  await sendEmail({
     email,
     subject: "The Code for Email Change",
     html: `<p>Hi ${req.user.name}</p>

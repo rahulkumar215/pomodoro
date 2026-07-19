@@ -28,6 +28,7 @@ import {
   type LoginResponse,
   type SigninFormData,
 } from "@/schemas/auth";
+import { DemoCredentials } from "@/components/demo-credentials";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -140,6 +141,14 @@ export function LoginForm() {
                   Don&apos;t have an account? <Link to="/signup">Sign up</Link>
                 </FieldDescription>
               </Field>
+              <DemoCredentials
+                onUse={({ email, password }) => {
+                  form.setValue("email", email, { shouldValidate: true });
+                  form.setValue("password", password, {
+                    shouldValidate: true,
+                  });
+                }}
+              />
             </FieldGroup>
           </form>
         </CardContent>

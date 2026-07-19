@@ -23,6 +23,7 @@ import { ClockCheckIcon } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router";
 import { toast } from "sonner";
+import { DemoCredentials } from "@/components/demo-credentials";
 
 export function SignupForm() {
   const form = useForm<SignupFormData>({
@@ -138,6 +139,10 @@ export function SignupForm() {
                   </FieldDescription>
                 </Field>
               </FieldGroup>
+              <DemoCredentials />
+              <FieldDescription className="text-center">
+                Use these on the <Link to="/signin">sign in</Link> page.
+              </FieldDescription>
             </FieldGroup>
           </form>
         </CardContent>
