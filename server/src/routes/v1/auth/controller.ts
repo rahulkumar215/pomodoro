@@ -49,7 +49,7 @@ export const signup = async (
     subject: "Please set your password",
     html: `<h1>Please set Password</h1>
       <p>Click on the following link to set your password:</p>
-      <a href="http://localhost:5173/set-password/${token}">http://localhost:5173/set-password</a>
+      <a href="${appConfig.CLIENT_URL}/set-password/${token}">${appConfig.CLIENT_URL}/set-password</a>
       <p>The link will expire in 10 minutes.</p>`,
   });
 
@@ -188,7 +188,7 @@ export const forgetPassword = async (
     subject: "Please reset your password",
     html: `<h1>Reset Your Password</h1>
     <p>Click on the following link to reset your password:</p>
-    <a href="http://localhost:5173/reset-password/${token}">http://localhost:5173/reset-password</a>
+    <a href="${appConfig.CLIENT_URL}/reset-password/${token}">${appConfig.CLIENT_URL}/reset-password</a>
     <p>The link will expire in 10 minutes.</p>
     <p>If you didn't request a password reset, please ignore this email.</p>`,
   });
