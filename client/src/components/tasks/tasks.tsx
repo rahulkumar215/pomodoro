@@ -1,25 +1,15 @@
 import {
   Card,
-  CardAction,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Separator } from "../ui/separator";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+
 import { Button } from "../ui/button";
 import {
-  CheckIcon,
-  CirclePlusIcon,
-  EllipsisVerticalIcon,
+ 
   FolderCodeIcon,
   PlusCircleIcon,
-  Trash2Icon,
 } from "lucide-react";
 
 import { useForm, useWatch } from "react-hook-form";

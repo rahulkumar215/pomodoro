@@ -14,7 +14,6 @@ import {
   FlameIcon,
   LogOut,
   SquarePenIcon,
-  Trash2Icon,
   UserCircleIcon,
 } from "lucide-react";
 import { Button, buttonVariants } from "./ui/button";
@@ -25,7 +24,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Link, useNavigate } from "react-router";
@@ -44,7 +42,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  type ColumnDef,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -63,7 +60,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Input } from "./ui/input";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z, { size } from "zod";
+import { z } from "zod";
 import { Field, FieldError, FieldLabel } from "./ui/field";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "./ui/card";
@@ -128,10 +125,6 @@ export const columns = [
   }),
 ];
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-}
-
 const username = z.object({
   name: z
     .string({ error: "Name is required." })
@@ -155,7 +148,7 @@ const otpSchema = z.object({
 
 type OTPInput = z.infer<typeof otpSchema>;
 
-export function DataTable({ columns }: DataTableProps<TData, TValue>) {
+export function DataTable({ columns }) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,

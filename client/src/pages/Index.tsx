@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { cx } from "class-variance-authority";
 import { TABS } from "@/consts/consts";
 import formattedTimer from "@/lib/formattedTimer";
 import useTimer from "@/hooks/useTimer";

@@ -8,7 +8,6 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
 
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -24,6 +23,7 @@
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitAny": false,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },

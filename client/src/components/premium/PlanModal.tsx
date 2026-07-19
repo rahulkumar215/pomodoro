@@ -79,7 +79,13 @@ function PlanModal() {
           <h3>Select Plan</h3>
           <div className="grid grid-cols-3 gap-3">
             {plans && plans.length > 0
-              ? plans.map((plan) => (
+              ? plans.map((plan: {
+                id: string,
+                billingType: "one_time" | "recurring",
+                name: string,
+                price: number,
+                interval: "monthly" | "yearly" | "lifetime"
+              }) => (
                   <Button
                     key={plan.id}
                     className={cx(
