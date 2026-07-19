@@ -130,7 +130,7 @@ export const signin = async (req: Request, res: Response) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "none",
       path: "/api/v1/auth",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -308,7 +308,7 @@ export const refreshToken = async (
     httpOnly: true,
     secure: true,
     path: "/api/v1/auth",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -333,8 +333,8 @@ export const logout = async (
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    sameSite: "strict",
-    path: "api/v1/auth",
+    sameSite: "none",
+    path: "/api/v1/auth",
     secure: true,
   });
 
