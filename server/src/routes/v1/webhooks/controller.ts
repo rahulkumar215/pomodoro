@@ -1,7 +1,7 @@
 import appConfig from "@/config";
 import { prisma } from "@/db";
 import { NextFunction, Request, Response } from "express";
-import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
+import Razorpay from "razorpay";
 
 export const razorPay = async (
   req: Request,
@@ -15,7 +15,7 @@ export const razorPay = async (
       return res.status(401).send("Invalid signature format");
 
     const secret = appConfig.RAZORPAY_WEBHOOK_SECRET;
-    const isValid = validateWebhookSignature(
+    const isValid = Razorpay.validateWebhookSignature(
       JSON.stringify(req.body),
       webhookSignature,
       secret,

@@ -55,7 +55,7 @@
     "nodemailer": "^9.0.3",
     "otp-generator": "^4.0.1",
     "pg": "^8.21.0",
-    "razorpay": "^2.9.6",
+    "razorpay": "^2.9.8",
     "zod": "^4.4.3"
   },
   "overrides": {
